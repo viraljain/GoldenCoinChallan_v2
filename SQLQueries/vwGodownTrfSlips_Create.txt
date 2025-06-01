@@ -1,0 +1,27 @@
+select TblVchMst.*, TblVchDtl.ItemDesc, TblVchDtl.Qty, TblUnit.FieldValue1 as Unit 
+from
+ (
+ SELECT Date, BillNo, Remark, TotQty FROM DBO.Vch_Hd
+ WHERE Remark IS NOT NULL 
+ AND Vch_Type=4 
+ --and Date between '2024-Apr-01' and '2024-Apr-30'
+ ) as TblVchMst
+ INNER JOIN 
+ (
+ select
+ BillDate, BillNo, PartyCode, ItemCode, ItemDesc, Qty, Unit, Descp, InOutTag,
+ code, VchId, Vch_Type, Srno,
+ ItemUcode
+ from dbo.Vch_Dtl
+ where BillNo not like '%opening%' --and BillDate between '2024-Apr-01' and '2024-Apr-30'
+ ) as TblVchDtl
+ on TblVchMst.BillNo = TblVchDtl.BillNo
+ inner join
+ (
+	SELECT [Code]
+      ,[FieldValue1]
+        FROM [dbo].[Master]
+		where FieldName1 = 'Unit Name'
+ ) as TblUnit
+ on TblUnit.Code=TblVchDtl.Unit
+ order by BillNo;

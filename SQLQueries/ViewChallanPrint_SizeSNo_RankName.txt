@@ -1,0 +1,18 @@
+SELECT        T1.Srno, T1.Add1, T1.Add2, T1.Add3, T1.BillNo, T1.Date, T1.FieldValue1, T1.ItemName, T1.Name, T1.Qty, T1.Remark, T1.TotQty, iif(t2.ParentSize IS NULL, t1.ItemSize, t2.ParentSize) AS ItemSize, T2.SizeSNo, T1.PinCode, 
+                         T1.TinCST
+FROM            (SELECT        /*Tbl_VchDtl.Srno,*/ dense_rank() OVER (partition BY Tbl_VchMst.BillNo
+                          ORDER BY LEFT(Tbl_VchDtl.ItemDesc, len(Tbl_VchDtl.ItemDesc) - charindex(' ', reverse(Tbl_VchDtl.ItemDesc), 0))) AS Srno, Tbl_VchMst.Date, Tbl_VchMst.BillNo, Tbl_VchMst.Remark, Tbl_VchMst.TotQty, tbl_AcctMst.Name, 
+                         tbl_AcctMst.Add1, tbl_AcctMst.Add2, tbl_AcctMst.Add3, tbl_AcctMst.TinCst, tbl_AcctMst.PinCode, LEFT(Tbl_VchDtl.ItemDesc, len(Tbl_VchDtl.ItemDesc) - charindex(' ', reverse(Tbl_VchDtl.ItemDesc), 0)) AS ItemName, 
+                         RIGHT(Tbl_VchDtl.ItemDesc, iif(charindex(' ', reverse(Tbl_VchDtl.ItemDesc), 0) = 0, 1, charindex(' ', reverse(Tbl_VchDtl.ItemDesc), 0)) - 1) AS ItemSize, Tbl_VchDtl.Qty, 
+                         /*iif(charindex(' ', reverse(Tbl_VchDtl.ItemDesc), 0)=0,1,charindex(' ', reverse(Tbl_VchDtl.ItemDesc), 0)),*/ TblUnit.FieldValue1
+FROM            (SELECT        /***/ Date, BillNo, Remark, TotQty, PartyCode
+                          FROM            DBO.Vch_Hd
+                          WHERE        Vch_Type = 5) AS Tbl_VchMst INNER JOIN
+                             (SELECT        CODE, Name, Add1, Add2, Add3, TinCst, PinCode
+                               FROM            DBO.AccountMaster) AS tbl_AcctMst ON Tbl_VchMst.PartyCode = tbl_AcctMst.Code INNER JOIN
+                             (SELECT        BillDate, BillNo, PartyCode, ItemCode, ItemDesc, Qty, Unit, Descp, InOutTag, code, VchId, Vch_Type, Srno, ItemUcode
+                               FROM            dbo.Vch_Dtl/*where BillNo = 'CH/0542'*/ ) AS Tbl_VchDtl ON Tbl_VchMst.BillNo = Tbl_VchDtl.BillNo INNER JOIN
+                             (SELECT        [Code], [FieldValue1]
+                               FROM            [dbo].[Master]
+                               WHERE        FieldName1 = 'Unit Name') AS TblUnit ON TblUnit.Code = Tbl_VchDtl.Unit) AS T1 LEFT JOIN
+dbo.tblSizeMap AS T2 ON t1.ItemSize = T2.ChildSize;

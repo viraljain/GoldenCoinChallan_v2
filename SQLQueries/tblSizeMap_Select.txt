@@ -1,0 +1,2 @@
+SELECT '('''+[ParentSize]+''','''+[ChildSize]+''','+convert(varchar,[SizeSNo])+'),'
+  FROM [AA_2023_2024].[dbo].[tblSizeMap]

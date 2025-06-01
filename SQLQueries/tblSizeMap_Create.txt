@@ -1,0 +1,6 @@
+
+CREATE TABLE [dbo].[tblSizeMap](
+	[ParentSize] [varchar](10) NOT NULL,
+	[ChildSize] [varchar](10) NOT NULL,
+	[SizeSNo] [smallint] NOT NULL
+) ON [PRIMARY]
