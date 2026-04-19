@@ -1,0 +1,4 @@
+CREATE TABLE tblNewChallanTemp
+(
+	ItemName varchar(200), ItemUnit varchar(10), ItemSize varchar(5), ItemQty smallint
+)

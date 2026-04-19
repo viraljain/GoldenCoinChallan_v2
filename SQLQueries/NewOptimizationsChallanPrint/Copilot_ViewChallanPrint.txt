@@ -1,0 +1,62 @@
+SET STATISTICS IO, TIME ON
+
+SELECT        T1.Srno, T1.Add1, T1.Add2, T1.Add3, T1.BillNo, T1.Date, T1.FieldValue1, T1.ItemName, T1.Name, T1.Qty, T1.Remark, T1.TotQty, iif(t2.ParentSize IS NULL, t1.ItemSize, t2.ParentSize) AS ItemSize, T2.SizeSNo, T1.PinCode, 
+                         T1.TinCST, VchHDCode, VchDtlCode
+FROM            (SELECT        Tbl_VchDtl.Srno, Tbl_VchMst.Date, Tbl_VchMst.BillNo, Tbl_VchMst.Remark, Tbl_VchMst.TotQty, tbl_AcctMst.Name, tbl_AcctMst.Add1, tbl_AcctMst.Add2, tbl_AcctMst.Add3, tbl_AcctMst.TinCst, tbl_AcctMst.PinCode, 
+                                                    Tbl_VchDtl.ItemName, Tbl_VchDtl.ItemSize, Tbl_VchDtl.Qty, TblUnit.FieldValue1, Tbl_VchMst.code as VchHDCode, Tbl_VchDtl.code as VchDtlCode
+                          FROM            (SELECT        /***/ Date, BillNo, Remark, TotQty, PartyCode, code
+                                                    FROM            DBO.Vch_Hd
+                                                    WHERE        Vch_Type = 5) AS Tbl_VchMst INNER JOIN
+                                                        (SELECT        CODE, Name, Add1, Add2, Add3, TinCst, PinCode
+                                                          FROM            DBO.AccountMaster) AS tbl_AcctMst ON Tbl_VchMst.PartyCode = tbl_AcctMst.Code INNER JOIN
+                                                        (SELECT        BillDate, BillNo, PartyCode, ItemCode, ItemName, ItemSize, Qty, Unit, Descp, InOutTag, code, VchId, Vch_Type, Srno, ItemUcode
+                                                          FROM            dbo.Vch_Dtl/*where BillNo not like '%opening%' and BillDate between '2024-Feb-01' and '2024-Feb-29'*/ ) AS Tbl_VchDtl ON Tbl_VchMst.BillNo = Tbl_VchDtl.BillNo AND 
+                                                    Tbl_VchMst.Date = Tbl_VchDtl.BillDate INNER JOIN
+                                                        (SELECT        [Code], [FieldValue1]
+                                                          FROM            [dbo].[Master]
+                                                          WHERE        FieldName1 = 'Unit Name') AS TblUnit ON TblUnit.Code = Tbl_VchDtl.Unit) AS T1 LEFT JOIN
+                         dbo.tblSizeMap AS T2 ON t1.ItemSize = T2.ChildSize;
+
+SET STATISTICS IO, TIME ON
+
+SELECT T1.Srno, T1.Add1, T1.Add2, T1.Add3, T1.BillNo, T1.Date, T1.FieldValue1,
+       T1.ItemName, T1.Name, T1.Qty, T1.Remark, T1.TotQty,
+       ISNULL(T2.ParentSize, T1.ItemSize) AS ItemSize,
+       T2.SizeSNo, T1.PinCode, T1.TinCST
+FROM (
+    SELECT Vd.Srno, Vm.Date, Vm.BillNo, Vm.Remark, Vm.TotQty,
+           Am.Name, Am.Add1, Am.Add2, Am.Add3, Am.TinCst, Am.PinCode,
+           LEFT(VD.ItemDesc, len(VD.ItemDesc) - charindex(' ', reverse(VD.ItemDesc), 0)) AS ItemName, RIGHT(VD.ItemDesc, iif(charindex(' ', reverse(VD.ItemDesc), 0) = 0, 1, 
+                                                    charindex(' ', reverse(VD.ItemDesc), 0)) - 1) AS ItemSize, Vd.Qty, Mu.FieldValue1
+    FROM dbo.Vch_Hd Vm
+    INNER JOIN dbo.AccountMaster Am ON Vm.PartyCode = Am.Code
+    INNER JOIN dbo.Vch_Dtl Vd ON Vm.BillNo = Vd.BillNo AND Vm.Date = Vd.BillDate
+    INNER JOIN dbo.Master Mu ON Mu.Code = Vd.Unit AND Mu.FieldName1 = 'Unit Name'
+    WHERE Vm.Vch_Type = 5
+) AS T1
+LEFT JOIN dbo.tblSizeMap AS T2 ON T1.ItemSize = T2.ChildSize;
+
+
+ALTER TABLE dbo.Vch_Dtl
+ADD ItemName AS LEFT(ItemDesc, LEN(ItemDesc) - CHARINDEX(' ', REVERSE(ItemDesc))) PERSISTED,
+    ItemSize AS RIGHT(ItemDesc, iif(charindex(' ', reverse(ItemDesc), 0) = 0, 1, charindex(' ', reverse(ItemDesc), 0)) - 1) PERSISTED;
+
+CREATE NONCLUSTERED INDEX IX_VchDtl_ItemName ON dbo.Vch_Dtl(ItemName);
+CREATE NONCLUSTERED INDEX IX_VchDtl_ItemSize ON dbo.Vch_Dtl(ItemSize);
+
+SELECT T1.Srno, T1.Add1, T1.Add2, T1.Add3, T1.BillNo, T1.Date, T1.FieldValue1,
+       T1.ItemName, T1.Name, T1.Qty, T1.Remark, T1.TotQty,
+       ISNULL(T2.ParentSize, T1.ItemSize) AS ItemSize,
+       T2.SizeSNo, T1.PinCode, T1.TinCST
+FROM (
+    SELECT Vd.Srno, Vm.Date, Vm.BillNo, Vm.Remark, Vm.TotQty,
+           Am.Name, Am.Add1, Am.Add2, Am.Add3, Am.TinCst, Am.PinCode,
+           Vd.ItemName, Vd.ItemSize, Vd.Qty, Mu.FieldValue1
+    FROM dbo.Vch_Hd Vm
+    INNER JOIN dbo.AccountMaster Am ON Vm.PartyCode = Am.Code
+    INNER JOIN dbo.Vch_Dtl Vd ON Vm.BillNo = Vd.BillNo AND Vm.Date = Vd.BillDate
+    INNER JOIN dbo.Master Mu ON Mu.Code = Vd.Unit AND Mu.FieldName1 = 'Unit Name'
+    WHERE Vm.Vch_Type = 5
+) AS T1
+LEFT JOIN dbo.tblSizeMap AS T2 ON T1.ItemSize = T2.ChildSize;
+

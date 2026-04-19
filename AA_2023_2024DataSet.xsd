@@ -11,7 +11,7 @@
             <MainSource>
               <DbSource ConnectionRef="AA_2023_2024ConnectionString (Settings)" DbObjectName="AA_2023_2024.dbo.ViewChallanPrint" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
                 <SelectCommand>
-                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
                     <CommandText>SELECT Date, BillNo, Remark, TotQty, Name, Add1, Add2, Add3, TinCST, PinCode, ItemName, ItemSize, Qty, FieldValue1, SizeSNo, Srno FROM ViewChallanPrint</CommandText>
                     <Parameters />
                   </DbCommand>
@@ -104,13 +104,7 @@ ORDER BY Remark</CommandText>
               <DbSource ConnectionRef="AA_2023_2024ConnectionString (Settings)" DbObjectName="" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT        FORMAT(Tbl_VchMst.Date, 'dd-MMM-yyyy') AS BillDate, Tbl_VchMst.BillNo, tbl_AcctMst.Name, Tbl_VchMst.TotQty
-FROM            (SELECT        Date, BillNo, Remark, TotQty, PartyCode
-                          FROM            Vch_Hd
-                          WHERE        (Vch_Type = 5)) AS Tbl_VchMst INNER JOIN
-                             (SELECT        Code, Name, Add1, Add2, Add3, TinCst, PinCode
-                               FROM            AccountMaster) AS tbl_AcctMst ON Tbl_VchMst.PartyCode = tbl_AcctMst.Code
-ORDER BY Tbl_VchMst.Date DESC, Tbl_VchMst.BillNo DESC</CommandText>
+                    <CommandText>SELECT TOP 100 CONVERT(VARCHAR(11), V.Date, 106) AS BillDate,V.BillNo,A.Name,V.TotQty FROM Vch_Hd V INNER JOIN AccountMaster A ON V.PartyCode = A.Code WHERE V.Vch_Type = 5 ORDER BY V.Date DESC, V.BillNo DESC</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>
@@ -129,19 +123,27 @@ ORDER BY Tbl_VchMst.Date DESC, Tbl_VchMst.BillNo DESC</CommandText>
               <DbSource ConnectionRef="AA_2023_2024ConnectionString (Settings)" DbObjectName="" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetItemNameWithSizes" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetItemNameWithSizes" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetItemNameWithSizes" UserSourceName="Fill">
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT        T1.ItemName,T1.ItemName+'|||'+T1.UnitName+'|||'+ String_Agg(iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize), '|||') 
-                         AS ItemSize
-/*, T1.UnitName, iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize) AS ItemSize, TblSizeMap.SizeSNo*/ FROM (SELECT        LEFT(Material.Name, len(Material.Name) - charindex(' ', reverse(Material.Name), 0)) 
-                                                                                                                                                                                                                                                                                                                           AS ItemName, RIGHT(Material.Name, iif(charindex(' ', reverse(Material.Name), 0) = 0, 1, 
-                                                                                                                                                                                                                                                                                                                           charindex(' ', reverse(Material.Name), 0)) - 1) AS ItemSize, dbo.Material.Code, Ucode, 
-                                                                                                                                                                                                                                                                                                                           UnitCode, TblUnit.UnitName
-                                                                                                                                                                                                                                                                                                 FROM            dbo.Material INNER JOIN
-                                                                                                                                                                                                                                                                                                                               (SELECT        [Code], [FieldValue1] AS UnitName
-                                                                                                                                                                                                                                                                                                                                 FROM            [dbo].[Master]
-                                                                                                                                                                                                                                                                                                                                 WHERE        FieldName1 = 'Unit Name') AS TblUnit ON 
-                                                                                                                                                                                                                                                                                                                           TblUnit.Code = Material.UnitCode/*	where Name like '%N-1%'*/ ) AS T1 LEFT JOIN
-                         dbo.tblSizeMap AS TblSizeMap ON T1.ItemSize = TblSizeMap.ChildSize
-GROUP BY T1.ItemName, T1.UnitName</CommandText>
+                    <CommandText>SELECT  T1.ItemName, T1.ItemName + '|||' + T1.UnitName + '|||' + REPLACE(dbo.Group_CSV(iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize)), ',', '|||') 
+		AS ItemSize
+/*T1.UnitName, iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize) AS ItemSize, TblSizeMap.SizeSNo*/ 
+FROM 
+(
+	SELECT        
+		LEFT(Material.Name, len(Material.Name) - charindex(' ', reverse(Material.Name), 0)) 
+		AS ItemName, RIGHT(Material.Name, iif(charindex(' ', reverse(Material.Name), 0) = 0, 1, 
+		charindex(' ', reverse(Material.Name), 0)) - 1) AS ItemSize, dbo.Material.Code, Ucode, 
+		UnitCode, TblUnit.UnitName
+	FROM dbo.Material INNER JOIN
+	(	SELECT [Code], [FieldValue1] AS UnitName
+		FROM            [dbo].[Master]
+		WHERE        FieldName1 = 'Unit Name'
+	) AS TblUnit 
+	ON TblUnit.Code = Material.UnitCode/*	where Name like '%N-1%'*/ 
+) AS T1
+LEFT JOIN
+dbo.tblSizeMap AS TblSizeMap ON T1.ItemSize = TblSizeMap.ChildSize
+GROUP BY T1.ItemName, T1.UnitName
+</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>
@@ -152,13 +154,13 @@ GROUP BY T1.ItemName, T1.UnitName</CommandText>
               <Mapping SourceColumn="ItemSize" DataSetColumn="ItemSize" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="AA_2023_2024ConnectionString (Settings)" DbObjectName="" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="FillByDealerName" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetDealerNameWithDetails" GeneratorSourceName="FillByDealerName" GetMethodModifier="Public" GetMethodName="GetDealerNameWithDetails" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDealerNameWithDetails" UserSourceName="FillByDealerName">
+              <DbSource ConnectionRef="AA_2023_2024ConnectionString (Settings)" DbObjectName="AA_2023_2024.dbo.AccountMaster" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="FillByDealerName" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetDealerNameWithDetails" GeneratorSourceName="FillByDealerName" GetMethodModifier="Public" GetMethodName="GetDealerNameWithDetails" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDealerNameWithDetails" UserSourceName="FillByDealerName">
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
-                    <CommandText>SELECT CODE, Name, Add1, Add2, Add3, TinCst, PinCode
-FROM DBO.AccountMaster
-where GrpCode = 8
---and CODE = 258</CommandText>
+                    <CommandText>/*and CODE = 258*/
+SELECT        Code AS DealerId, Name + ' (' + LOWER(ISNULL(Add1, '') + ' ' + ISNULL(Add2, '') + ' ' + ISNULL(Add3, '') + ' ' + ISNULL(Add4, '')) + ')' AS DealerName, TinCst AS GSTIN, PinCode
+FROM            AccountMaster
+WHERE        (GrpCode = 8)</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>
@@ -170,95 +172,95 @@ where GrpCode = 8
       </DataSource>
     </xs:appinfo>
   </xs:annotation>
-  <xs:element name="AA_2023_2024DataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="AA_2023_2024DataSet" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="AA_2023_2024DataSet">
+  <xs:element name="AA_2023_2024DataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_UserDSName="AA_2023_2024DataSet" msprop:Generator_DataSetName="AA_2023_2024DataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="ViewChallanPrint" msprop:Generator_RowEvHandlerName="ViewChallanPrintRowChangeEventHandler" msprop:Generator_RowDeletedName="ViewChallanPrintRowDeleted" msprop:Generator_RowDeletingName="ViewChallanPrintRowDeleting" msprop:Generator_RowEvArgName="ViewChallanPrintRowChangeEvent" msprop:Generator_TablePropName="ViewChallanPrint" msprop:Generator_RowChangedName="ViewChallanPrintRowChanged" msprop:Generator_UserTableName="ViewChallanPrint" msprop:Generator_RowChangingName="ViewChallanPrintRowChanging" msprop:Generator_RowClassName="ViewChallanPrintRow" msprop:Generator_TableClassName="ViewChallanPrintDataTable" msprop:Generator_TableVarName="tableViewChallanPrint">
+        <xs:element name="ViewChallanPrint" msprop:Generator_RowClassName="ViewChallanPrintRow" msprop:Generator_RowEvHandlerName="ViewChallanPrintRowChangeEventHandler" msprop:Generator_RowDeletedName="ViewChallanPrintRowDeleted" msprop:Generator_RowDeletingName="ViewChallanPrintRowDeleting" msprop:Generator_RowEvArgName="ViewChallanPrintRowChangeEvent" msprop:Generator_TablePropName="ViewChallanPrint" msprop:Generator_RowChangedName="ViewChallanPrintRowChanged" msprop:Generator_UserTableName="ViewChallanPrint" msprop:Generator_RowChangingName="ViewChallanPrintRowChanging" msprop:Generator_TableClassName="ViewChallanPrintDataTable" msprop:Generator_TableVarName="tableViewChallanPrint">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Date" msprop:Generator_ColumnPropNameInTable="DateColumn" msprop:Generator_ColumnPropNameInRow="Date" msprop:Generator_UserColumnName="Date" msprop:Generator_ColumnVarNameInTable="columnDate" type="xs:dateTime" minOccurs="0" />
-              <xs:element name="BillNo" msprop:Generator_ColumnPropNameInTable="BillNoColumn" msprop:Generator_ColumnPropNameInRow="BillNo" msprop:Generator_UserColumnName="BillNo" msprop:Generator_ColumnVarNameInTable="columnBillNo" minOccurs="0">
+              <xs:element name="Date" msprop:Generator_ColumnPropNameInRow="Date" msprop:Generator_ColumnPropNameInTable="DateColumn" msprop:Generator_ColumnVarNameInTable="columnDate" msprop:Generator_UserColumnName="Date" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="BillNo" msprop:Generator_ColumnPropNameInRow="BillNo" msprop:Generator_ColumnPropNameInTable="BillNoColumn" msprop:Generator_ColumnVarNameInTable="columnBillNo" msprop:Generator_UserColumnName="BillNo" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="Remark" msprop:Generator_ColumnPropNameInTable="RemarkColumn" msprop:Generator_ColumnPropNameInRow="Remark" msprop:Generator_UserColumnName="Remark" msprop:Generator_ColumnVarNameInTable="columnRemark" minOccurs="0">
+              <xs:element name="Remark" msprop:Generator_ColumnPropNameInRow="Remark" msprop:Generator_ColumnPropNameInTable="RemarkColumn" msprop:Generator_ColumnVarNameInTable="columnRemark" msprop:Generator_UserColumnName="Remark" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="250" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="TotQty" msprop:Generator_ColumnPropNameInTable="TotQtyColumn" msprop:Generator_ColumnPropNameInRow="TotQty" msprop:Generator_UserColumnName="TotQty" msprop:Generator_ColumnVarNameInTable="columnTotQty" type="xs:double" minOccurs="0" />
-              <xs:element name="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_UserColumnName="Name" msprop:Generator_ColumnVarNameInTable="columnName" minOccurs="0">
+              <xs:element name="TotQty" msprop:Generator_ColumnPropNameInRow="TotQty" msprop:Generator_ColumnPropNameInTable="TotQtyColumn" msprop:Generator_ColumnVarNameInTable="columnTotQty" msprop:Generator_UserColumnName="TotQty" type="xs:double" minOccurs="0" />
+              <xs:element name="Name" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_UserColumnName="Name" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="Add1" msprop:Generator_ColumnPropNameInTable="Add1Column" msprop:Generator_ColumnPropNameInRow="Add1" msprop:Generator_UserColumnName="Add1" msprop:Generator_ColumnVarNameInTable="columnAdd1" minOccurs="0">
+              <xs:element name="Add1" msprop:Generator_ColumnPropNameInRow="Add1" msprop:Generator_ColumnPropNameInTable="Add1Column" msprop:Generator_ColumnVarNameInTable="columnAdd1" msprop:Generator_UserColumnName="Add1" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="Add2" msprop:Generator_ColumnPropNameInTable="Add2Column" msprop:Generator_ColumnPropNameInRow="Add2" msprop:Generator_UserColumnName="Add2" msprop:Generator_ColumnVarNameInTable="columnAdd2" minOccurs="0">
+              <xs:element name="Add2" msprop:Generator_ColumnPropNameInRow="Add2" msprop:Generator_ColumnPropNameInTable="Add2Column" msprop:Generator_ColumnVarNameInTable="columnAdd2" msprop:Generator_UserColumnName="Add2" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="Add3" msprop:Generator_ColumnPropNameInTable="Add3Column" msprop:Generator_ColumnPropNameInRow="Add3" msprop:Generator_UserColumnName="Add3" msprop:Generator_ColumnVarNameInTable="columnAdd3" minOccurs="0">
+              <xs:element name="Add3" msprop:Generator_ColumnPropNameInRow="Add3" msprop:Generator_ColumnPropNameInTable="Add3Column" msprop:Generator_ColumnVarNameInTable="columnAdd3" msprop:Generator_UserColumnName="Add3" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="TinCst" msprop:Generator_ColumnPropNameInTable="TinCstColumn" msprop:Generator_ColumnPropNameInRow="TinCst" msprop:Generator_UserColumnName="TinCst" msprop:Generator_ColumnVarNameInTable="columnTinCst" minOccurs="0">
+              <xs:element name="TinCst" msprop:Generator_ColumnPropNameInRow="TinCst" msprop:Generator_ColumnPropNameInTable="TinCstColumn" msprop:Generator_ColumnVarNameInTable="columnTinCst" msprop:Generator_UserColumnName="TinCst" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="PinCode" msprop:Generator_ColumnPropNameInTable="PinCodeColumn" msprop:Generator_ColumnPropNameInRow="PinCode" msprop:Generator_UserColumnName="PinCode" msprop:Generator_ColumnVarNameInTable="columnPinCode" minOccurs="0">
+              <xs:element name="PinCode" msprop:Generator_ColumnPropNameInRow="PinCode" msprop:Generator_ColumnPropNameInTable="PinCodeColumn" msprop:Generator_ColumnVarNameInTable="columnPinCode" msprop:Generator_UserColumnName="PinCode" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="ItemName" msdata:ReadOnly="true" msprop:Generator_ColumnPropNameInTable="ItemNameColumn" msprop:Generator_ColumnPropNameInRow="ItemName" msprop:Generator_UserColumnName="ItemName" msprop:Generator_ColumnVarNameInTable="columnItemName" minOccurs="0">
+              <xs:element name="ItemName" msdata:ReadOnly="true" msprop:Generator_ColumnPropNameInRow="ItemName" msprop:Generator_ColumnPropNameInTable="ItemNameColumn" msprop:Generator_ColumnVarNameInTable="columnItemName" msprop:Generator_UserColumnName="ItemName" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="250" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="ItemSize" msdata:ReadOnly="true" msprop:Generator_ColumnPropNameInTable="ItemSizeColumn" msprop:Generator_ColumnPropNameInRow="ItemSize" msprop:Generator_UserColumnName="ItemSize" msprop:Generator_ColumnVarNameInTable="columnItemSize" minOccurs="0">
+              <xs:element name="ItemSize" msdata:ReadOnly="true" msprop:Generator_ColumnPropNameInRow="ItemSize" msprop:Generator_ColumnPropNameInTable="ItemSizeColumn" msprop:Generator_ColumnVarNameInTable="columnItemSize" msprop:Generator_UserColumnName="ItemSize" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="250" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="Qty" msprop:Generator_ColumnPropNameInTable="QtyColumn" msprop:Generator_ColumnPropNameInRow="Qty" msprop:Generator_UserColumnName="Qty" msprop:Generator_ColumnVarNameInTable="columnQty" type="xs:double" minOccurs="0" />
-              <xs:element name="FieldValue1" msprop:Generator_ColumnPropNameInTable="FieldValue1Column" msprop:Generator_ColumnPropNameInRow="FieldValue1" msprop:Generator_UserColumnName="FieldValue1" msprop:Generator_ColumnVarNameInTable="columnFieldValue1">
+              <xs:element name="Qty" msprop:Generator_ColumnPropNameInRow="Qty" msprop:Generator_ColumnPropNameInTable="QtyColumn" msprop:Generator_ColumnVarNameInTable="columnQty" msprop:Generator_UserColumnName="Qty" type="xs:double" minOccurs="0" />
+              <xs:element name="FieldValue1" msprop:Generator_ColumnPropNameInRow="FieldValue1" msprop:Generator_ColumnPropNameInTable="FieldValue1Column" msprop:Generator_ColumnVarNameInTable="columnFieldValue1" msprop:Generator_UserColumnName="FieldValue1">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="SizeSNo" msprop:Generator_ColumnPropNameInTable="SizeSNoColumn" msprop:Generator_ColumnPropNameInRow="SizeSNo" msprop:Generator_UserColumnName="SizeSNo" msprop:Generator_ColumnVarNameInTable="columnSizeSNo" type="xs:short" minOccurs="0" />
-              <xs:element name="Srno" msprop:Generator_ColumnPropNameInTable="SrnoColumn" msprop:Generator_ColumnPropNameInRow="Srno" msprop:Generator_UserColumnName="Srno" msprop:Generator_ColumnVarNameInTable="columnSrno" type="xs:int" minOccurs="0" />
-              <xs:element name="TinCST" msprop:Generator_ColumnPropNameInTable="TinCSTColumn" msprop:Generator_ColumnPropNameInRow="TinCST" msprop:Generator_UserColumnName="TinCST" msprop:Generator_ColumnVarNameInTable="columnTinCST" minOccurs="0">
+              <xs:element name="SizeSNo" msprop:Generator_ColumnPropNameInRow="SizeSNo" msprop:Generator_ColumnPropNameInTable="SizeSNoColumn" msprop:Generator_ColumnVarNameInTable="columnSizeSNo" msprop:Generator_UserColumnName="SizeSNo" type="xs:short" minOccurs="0" />
+              <xs:element name="Srno" msprop:Generator_ColumnPropNameInRow="Srno" msprop:Generator_ColumnPropNameInTable="SrnoColumn" msprop:Generator_ColumnVarNameInTable="columnSrno" msprop:Generator_UserColumnName="Srno" type="xs:int" minOccurs="0" />
+              <xs:element name="TinCST" msprop:Generator_ColumnPropNameInRow="TinCST" msprop:Generator_ColumnPropNameInTable="TinCSTColumn" msprop:Generator_ColumnVarNameInTable="columnTinCST" msprop:Generator_UserColumnName="TinCST" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
@@ -268,34 +270,34 @@ where GrpCode = 8
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="vwGodownTrfSlips" msprop:Generator_RowEvHandlerName="vwGodownTrfSlipsRowChangeEventHandler" msprop:Generator_RowDeletedName="vwGodownTrfSlipsRowDeleted" msprop:Generator_RowDeletingName="vwGodownTrfSlipsRowDeleting" msprop:Generator_RowEvArgName="vwGodownTrfSlipsRowChangeEvent" msprop:Generator_TablePropName="vwGodownTrfSlips" msprop:Generator_RowChangedName="vwGodownTrfSlipsRowChanged" msprop:Generator_UserTableName="vwGodownTrfSlips" msprop:Generator_RowChangingName="vwGodownTrfSlipsRowChanging" msprop:Generator_RowClassName="vwGodownTrfSlipsRow" msprop:Generator_TableClassName="vwGodownTrfSlipsDataTable" msprop:Generator_TableVarName="tablevwGodownTrfSlips">
+        <xs:element name="vwGodownTrfSlips" msprop:Generator_RowClassName="vwGodownTrfSlipsRow" msprop:Generator_RowEvHandlerName="vwGodownTrfSlipsRowChangeEventHandler" msprop:Generator_RowDeletedName="vwGodownTrfSlipsRowDeleted" msprop:Generator_RowDeletingName="vwGodownTrfSlipsRowDeleting" msprop:Generator_RowEvArgName="vwGodownTrfSlipsRowChangeEvent" msprop:Generator_TablePropName="vwGodownTrfSlips" msprop:Generator_RowChangedName="vwGodownTrfSlipsRowChanged" msprop:Generator_UserTableName="vwGodownTrfSlips" msprop:Generator_RowChangingName="vwGodownTrfSlipsRowChanging" msprop:Generator_TableClassName="vwGodownTrfSlipsDataTable" msprop:Generator_TableVarName="tablevwGodownTrfSlips">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Date" msprop:Generator_ColumnPropNameInTable="DateColumn" msprop:Generator_ColumnPropNameInRow="Date" msprop:Generator_UserColumnName="Date" msprop:Generator_ColumnVarNameInTable="columnDate" type="xs:dateTime" minOccurs="0" />
-              <xs:element name="BillNo" msprop:Generator_ColumnPropNameInTable="BillNoColumn" msprop:Generator_ColumnPropNameInRow="BillNo" msprop:Generator_UserColumnName="BillNo" msprop:Generator_ColumnVarNameInTable="columnBillNo" minOccurs="0">
+              <xs:element name="Date" msprop:Generator_ColumnPropNameInRow="Date" msprop:Generator_ColumnPropNameInTable="DateColumn" msprop:Generator_ColumnVarNameInTable="columnDate" msprop:Generator_UserColumnName="Date" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="BillNo" msprop:Generator_ColumnPropNameInRow="BillNo" msprop:Generator_ColumnPropNameInTable="BillNoColumn" msprop:Generator_ColumnVarNameInTable="columnBillNo" msprop:Generator_UserColumnName="BillNo" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="Remark" msprop:Generator_ColumnPropNameInTable="RemarkColumn" msprop:Generator_ColumnPropNameInRow="Remark" msprop:Generator_UserColumnName="Remark" msprop:Generator_ColumnVarNameInTable="columnRemark" minOccurs="0">
+              <xs:element name="Remark" msprop:Generator_ColumnPropNameInRow="Remark" msprop:Generator_ColumnPropNameInTable="RemarkColumn" msprop:Generator_ColumnVarNameInTable="columnRemark" msprop:Generator_UserColumnName="Remark" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="250" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="TotQty" msprop:Generator_ColumnPropNameInTable="TotQtyColumn" msprop:Generator_ColumnPropNameInRow="TotQty" msprop:Generator_UserColumnName="TotQty" msprop:Generator_ColumnVarNameInTable="columnTotQty" type="xs:double" minOccurs="0" />
-              <xs:element name="ItemDesc" msprop:Generator_ColumnPropNameInTable="ItemDescColumn" msprop:Generator_ColumnPropNameInRow="ItemDesc" msprop:Generator_UserColumnName="ItemDesc" msprop:Generator_ColumnVarNameInTable="columnItemDesc" minOccurs="0">
+              <xs:element name="TotQty" msprop:Generator_ColumnPropNameInRow="TotQty" msprop:Generator_ColumnPropNameInTable="TotQtyColumn" msprop:Generator_ColumnVarNameInTable="columnTotQty" msprop:Generator_UserColumnName="TotQty" type="xs:double" minOccurs="0" />
+              <xs:element name="ItemDesc" msprop:Generator_ColumnPropNameInRow="ItemDesc" msprop:Generator_ColumnPropNameInTable="ItemDescColumn" msprop:Generator_ColumnVarNameInTable="columnItemDesc" msprop:Generator_UserColumnName="ItemDesc" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="250" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="Qty" msprop:Generator_ColumnPropNameInTable="QtyColumn" msprop:Generator_ColumnPropNameInRow="Qty" msprop:Generator_UserColumnName="Qty" msprop:Generator_ColumnVarNameInTable="columnQty" type="xs:double" minOccurs="0" />
-              <xs:element name="Unit" msprop:Generator_ColumnPropNameInTable="UnitColumn" msprop:Generator_ColumnPropNameInRow="Unit" msprop:Generator_UserColumnName="Unit" msprop:Generator_ColumnVarNameInTable="columnUnit">
+              <xs:element name="Qty" msprop:Generator_ColumnPropNameInRow="Qty" msprop:Generator_ColumnPropNameInTable="QtyColumn" msprop:Generator_ColumnVarNameInTable="columnQty" msprop:Generator_UserColumnName="Qty" type="xs:double" minOccurs="0" />
+              <xs:element name="Unit" msprop:Generator_ColumnPropNameInRow="Unit" msprop:Generator_ColumnPropNameInTable="UnitColumn" msprop:Generator_ColumnVarNameInTable="columnUnit" msprop:Generator_UserColumnName="Unit">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
@@ -305,45 +307,45 @@ where GrpCode = 8
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="ViewChallanList" msprop:Generator_RowEvHandlerName="ViewChallanListRowChangeEventHandler" msprop:Generator_RowDeletedName="ViewChallanListRowDeleted" msprop:Generator_RowDeletingName="ViewChallanListRowDeleting" msprop:Generator_RowEvArgName="ViewChallanListRowChangeEvent" msprop:Generator_TablePropName="ViewChallanList" msprop:Generator_RowChangedName="ViewChallanListRowChanged" msprop:Generator_UserTableName="ViewChallanList" msprop:Generator_RowChangingName="ViewChallanListRowChanging" msprop:Generator_RowClassName="ViewChallanListRow" msprop:Generator_TableClassName="ViewChallanListDataTable" msprop:Generator_TableVarName="tableViewChallanList">
+        <xs:element name="ViewChallanList" msprop:Generator_RowClassName="ViewChallanListRow" msprop:Generator_RowEvHandlerName="ViewChallanListRowChangeEventHandler" msprop:Generator_RowDeletedName="ViewChallanListRowDeleted" msprop:Generator_RowDeletingName="ViewChallanListRowDeleting" msprop:Generator_RowEvArgName="ViewChallanListRowChangeEvent" msprop:Generator_TablePropName="ViewChallanList" msprop:Generator_RowChangedName="ViewChallanListRowChanged" msprop:Generator_UserTableName="ViewChallanList" msprop:Generator_RowChangingName="ViewChallanListRowChanging" msprop:Generator_TableClassName="ViewChallanListDataTable" msprop:Generator_TableVarName="tableViewChallanList">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="BillDate" msdata:ReadOnly="true" msprop:Generator_ColumnPropNameInTable="BillDateColumn" msprop:Generator_ColumnPropNameInRow="BillDate" msprop:Generator_UserColumnName="BillDate" msprop:Generator_ColumnVarNameInTable="columnBillDate" minOccurs="0">
+              <xs:element name="BillDate" msdata:ReadOnly="true" msprop:Generator_ColumnPropNameInRow="BillDate" msprop:Generator_ColumnPropNameInTable="BillDateColumn" msprop:Generator_ColumnVarNameInTable="columnBillDate" msprop:Generator_UserColumnName="BillDate" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="4000" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="BillNo" msprop:Generator_ColumnPropNameInTable="BillNoColumn" msprop:Generator_ColumnPropNameInRow="BillNo" msprop:Generator_UserColumnName="BillNo" msprop:Generator_ColumnVarNameInTable="columnBillNo" minOccurs="0">
+              <xs:element name="BillNo" msprop:Generator_ColumnPropNameInRow="BillNo" msprop:Generator_ColumnPropNameInTable="BillNoColumn" msprop:Generator_ColumnVarNameInTable="columnBillNo" msprop:Generator_UserColumnName="BillNo" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_UserColumnName="Name" msprop:Generator_ColumnVarNameInTable="columnName" minOccurs="0">
+              <xs:element name="Name" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_UserColumnName="Name" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="TotQty" msprop:Generator_ColumnPropNameInTable="TotQtyColumn" msprop:Generator_ColumnPropNameInRow="TotQty" msprop:Generator_UserColumnName="TotQty" msprop:Generator_ColumnVarNameInTable="columnTotQty" type="xs:double" minOccurs="0" />
+              <xs:element name="TotQty" msprop:Generator_ColumnPropNameInRow="TotQty" msprop:Generator_ColumnPropNameInTable="TotQtyColumn" msprop:Generator_ColumnVarNameInTable="columnTotQty" msprop:Generator_UserColumnName="TotQty" type="xs:double" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="ViewNewChallan" msprop:Generator_RowEvHandlerName="ViewNewChallanRowChangeEventHandler" msprop:Generator_RowDeletedName="ViewNewChallanRowDeleted" msprop:Generator_RowDeletingName="ViewNewChallanRowDeleting" msprop:Generator_RowEvArgName="ViewNewChallanRowChangeEvent" msprop:Generator_TablePropName="ViewNewChallan" msprop:Generator_RowChangedName="ViewNewChallanRowChanged" msprop:Generator_UserTableName="ViewNewChallan" msprop:Generator_RowChangingName="ViewNewChallanRowChanging" msprop:Generator_RowClassName="ViewNewChallanRow" msprop:Generator_TableClassName="ViewNewChallanDataTable" msprop:Generator_TableVarName="tableViewNewChallan">
+        <xs:element name="ViewNewChallan" msprop:Generator_RowClassName="ViewNewChallanRow" msprop:Generator_RowEvHandlerName="ViewNewChallanRowChangeEventHandler" msprop:Generator_RowDeletedName="ViewNewChallanRowDeleted" msprop:Generator_RowDeletingName="ViewNewChallanRowDeleting" msprop:Generator_RowEvArgName="ViewNewChallanRowChangeEvent" msprop:Generator_TablePropName="ViewNewChallan" msprop:Generator_RowChangedName="ViewNewChallanRowChanged" msprop:Generator_UserTableName="ViewNewChallan" msprop:Generator_RowChangingName="ViewNewChallanRowChanging" msprop:Generator_TableClassName="ViewNewChallanDataTable" msprop:Generator_TableVarName="tableViewNewChallan">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="ItemName" msdata:ReadOnly="true" msprop:Generator_ColumnPropNameInTable="ItemNameColumn" msprop:Generator_ColumnPropNameInRow="ItemName" msprop:Generator_UserColumnName="ItemName" msprop:Generator_ColumnVarNameInTable="columnItemName" minOccurs="0">
+              <xs:element name="ItemName" msdata:ReadOnly="true" msprop:Generator_ColumnPropNameInRow="ItemName" msprop:Generator_ColumnPropNameInTable="ItemNameColumn" msprop:Generator_ColumnVarNameInTable="columnItemName" msprop:Generator_UserColumnName="ItemName" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="250" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="ItemSize" msdata:ReadOnly="true" msprop:Generator_ColumnPropNameInTable="ItemSizeColumn" msprop:Generator_ColumnPropNameInRow="ItemSize" msprop:Generator_UserColumnName="ItemSize" msprop:Generator_ColumnVarNameInTable="columnItemSize" minOccurs="0">
+              <xs:element name="ItemSize" msdata:ReadOnly="true" msprop:Generator_ColumnPropNameInRow="ItemSize" msprop:Generator_ColumnPropNameInTable="ItemSizeColumn" msprop:Generator_ColumnVarNameInTable="columnItemSize" msprop:Generator_UserColumnName="ItemSize" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="8000" />

@@ -1,0 +1,52 @@
+<ENVELOPE>
+    <HEADER>
+        <TALLYREQUEST>Import Data</TALLYREQUEST>
+    </HEADER>
+    <BODY>
+        <IMPORTDATA>
+            <REQUESTDESC>
+                <REPORTNAME>Vouchers</REPORTNAME>
+                <STATICVARIABLES>
+                    <SVCURRENTCOMPANY>R.B. SANTANI (from 1-Apr-25)</SVCURRENTCOMPANY>
+                </STATICVARIABLES>
+            </REQUESTDESC>
+            <REQUESTDATA>
+                <TALLYMESSAGE xmlns:UDF="TallyUDF">
+                    <VOUCHER VCHTYPE="GODOWN SALE (Y)" VCHCLASS="Godown-Sale-Y" ACTION="Create">
+					  <DATE>20260411</DATE>
+					  <VOUCHERNUMBER>26-27/FH/Y/2</VOUCHERNUMBER>
+					  <PARTYNAME>Saraswati Trading</PARTYNAME>
+						<PARTYLEDGERNAME>Saraswati Trading</PARTYLEDGERNAME>
+                        <VOUCHERTYPENAME>GODOWN SALE (Y)</VOUCHERTYPENAME>
+						<PERSISTEDVIEW>Invoice Voucher View</PERSISTEDVIEW>
+						<VCHENTRYMODE>Item Invoice</VCHENTRYMODE>
+						<ISINVOICE>Yes</ISINVOICE>
+                        <REFERENCE>SO-789</REFERENCE>
+
+					  <!-- Only Items + Qty -->
+						<ALLINVENTORYENTRIES.LIST>
+							<STOCKITEMNAME>DIVYA PREMIUM Fine Colour RNS 035</STOCKITEMNAME>
+							<ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+							<ACTUALQTY>2</ACTUALQTY>
+							<BILLEDQTY>2</BILLEDQTY>									  
+							<RATE>500</RATE>
+							<AMOUNT>1000</AMOUNT>                            
+							<BATCHALLOCATIONS.LIST>
+								<GODOWNNAME>Main Location</GODOWNNAME>
+								<BATCHNAME>Primary Batch</BATCHNAME>
+								<AMOUNT>1000</AMOUNT>
+								<ACTUALQTY>1</ACTUALQTY>
+								<BILLEDQTY>1</BILLEDQTY>
+							</BATCHALLOCATIONS.LIST>
+							<!-- Stub accounting allocation -->
+							<ACCOUNTINGALLOCATIONS.LIST>
+							<LEDGERNAME>CENTRAL SALES@5%</LEDGERNAME>
+							<AMOUNT>0</AMOUNT>
+							</ACCOUNTINGALLOCATIONS.LIST>
+						</ALLINVENTORYENTRIES.LIST>
+					</VOUCHER>
+                </TALLYMESSAGE>
+            </REQUESTDATA>
+        </IMPORTDATA>
+    </BODY>
+</ENVELOPE>

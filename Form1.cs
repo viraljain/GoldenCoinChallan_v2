@@ -19,6 +19,8 @@ namespace GoldenCoinChallan
         public Form1()
         {
             InitializeComponent();
+            //tabControl1.SelectedTab = tabControl1.TabPages["tabPageNewChallan"];
+            tabControl1.SelectedTab = tabControl1.TabPages["tabPageChallanPrint"];
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -102,17 +104,52 @@ namespace GoldenCoinChallan
 
         #region NEW CHALLAN LOGIC
 
+        private void dgvNewChallan_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (sender is ComboBox cb)
+                {
+                    dgvNewChallan.CurrentCell.Value = cb.SelectedValue ?? cb.Text;
+                    e.Handled = true;
+                }
+                e.SuppressKeyPress = true; // prevent default behavior (like moving to next row)
+                SendKeys.Send("{TAB}");    // simulate Tab key
+            }
+        }
+
+
         private void dgvNewChallan_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if (dgvNewChallan.CurrentCell.OwningColumn.Name == "ItemNameFilter" && e.Control is TextBox txtItemNameFilter)
+            string dgvCurrentColumnName = dgvNewChallan.CurrentCell.OwningColumn.Name;
+            if (e.Control is TextBox tb)
+            {
+                tb.KeyDown -= dgvNewChallan_KeyDown;
+                tb.KeyDown += dgvNewChallan_KeyDown;
+            }
+            else if (e.Control is ComboBox cb)
+            {
+                cb.DropDownStyle = ComboBoxStyle.DropDown;
+                cb.DroppedDown = true;
+
+                cb.KeyDown -= dgvNewChallan_KeyDown;
+                cb.KeyDown += dgvNewChallan_KeyDown;
+
+                if (cb.Items.Count == 1)
+                {
+                    cb.SelectedIndex = 0;
+                }
+            }
+            if (dgvCurrentColumnName == "ItemNameFilter" && e.Control is TextBox txtItemNameFilter)
             {
                 if (txtItemNameFilter != null)
                 {
+                    txtItemNameFilter.KeyPress -= TxtItemSize_KeyPress;
                     txtItemNameFilter.TextChanged -= TxtItemNameFilter_TextChanged;
                     txtItemNameFilter.TextChanged += TxtItemNameFilter_TextChanged;
                 }
             }
-            else if (dgvNewChallan.CurrentCell.OwningColumn.Name.Contains("Size") && e.Control is TextBox txtItemSize)
+            else if (dgvCurrentColumnName.Contains("Size") && e.Control is TextBox txtItemSize)
             {
                 if (txtItemSize != null)
                 {
@@ -126,7 +163,7 @@ namespace GoldenCoinChallan
                     txtItemSize.LostFocus += TxtItemSize_LostFocus;
                 }
             }
-            else if (dgvNewChallan.CurrentCell.OwningColumn.Name == "ItemName" && e.Control is ComboBox comboboxItemName)
+            else if (dgvCurrentColumnName == "ItemName" && e.Control is ComboBox comboboxItemName)
             {
                 if (comboboxItemName != null)
                 {
@@ -139,7 +176,7 @@ namespace GoldenCoinChallan
                     //comboboxItemName.SelectionChangeCommitted += comboboxItemName_SelectionChangeCommitted;
                     if (comboboxItemName.SelectedIndex == 0)
                     {
-                        comboboxItemName_TextChanged(sender, e);
+                        comboboxItemName_TextChanged(comboboxItemName, e);
                     }
                 }
             }
@@ -172,6 +209,32 @@ namespace GoldenCoinChallan
         {
             dgvNewChallan.EndEdit();
         }
+
+        private void comboBoxDealerName_Enter(object sender, EventArgs e)
+        {
+            comboBoxDealerName.IntegralHeight = false;
+            int visibleItems = Math.Min(4, comboBoxDealerName.MaxDropDownItems);
+            comboBoxDealerName.DropDownHeight = comboBoxDealerName.ItemHeight * visibleItems;
+            comboBoxDealerName.DroppedDown = true;
+            comboBoxDealerName.IntegralHeight = false;
+            visibleItems = Math.Min(4, comboBoxDealerName.MaxDropDownItems);
+            comboBoxDealerName.DropDownHeight = comboBoxDealerName.ItemHeight * visibleItems;
+        }
+
+        private void tabPageNewChallan_Enter(object sender, EventArgs e)
+        {
+            comboBoxDealerName.Focus();
+            comboBoxDealerName.DroppedDown = true;
+        }
+
+        private void comboBoxDealerName_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            comboBoxDealerName.DroppedDown = true;
+            // Force dropdown to resize based on current items
+            int visibleItems = comboBoxDealerName.MaxDropDownItems;
+            comboBoxDealerName.DropDownHeight = comboBoxDealerName.ItemHeight * visibleItems;
+        }
+
         #endregion
 
         #region CHALLAN PRINT LOGIC
@@ -197,91 +260,102 @@ namespace GoldenCoinChallan
 
         #endregion
 
-        private void buttonNewChallanInsert_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                DataTable dtNewChallan = new DataTable();
-                dtNewChallan.Columns.Add("ItemName", typeof(string));
-                dtNewChallan.Columns.Add("ItemSize", typeof(string));
-                dtNewChallan.Columns.Add("ItemQty", typeof(Int16));
-                dtNewChallan.Columns.Add("ItemUnit", typeof(string));
 
-                string itemName = string.Empty, itemUnit = String.Empty, itemSize = String.Empty;
-                int itemQty = 0;
-
-                foreach (DataGridViewRow row in dgvNewChallan.Rows)
-                {
-                    if (row.IsNewRow)
-                    {
-                        if (row.Index == 0)
-                            MessageBox.Show("Please fill all the rows before inserting");
-                    }
-                    else
-                    {
-                        DataGridViewComboBoxCell cmbItemName = row.Cells["ItemName"] as DataGridViewComboBoxCell;
-                        itemUnit = cmbItemName.Value.ToString().Split(new String[] { "|||" }, StringSplitOptions.RemoveEmptyEntries)[1];
-                        itemName = cmbItemName.FormattedValue.ToString();
-                        foreach (DataGridViewCell cell in row.Cells.Cast<DataGridViewCell>().ToList().Where(cell => cell.Value != null && cell.OwningColumn.Name.Contains("Size")))
-                        {
-                            if (cell.Value.ToString().Length > 0)
-                            {
-                                itemSize = cell.OwningColumn.Name.Split('_')[1];
-                                int.TryParse(cell.Value.ToString(), out itemQty);
-
-                                dtNewChallan.Rows.Add(itemName, itemSize, itemQty, itemUnit);
-                            }
-                        }
-
-
-
-                        //newChallan = dtNewChallan.AsEnumerable().ToList().ForEach(row => String.Join("\t", row.ItemArray));
-                        //dtNewChallan.Rows.Add(
-                        //     ,
-                        //    row.Cells["ItemSize"].Value.ToString(),
-                        //    row.Cells["ItemQty"].Value.ToString(),
-                        //    row.Cells["ItemNameUnitSize"].Value.ToString()
-                        //);
-                    }
-                    string newChallan = "";
-                    //foreach (DataRow dtRow in dtNewChallan.Rows)
-                    //{
-                    //    foreach (var cell in dtRow.ItemArray)
-                    //    {
-                    //        newChallan += cell.ToString() + "\t";
-                    //    }
-                    //    newChallan += Environment.NewLine;
-                    //}
-                    newChallan = string.Join(Environment.NewLine,
-    dtNewChallan.AsEnumerable().Select(rowCurr => string.Join("\t", rowCurr.ItemArray.Select(item => item.ToString()))));
-                    //newChallan = dtNewChallan.AsEnumerable().ToList().ForEach(rowCurr => String.Join("\t", rowCurr.ItemArray.Select(item=>item.ToString())));
-                    MessageBox.Show(newChallan);
-                }
-
-                using (SqlConnection sqlConnection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["GoldenCoinChallan.Properties.Settings.AA_2023_2024ConnectionString"].ConnectionString))
-                {
-                    using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(sqlConnection))
-                    {
-                        sqlConnection.Open();
-                        sqlBulkCopy.ColumnMappings.Add("ItemName", "ItemName");
-                        sqlBulkCopy.ColumnMappings.Add("ItemSize", "ItemSize");
-                        sqlBulkCopy.ColumnMappings.Add("ItemQty", "ItemQty");
-                        sqlBulkCopy.ColumnMappings.Add("ItemUnit", "ItemUnit");
-
-                        sqlBulkCopy.DestinationTableName = "tblNewChallanTemp";
-                        sqlBulkCopy.WriteToServer(dtNewChallan);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("ERROR Occurred - " + ex.Message);
-            }
-        }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Form1_Load(sender,e);
+            Form1_Load(sender, e);
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Enter)
+            {
+                // If focus is inside DataGridView
+                if (this.ActiveControl is DataGridView dgv)
+                {
+                    do
+                    {
+                        // If last column, move to first cell of next row
+                        if (dgv.CurrentCell.ColumnIndex == dgv.ColumnCount - 1)
+                        {
+                            int nextRow = dgv.CurrentCell.RowIndex + 1;
+                            if (nextRow < dgv.RowCount)
+                            {
+                                dgv.CurrentCell = dgv.Rows[nextRow].Cells[0];
+                            }
+                            else
+                            {
+                                this.SelectNextControl(this.ActiveControl, true, true, true, true);
+                            }
+                        }
+                        else
+                        {
+                            // Otherwise move to next column
+
+                            dgv.CurrentCell = dgv.Rows[dgv.CurrentCell.RowIndex]
+                                               .Cells[dgv.CurrentCell.ColumnIndex + 1];
+                            //} while (dgv.CurrentCell.ReadOnly == true || (dgv.CurrentCell.ColumnIndex != dgv.ColumnCount - 1));
+
+                        }
+                    } while ((dgv.CurrentCell.ReadOnly == true) && (this.ActiveControl.Name != "buttonNewChallanInsert"));
+                }
+                else if (this.ActiveControl.Parent.Parent is DataGridView dgv1)
+                {
+                    if (dgvNewChallan.CurrentCell is DataGridViewComboBoxCell)
+                    {
+                        ComboBox cb = dgvNewChallan.EditingControl as ComboBox;
+                        if (cb != null)
+                        {
+                            // Auto-select if only one item remains
+                            if (cb.Items.Count == 1)
+                            {
+                                cb.SelectedIndex = 0;
+                            }
+
+                            // Commit the selection back to the cell
+                            dgvNewChallan.CurrentCell.Value = cb.SelectedValue ?? cb.Text;
+                        }
+                    }
+                    do
+                    {
+                        // If last column, move to first cell of next row
+                        if (dgv1.CurrentCell.ColumnIndex == dgv1.ColumnCount - 1)
+                        {
+                            int nextRow = dgv1.CurrentCell.RowIndex + 1;
+                            if (nextRow < dgv1.RowCount)
+                            {
+                                dgv1.CurrentCell = dgv1.Rows[nextRow].Cells[0];
+                            }
+                            else
+                                this.SelectNextControl(this.ActiveControl, true, true, true, true);
+                        }
+                        else
+                        {
+                            // Otherwise move to next column
+
+                            dgv1.CurrentCell = dgv1.Rows[dgv1.CurrentCell.RowIndex]
+                                                             .Cells[dgv1.CurrentCell.ColumnIndex + 1];
+                            //} while (dgv1.CurrentCell.ReadOnly==true||(dgv1.CurrentCell.ColumnIndex != dgv1.ColumnCount - 1));
+                        }
+                    } while ((dgv1.CurrentCell.ReadOnly == true) && (this.ActiveControl.Name != "buttonNewChallanInsert"));
+                }
+                else
+                {
+                    // For other controls, behave like Tab
+                    this.SelectNextControl(this.ActiveControl, true, true, true, true);
+                }
+
+                return true; // handled
+            }
+            
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void btnTallyExport_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Tally XML Export - Work in Progress. -> " + textBoxChallan.Text);
+
         }
     }
 }

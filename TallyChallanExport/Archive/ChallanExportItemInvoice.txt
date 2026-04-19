@@ -1,0 +1,67 @@
+<ENVELOPE>
+  <HEADER>
+    <TALLYREQUEST>Import Data</TALLYREQUEST>
+  </HEADER>
+  <BODY>
+    <IMPORTDATA>
+      <REQUESTDESC>
+        <REPORTNAME>Vouchers</REPORTNAME>
+        <STATICVARIABLES>
+          <SVCURRENTCOMPANY>R.B. SANTANI (from 1-Apr-25)</SVCURRENTCOMPANY>
+        </STATICVARIABLES>
+      </REQUESTDESC>
+      <REQUESTDATA>
+        <TALLYMESSAGE xmlns:UDF="TallyUDF">
+          <VOUCHER VCHTYPE="FLOWER HOSIERIES SALE (Y)" ACTION="Create">
+            <DATE>20260411</DATE>
+            <VOUCHERNUMBER>26-27/FH/Y/2</VOUCHERNUMBER>
+                        <PARTYNAME>Saraswati Trading</PARTYNAME>
+						<PARTYLEDGERNAME>Saraswati Trading</PARTYLEDGERNAME>
+                        <VOUCHERTYPENAME>FLOWER HOSIERIES SALE (Y)</VOUCHERTYPENAME>
+                        <REFERENCE>SO-789</REFERENCE>
+
+            <!-- Inventory Item -->
+            <ALLINVENTORYENTRIES.LIST>
+              <STOCKITEMNAME>DIVYA PREMIUM Fine Colour RNS 035</STOCKITEMNAME>
+              <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+              <ACTUALQTY>2</ACTUALQTY>
+              <BILLEDQTY>2</BILLEDQTY>
+              <RATE>500</RATE>
+              <AMOUNT>1000</AMOUNT>
+              <ACCOUNTINGALLOCATIONS.LIST>
+                <LEDGERNAME>Sales</LEDGERNAME>
+                <AMOUNT>1000</AMOUNT>
+              </ACCOUNTINGALLOCATIONS.LIST>
+              <BATCHALLOCATIONS.LIST>
+                <GODOWNNAME>Main Location</GODOWNNAME>
+                <BATCHNAME>Default Batch</BATCHNAME>
+                <AMOUNT>1000</AMOUNT>
+                <ACTUALQTY>2</ACTUALQTY>
+                <BILLEDQTY>2</BILLEDQTY>
+              </BATCHALLOCATIONS.LIST>
+            </ALLINVENTORYENTRIES.LIST>
+
+            <!-- GST Ledgers -->
+            <ALLLEDGERENTRIES.LIST>
+              <LEDGERNAME>CGST @ 9%</LEDGERNAME>
+              <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+              <AMOUNT>90</AMOUNT>
+            </ALLLEDGERENTRIES.LIST>
+            <ALLLEDGERENTRIES.LIST>
+              <LEDGERNAME>SGST @ 9%</LEDGERNAME>
+              <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+              <AMOUNT>90</AMOUNT>
+            </ALLLEDGERENTRIES.LIST>
+
+            <!-- Party Ledger -->
+            <ALLLEDGERENTRIES.LIST>
+              <LEDGERNAME>Customer D</LEDGERNAME>
+              <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+              <AMOUNT>-1180</AMOUNT>
+            </ALLLEDGERENTRIES.LIST>
+          </VOUCHER>
+        </TALLYMESSAGE>
+      </REQUESTDATA>
+    </IMPORTDATA>
+  </BODY>
+</ENVELOPE>

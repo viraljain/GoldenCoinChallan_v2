@@ -1,4 +1,5 @@
-﻿using Microsoft.Reporting.WinForms;
+﻿using GoldenCoinChallan.AA_2023_2024DataSetTableAdapters;
+using Microsoft.Reporting.WinForms;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,17 +12,25 @@ namespace GoldenCoinChallan
 {
     public partial class Form1
     {
-        private void showChallanData()
+        private async Task showChallanData()
+        //private void showChallanData()
         {
-            //Below code is used to populate the report viewer
-            DataTable resTable = this.viewChallanPrintTableAdapter.GetDataBy(textBoxChallan.Text);
+            string challanNo = textBoxChallan.Text;
 
-            var rds = new ReportDataSource("DSViewChallanPrint", resTable as DataTable);
-            this.reportViewerChallanPrint.LocalReport.DataSources.Clear();
+            using (var tempViewChallanPrintTableAdapter = new ViewChallanPrintTableAdapter())
+            {
+                //Below code is used to populate the report viewer
+                //DataTable resTable = await Task.Run(() => this.viewChallanPrintTableAdapter.GetDataBy(challanNo));
+                DataTable resTable = await Task.Run(() => tempViewChallanPrintTableAdapter.GetDataBy(challanNo));
+                //DataTable resTable = this.viewChallanPrintTableAdapter.GetDataBy(textBoxChallan.Text); 
 
-            this.reportViewerChallanPrint.LocalReport.DataSources.Add(rds);
-            this.reportViewerChallanPrint.LocalReport.Refresh();
-            this.reportViewerChallanPrint.RefreshReport();
+                var rds = new ReportDataSource("DSViewChallanPrint", resTable as DataTable);
+                this.reportViewerChallanPrint.LocalReport.DataSources.Clear();
+
+                this.reportViewerChallanPrint.LocalReport.DataSources.Add(rds);
+                this.reportViewerChallanPrint.LocalReport.Refresh();
+                this.reportViewerChallanPrint.RefreshReport();
+            }            
         }
 
         private void generateChallan() 

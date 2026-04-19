@@ -1,6 +1,6 @@
 USE [AA_2023_2024]
 GO
-/****** Object:  StoredProcedure [dbo].[sp_GetChallanData]    Script Date: 4/19/2026 9:01:08 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_GetChallanData]    Script Date: 4/12/2026 5:39:19 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -59,19 +59,15 @@ SELECT @ChallanDate=max(Date) FROM ViewChallanPrint WHERE BillNo = @ChallanNo;
 WITH TempChallanView AS
 	(
 		--SELECT        Srno, Date, BillNo, Remark, TotQty, Name, Add1, Add2, Add3, TinCst, PinCode, ItemName, ItemSize, Qty, FieldValue1, SizeSNo
-		SELECT		VchDtlCode as Srno, Date, BillNo, Remark, TotQty, Name, 
-					Add1, Add2, Add3, TinCst, PinCode, 
-					REPLACE(REPLACE(REPLACE(ItemName,'Divya','D.'),'Maestro', 'M.'),'Commander','Cmndr') AS ItemName,
-					ItemSize, Qty, 
-					Replace(Replace(Replace(FieldValue1,'Units', 'UNT'),'box','Box'),'Pcs.','Pcs') AS FieldValue1, SizeSNo
-      FROM			ViewChallanPrint
+		SELECT        Srno, Date, BillNo, Remark, TotQty, Name, Add1, Add2, Add3, TinCst, PinCode, ItemName, ItemSize, Qty, FieldValue1, SizeSNo
+      FROM            ViewChallanPrint
       WHERE        (BillNo = @ChallanNo) AND DATE = @ChallanDate
 					--AND
 					--Date = (SELECT max(Date) FROM ViewChallanPrint WHERE BillNo = @ChallanNo)
 					--ORDER BY Date DESC 
 	)
 	SELECT
-	iif(T3.Srno IS NULL, 9999999, T3.Srno) as Srno,
+	iif(T3.Srno IS NULL, 999, T3.Srno) as Srno,
 	iif(T1.ItemName IS NULL, T2.b, T1.ItemName) AS ItemName, 
 	iif(T3.Date IS NULL,CONVERT (date, SYSDATETIME()), T3.Date) AS DATE, IIF(T3.BillNo IS NULL, '-',T3.BillNo) AS BillNo, IIF(T3.Remark IS NULL, '-',T3.Remark) as Remark , iif(T3.TotQty is null, 0, t3.TotQty) as TotQty, 
 	iif(T3.Name IS NULL, '-', T3.Name) as Name, iif(T3.Add1 IS NULL, '-', T3.Add1) as Add1, iif(T3.Add2 IS NULL, '-', T3.Add2) as Add2, iif(T3.Add3 IS NULL, '-', T3.Add3) as Add3, 
@@ -90,7 +86,6 @@ GROUP BY ItemName) AS T1 RIGHT JOIN
     (SELECT        Srno, Date, BillNo, Remark, TotQty, Name, Add1, Add2, Add3, TinCst, PinCode, ItemName, ItemSize, Qty, FieldValue1, SizeSNo
       FROM         TempChallanView
 	 ) AS T3 ON T1.ItemName = T3.ItemName
-ORDER BY Srno
 
 -- ****************	Suggested by Copilot	*************************
 --WITH TempChallanView AS

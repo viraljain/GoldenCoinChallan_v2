@@ -1,0 +1,75 @@
+using System;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main()
+    {
+        string tallyUrl = "http://localhost:9000/";
+        
+        // Your XML envelope
+        string xml = @"<ENVELOPE>
+ <HEADER>
+  <TALLYREQUEST>Import Data</TALLYREQUEST>
+ </HEADER>
+ <BODY>
+  <IMPORTDATA>
+   <REQUESTDESC>
+    <REPORTNAME>Vouchers</REPORTNAME>
+    <STATICVARIABLES>
+     <SVCURRENTCOMPANY>R.B. SANTANI (from 1-Apr-25)</SVCURRENTCOMPANY>
+    </STATICVARIABLES>
+   </REQUESTDESC>
+   <REQUESTDATA>
+    <TALLYMESSAGE xmlns:UDF=""TallyUDF"">
+     <VOUCHER VCHTYPE=""Delivery Note"" ACTION=""Create"">
+      <DATE>20260412</DATE>
+      <VOUCHERNUMBER>DN-001</VOUCHERNUMBER>
+      <PARTYLEDGERNAME>Saraswati Trading</PARTYLEDGERNAME>
+      <ALLINVENTORYENTRIES.LIST>
+        <STOCKITEMNAME>DIVYA PREMIUM Fine Colour RNS 105</STOCKITEMNAME>
+        <ACTUALQTY>3</ACTUALQTY>
+        <BILLEDQTY>3</BILLEDQTY>
+        <BATCHALLOCATIONS.LIST>
+          <GODOWNNAME>SHASTRI NAGAR</GODOWNNAME>
+          <TRACKINGNUMBER>CH-61</TRACKINGNUMBER>
+          <ACTUALQTY>3</ACTUALQTY>
+          <BILLEDQTY>3</BILLEDQTY>
+        </BATCHALLOCATIONS.LIST>
+      </ALLINVENTORYENTRIES.LIST>
+     </VOUCHER>
+    </TALLYMESSAGE>
+   </REQUESTDATA>
+  </IMPORTDATA>
+ </BODY>
+</ENVELOPE>";
+
+        using (var client = new HttpClient())
+        {
+            var content = new StringContent("xmlRequest=" + xml, Encoding.UTF8, "application/x-www-form-urlencoded");
+            HttpResponseMessage response = await client.PostAsync(tallyUrl, content);
+
+            string result = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Response from Tally:");
+            Console.WriteLine(result);
+	    
+	    // Parse XML response
+            try
+            {
+                var doc = XDocument.Parse(result);
+                var status = doc.Root?.Element("BODY")?
+                                   .Element("DATA")?
+                                   .Element("IMPORTRESULT")?
+                                   .Element("CREATED")?.Value;
+
+                Console.WriteLine("Voucher Created Count: " + status);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error parsing response: " + ex.Message);
+            }
+        }
+    }
+}

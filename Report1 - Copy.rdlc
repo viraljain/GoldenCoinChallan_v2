@@ -116,9 +116,7 @@
                                 </Style>
                               </TextRun>
                             </TextRuns>
-                            <Style>
-                              <TextAlign>Center</TextAlign>
-                            </Style>
+                            <Style />
                           </Paragraph>
                         </Paragraphs>
                         <rd:DefaultName>Textbox31</rd:DefaultName>
@@ -239,7 +237,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!FieldValue1.Value</Value>
+                                  <Value>=Replace(Replace(Replace(Fields!FieldValue1.Value,"Units", "UNT"),"box","Box"),"Pcs.","Pcs")</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                   </Style>
@@ -386,10 +384,10 @@
                     </GroupExpressions>
                     <Filters>
                       <Filter>
-                        <FilterExpression>=Sum(Fields!Qty.Value)</FilterExpression>
+                        <FilterExpression>=Fields!Qty.Value</FilterExpression>
                         <Operator>NotEqual</Operator>
                         <FilterValues>
-                          <FilterValue DataType="Integer">0</FilterValue>
+                          <FilterValue DataType="Float">0</FilterValue>
                         </FilterValues>
                       </Filter>
                     </Filters>
@@ -537,7 +535,7 @@
                           <Paragraph>
                             <TextRuns>
                               <TextRun>
-                                <Value>=Fields!ItemName.Value</Value>
+                                <Value>=Replace(Replace(Replace(Fields!ItemName.Value,"Divya","D."),"Maestro", "M."),"Commander","Cmndr")</Value>
                                 <Style>
                                   <FontFamily>ARIAL</FontFamily>
                                 </Style>
@@ -1308,9 +1306,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                                 </Style>
                               </TextRun>
                             </TextRuns>
-                            <Style>
-                              <TextAlign>Center</TextAlign>
-                            </Style>
+                            <Style />
                           </Paragraph>
                         </Paragraphs>
                         <rd:DefaultName>Textbox31</rd:DefaultName>
@@ -1419,7 +1415,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!FieldValue1.Value</Value>									      
+                                  <Value>=Replace(Replace(Replace(Fields!FieldValue1.Value, "Units", "UNT"), "box", "Box"), "Pcs.", "Pcs")</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                   </Style>
@@ -1560,10 +1556,10 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                     </GroupExpressions>
                     <Filters>
                       <Filter>
-                        <FilterExpression>=Sum(Fields!Qty.Value)</FilterExpression>
+                        <FilterExpression>=Fields!Qty.Value</FilterExpression>
                         <Operator>NotEqual</Operator>
                         <FilterValues>
-                          <FilterValue DataType="Integer">0</FilterValue>
+                          <FilterValue DataType="Float">0</FilterValue>
                         </FilterValues>
                       </Filter>
                     </Filters>
@@ -1711,7 +1707,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                           <Paragraph>
                             <TextRuns>
                               <TextRun>
-                                <Value>=Fields!ItemName.Value</Value>
+                                <Value>=Replace(Replace(Replace(Fields!ItemName.Value, "Divya", "D."), "Maestro", "M."), "Commander", "Cmndr")</Value>
                                 <Style>
                                   <FontFamily>ARIAL</FontFamily>
                                 </Style>
@@ -1807,9 +1803,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                                 </Style>
                               </TextRun>
                             </TextRuns>
-                            <Style>
-                              <TextAlign>Center</TextAlign>
-                            </Style>
+                            <Style />
                           </Paragraph>
                         </Paragraphs>
                         <rd:DefaultName>Textbox31</rd:DefaultName>
@@ -1918,7 +1912,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!FieldValue1.Value</Value>
+                                  <Value>=Replace(Replace(Replace(Fields!FieldValue1.Value, "Units", "UNT"), "box", "Box"), "Pcs.", "Pcs")</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                   </Style>
@@ -2059,10 +2053,10 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                     </GroupExpressions>
                     <Filters>
                       <Filter>
-                        <FilterExpression>=Sum(Fields!Qty.Value)</FilterExpression>
+                        <FilterExpression>=Fields!Qty.Value</FilterExpression>
                         <Operator>NotEqual</Operator>
                         <FilterValues>
-                          <FilterValue DataType="Integer">0</FilterValue>
+                          <FilterValue DataType="Float">0</FilterValue>
                         </FilterValues>
                       </Filter>
                     </Filters>
@@ -2210,7 +2204,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                           <Paragraph>
                             <TextRuns>
                               <TextRun>
-                                <Value>=Fields!ItemName.Value</Value>
+                                <Value>=Replace(Replace(Replace(Fields!ItemName.Value, "Divya", "D."), "Maestro", "M."), "Commander", "Cmndr")</Value>
                                 <Style>
                                   <FontFamily>ARIAL</FontFamily>
                                 </Style>
@@ -2286,128 +2280,8 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
               </Border>
             </Style>
           </Tablix>
-          <Textbox Name="Textbox10">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value EvaluationMode="Constant">/*=MAX(Fields!Srno.Value, "DSViewChallanPrint") &amp; iif(MAX(Fields!Srno.Value, "DSViewChallanPrint")&gt;15,StrDup(30,"&gt;") &amp; "MONSTERRRR CHALLAN -  " &amp; CInt(MAX(Fields!Srno.Value, "DSViewChallanPrint"))-17  &amp; " EXTRA ITEMS " &amp; StrDup(30,"&lt;") ,"")*/</Value>
-                    <Style>
-                      <FontSize>6pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>=iif(MAX(Fields!Srno.Value, "DSViewChallanPrint")&gt;15,"White","Black")</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox10</rd:DefaultName>
-            <Top>2.45079cm</Top>
-            <Left>0.02159cm</Left>
-            <Height>0.15131cm</Height>
-            <Width>20.46928cm</Width>
-            <ZIndex>8</ZIndex>
-            <Visibility>
-              <Hidden>true</Hidden>
-            </Visibility>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>=iif(MAX(Fields!Srno.Value, "DSViewChallanPrint")&gt;15,"Black","White")</BackgroundColor>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox11">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=MAX(Fields!Srno.Value, "DSViewChallanPrint") &amp; iif(MAX(Fields!Srno.Value, "DSViewChallanPrint")&gt;15,StrDup(30,"&gt;") &amp; "MONSTERRRR CHALLAN -  " &amp; CInt(MAX(Fields!Srno.Value, "DSViewChallanPrint"))-17 &amp; " EXTRA ITEMS " &amp; StrDup(30,"&lt;") ,"")</Value>
-                    <Style>
-                      <FontSize>6pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>=iif(MAX(Fields!Srno.Value, "DSViewChallanPrint")&gt;15,"White","Black")</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox10</rd:DefaultName>
-            <Top>5.4259cm</Top>
-            <Left>0.05236cm</Left>
-            <Height>0.15131cm</Height>
-            <Width>20.46928cm</Width>
-            <ZIndex>9</ZIndex>
-            <Visibility>
-              <Hidden>true</Hidden>
-            </Visibility>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>=iif(MAX(Fields!Srno.Value, "DSViewChallanPrint")&gt;15,"Black","White")</BackgroundColor>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Textbox12">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=MAX(Fields!Srno.Value, "DSViewChallanPrint") &amp; iif(MAX(Fields!Srno.Value, "DSViewChallanPrint")&gt;15,StrDup(30,"&gt;") &amp; "MONSTERRRR CHALLAN -  " &amp; CInt(MAX(Fields!Srno.Value, "DSViewChallanPrint"))-17  &amp; " EXTRA ITEMS " &amp; StrDup(30,"&lt;") ,"")</Value>
-                    <Style>
-                      <FontSize>6pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>=iif(MAX(Fields!Srno.Value, "DSViewChallanPrint")&gt;15,"White","Black")</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox10</rd:DefaultName>
-            <Top>8.2199cm</Top>
-            <Left>0.05236cm</Left>
-            <Height>0.15131cm</Height>
-            <Width>20.46928cm</Width>
-            <ZIndex>10</ZIndex>
-            <Visibility>
-              <Hidden>true</Hidden>
-            </Visibility>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <BackgroundColor>=iif(MAX(Fields!Srno.Value, "DSViewChallanPrint")&gt;15,"Black","White")</BackgroundColor>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
         </ReportItems>
-        <Height>3.30825in</Height>
+        <Height>3.30429in</Height>
         <Style>
           <Border>
             <Style>None</Style>

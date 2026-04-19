@@ -29,10 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPageNewChallan = new System.Windows.Forms.TabPage();
+            this.buttonResetChallan = new System.Windows.Forms.Button();
+            this.labelDealerDetails = new System.Windows.Forms.Label();
             this.dateNewChallan = new System.Windows.Forms.DateTimePicker();
             this.labelNewChallanNumber = new System.Windows.Forms.Label();
             this.labelNewChallanRemark = new System.Windows.Forms.Label();
@@ -64,8 +68,10 @@
             this.Size_120_6XL = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Size_Misc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.UnitName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.rowTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabPageChallanPrint = new System.Windows.Forms.TabPage();
             this.btnGenChallan = new System.Windows.Forms.Button();
+            this.btnTallyExport = new System.Windows.Forms.Button();
             this.buttonChallanPrintRefresh = new System.Windows.Forms.Button();
             this.dgvChallanList = new System.Windows.Forms.DataGridView();
             this.dgvTextBoxDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -79,7 +85,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblChallanProgress = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPageGodownTransfer = new System.Windows.Forms.TabPage();
             this.dgvGodownTrfPSlips = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn17 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.vwGodownTrfSlipsBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -103,14 +109,14 @@
             this.newChallanItemTableAdapter1 = new GoldenCoinChallan.AA_2023_2024DataSetTableAdapters.NewChallanItemTableAdapter();
             this.newChallanBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.tabPageNewChallan.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNewChallan)).BeginInit();
-            this.tabPage1.SuspendLayout();
+            this.tabPageChallanPrint.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvChallanList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewChallanListBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.aA_2023_2024DataSet)).BeginInit();
             this.panel1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.tabPageGodownTransfer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvGodownTrfPSlips)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vwGodownTrfSlipsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvGodownTrfDetail)).BeginInit();
@@ -130,9 +136,9 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPageNewChallan);
+            this.tabControl1.Controls.Add(this.tabPageChallanPrint);
+            this.tabControl1.Controls.Add(this.tabPageGodownTransfer);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -141,30 +147,57 @@
             this.tabControl1.TabIndex = 4;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
-            // tabPage3
+            // tabPageNewChallan
             // 
-            this.tabPage3.Controls.Add(this.dateNewChallan);
-            this.tabPage3.Controls.Add(this.labelNewChallanNumber);
-            this.tabPage3.Controls.Add(this.labelNewChallanRemark);
-            this.tabPage3.Controls.Add(this.textBoxNewChallanRemark);
-            this.tabPage3.Controls.Add(this.buttonNewChallanInsert);
-            this.tabPage3.Controls.Add(this.labelDealerName);
-            this.tabPage3.Controls.Add(this.comboBoxDealerName);
-            this.tabPage3.Controls.Add(this.labelTotal);
-            this.tabPage3.Controls.Add(this.dgvNewChallan);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1256, 655);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "New Challan";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabPageNewChallan.Controls.Add(this.buttonResetChallan);
+            this.tabPageNewChallan.Controls.Add(this.labelDealerDetails);
+            this.tabPageNewChallan.Controls.Add(this.dateNewChallan);
+            this.tabPageNewChallan.Controls.Add(this.labelNewChallanNumber);
+            this.tabPageNewChallan.Controls.Add(this.labelNewChallanRemark);
+            this.tabPageNewChallan.Controls.Add(this.textBoxNewChallanRemark);
+            this.tabPageNewChallan.Controls.Add(this.buttonNewChallanInsert);
+            this.tabPageNewChallan.Controls.Add(this.labelDealerName);
+            this.tabPageNewChallan.Controls.Add(this.comboBoxDealerName);
+            this.tabPageNewChallan.Controls.Add(this.labelTotal);
+            this.tabPageNewChallan.Controls.Add(this.dgvNewChallan);
+            this.tabPageNewChallan.Location = new System.Drawing.Point(4, 22);
+            this.tabPageNewChallan.Name = "tabPageNewChallan";
+            this.tabPageNewChallan.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageNewChallan.Size = new System.Drawing.Size(1256, 655);
+            this.tabPageNewChallan.TabIndex = 2;
+            this.tabPageNewChallan.Text = "New Challan";
+            this.tabPageNewChallan.UseVisualStyleBackColor = true;
+            this.tabPageNewChallan.Enter += new System.EventHandler(this.tabPageNewChallan_Enter);
+            // 
+            // buttonResetChallan
+            // 
+            this.buttonResetChallan.Location = new System.Drawing.Point(1109, 423);
+            this.buttonResetChallan.Name = "buttonResetChallan";
+            this.buttonResetChallan.Size = new System.Drawing.Size(139, 35);
+            this.buttonResetChallan.TabIndex = 16;
+            this.buttonResetChallan.Text = "&Reset Challan";
+            this.buttonResetChallan.UseVisualStyleBackColor = true;
+            this.buttonResetChallan.Click += new System.EventHandler(this.buttonResetChallan_Click);
+            // 
+            // labelDealerDetails
+            // 
+            this.labelDealerDetails.AutoEllipsis = true;
+            this.labelDealerDetails.AutoSize = true;
+            this.labelDealerDetails.BackColor = System.Drawing.Color.LightCyan;
+            this.labelDealerDetails.Font = new System.Drawing.Font("Calibri", 12F);
+            this.labelDealerDetails.Location = new System.Drawing.Point(5, 6);
+            this.labelDealerDetails.MaximumSize = new System.Drawing.Size(750, 0);
+            this.labelDealerDetails.Name = "labelDealerDetails";
+            this.labelDealerDetails.Size = new System.Drawing.Size(0, 19);
+            this.labelDealerDetails.TabIndex = 15;
             // 
             // dateNewChallan
             // 
-            this.dateNewChallan.Location = new System.Drawing.Point(1137, 13);
+            this.dateNewChallan.CustomFormat = "dd-mm-yyyy";
+            this.dateNewChallan.Enabled = false;
+            this.dateNewChallan.Location = new System.Drawing.Point(1109, 216);
             this.dateNewChallan.Name = "dateNewChallan";
-            this.dateNewChallan.Size = new System.Drawing.Size(114, 20);
+            this.dateNewChallan.Size = new System.Drawing.Size(139, 20);
             this.dateNewChallan.TabIndex = 14;
             // 
             // labelNewChallanNumber
@@ -172,7 +205,7 @@
             this.labelNewChallanNumber.AutoSize = true;
             this.labelNewChallanNumber.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.labelNewChallanNumber.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold);
-            this.labelNewChallanNumber.Location = new System.Drawing.Point(1046, 13);
+            this.labelNewChallanNumber.Location = new System.Drawing.Point(1109, 189);
             this.labelNewChallanNumber.Name = "labelNewChallanNumber";
             this.labelNewChallanNumber.Size = new System.Drawing.Size(87, 19);
             this.labelNewChallanNumber.TabIndex = 13;
@@ -180,57 +213,65 @@
             // 
             // labelNewChallanRemark
             // 
-            this.labelNewChallanRemark.AutoSize = true;
-            this.labelNewChallanRemark.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Bold);
-            this.labelNewChallanRemark.Location = new System.Drawing.Point(1058, 61);
+            this.labelNewChallanRemark.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.labelNewChallanRemark.Location = new System.Drawing.Point(754, 4);
             this.labelNewChallanRemark.Name = "labelNewChallanRemark";
-            this.labelNewChallanRemark.Size = new System.Drawing.Size(42, 13);
+            this.labelNewChallanRemark.Size = new System.Drawing.Size(73, 22);
             this.labelNewChallanRemark.TabIndex = 12;
-            this.labelNewChallanRemark.Text = "Remark";
+            this.labelNewChallanRemark.Text = "Remarks";
             // 
             // textBoxNewChallanRemark
             // 
-            this.textBoxNewChallanRemark.Location = new System.Drawing.Point(1061, 75);
+            this.textBoxNewChallanRemark.Location = new System.Drawing.Point(759, 29);
             this.textBoxNewChallanRemark.Multiline = true;
             this.textBoxNewChallanRemark.Name = "textBoxNewChallanRemark";
-            this.textBoxNewChallanRemark.Size = new System.Drawing.Size(187, 168);
-            this.textBoxNewChallanRemark.TabIndex = 11;
+            this.textBoxNewChallanRemark.Size = new System.Drawing.Size(489, 80);
+            this.textBoxNewChallanRemark.TabIndex = 3;
             // 
             // buttonNewChallanInsert
             // 
-            this.buttonNewChallanInsert.Location = new System.Drawing.Point(443, 12);
+            this.buttonNewChallanInsert.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.buttonNewChallanInsert.Location = new System.Drawing.Point(1109, 119);
             this.buttonNewChallanInsert.Name = "buttonNewChallanInsert";
-            this.buttonNewChallanInsert.Size = new System.Drawing.Size(111, 23);
-            this.buttonNewChallanInsert.TabIndex = 10;
-            this.buttonNewChallanInsert.Text = "Insert Challan";
+            this.buttonNewChallanInsert.Size = new System.Drawing.Size(139, 58);
+            this.buttonNewChallanInsert.TabIndex = 4;
+            this.buttonNewChallanInsert.Text = "&Insert Challan";
             this.buttonNewChallanInsert.UseVisualStyleBackColor = true;
             this.buttonNewChallanInsert.Click += new System.EventHandler(this.buttonNewChallanInsert_Click);
             // 
             // labelDealerName
             // 
-            this.labelDealerName.AutoSize = true;
-            this.labelDealerName.Location = new System.Drawing.Point(9, 17);
+            this.labelDealerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDealerName.Location = new System.Drawing.Point(5, 73);
             this.labelDealerName.Name = "labelDealerName";
-            this.labelDealerName.Size = new System.Drawing.Size(69, 13);
+            this.labelDealerName.Size = new System.Drawing.Size(60, 45);
             this.labelDealerName.TabIndex = 9;
             this.labelDealerName.Text = "Dealer Name";
             // 
             // comboBoxDealerName
             // 
+            this.comboBoxDealerName.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.comboBoxDealerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.comboBoxDealerName.FormattingEnabled = true;
             this.comboBoxDealerName.IntegralHeight = false;
-            this.comboBoxDealerName.ItemHeight = 13;
-            this.comboBoxDealerName.Location = new System.Drawing.Point(106, 14);
+            this.comboBoxDealerName.ItemHeight = 16;
+            this.comboBoxDealerName.Location = new System.Drawing.Point(68, 85);
             this.comboBoxDealerName.Name = "comboBoxDealerName";
-            this.comboBoxDealerName.Size = new System.Drawing.Size(321, 21);
-            this.comboBoxDealerName.TabIndex = 8;
+            this.comboBoxDealerName.Size = new System.Drawing.Size(685, 24);
+            this.comboBoxDealerName.TabIndex = 1;
+            this.comboBoxDealerName.DropDown += new System.EventHandler(this.comboBoxDealerName_DropDown);
+            this.comboBoxDealerName.SelectedIndexChanged += new System.EventHandler(this.comboBoxDealerName_SelectedIndexChanged);
+            this.comboBoxDealerName.TextUpdate += new System.EventHandler(this.comboBoxDealerName_TextUpdated);
+            this.comboBoxDealerName.Enter += new System.EventHandler(this.comboBoxDealerName_Enter);
+            this.comboBoxDealerName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBoxDealerName_KeyPress);
+            this.comboBoxDealerName.Leave += new System.EventHandler(this.comboBoxDealerName_Leave);
             // 
             // labelTotal
             // 
             this.labelTotal.AutoSize = true;
             this.labelTotal.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.labelTotal.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
-            this.labelTotal.Location = new System.Drawing.Point(886, 16);
+            this.labelTotal.Location = new System.Drawing.Point(1109, 255);
             this.labelTotal.Name = "labelTotal";
             this.labelTotal.Size = new System.Drawing.Size(37, 17);
             this.labelTotal.TabIndex = 7;
@@ -239,6 +280,16 @@
             // dgvNewChallan
             // 
             this.dgvNewChallan.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.dgvNewChallan.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvNewChallan.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dgvNewChallan.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvNewChallan.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ItemNameFilter,
@@ -262,15 +313,19 @@
             this.Size_110_4XL,
             this.Size_120_6XL,
             this.Size_Misc,
-            this.UnitName});
-            this.dgvNewChallan.Location = new System.Drawing.Point(12, 61);
+            this.UnitName,
+            this.rowTotal});
+            this.dgvNewChallan.Location = new System.Drawing.Point(3, 119);
             this.dgvNewChallan.MultiSelect = false;
             this.dgvNewChallan.Name = "dgvNewChallan";
-            this.dgvNewChallan.Size = new System.Drawing.Size(1033, 586);
-            this.dgvNewChallan.TabIndex = 6;
+            this.dgvNewChallan.RowHeadersWidth = 24;
+            this.dgvNewChallan.Size = new System.Drawing.Size(1100, 339);
+            this.dgvNewChallan.TabIndex = 2;
+            this.dgvNewChallan.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvNewChallan_CellEnter);
             this.dgvNewChallan.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgvNewChallan_EditingControlShowing);
             this.dgvNewChallan.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgvNewChallan_RowsRemoved);
             this.dgvNewChallan.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dgvNewChallan_UserDeletingRow);
+            this.dgvNewChallan.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvNewChallan_KeyDown);
             // 
             // ItemNameFilter
             // 
@@ -456,43 +511,60 @@
             this.Size_Misc.MaxInputLength = 3;
             this.Size_Misc.Name = "Size_Misc";
             this.Size_Misc.ReadOnly = true;
-            this.Size_Misc.Visible = false;
             this.Size_Misc.Width = 30;
             // 
             // UnitName
             // 
-            this.UnitName.Frozen = true;
             this.UnitName.HeaderText = "UNIT";
             this.UnitName.Name = "UnitName";
             this.UnitName.ReadOnly = true;
             this.UnitName.Width = 48;
             // 
-            // tabPage1
+            // rowTotal
             // 
-            this.tabPage1.Controls.Add(this.btnGenChallan);
-            this.tabPage1.Controls.Add(this.buttonChallanPrintRefresh);
-            this.tabPage1.Controls.Add(this.dgvChallanList);
-            this.tabPage1.Controls.Add(this.textBoxChallan);
-            this.tabPage1.Controls.Add(this.reportViewerChallanPrint);
-            this.tabPage1.Controls.Add(this.panel1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1256, 655);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Challan Print";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.rowTotal.HeaderText = "Total";
+            this.rowTotal.MaxInputLength = 3;
+            this.rowTotal.Name = "rowTotal";
+            this.rowTotal.ReadOnly = true;
+            this.rowTotal.Width = 48;
+            // 
+            // tabPageChallanPrint
+            // 
+            this.tabPageChallanPrint.Controls.Add(this.btnGenChallan);
+            this.tabPageChallanPrint.Controls.Add(this.btnTallyExport);
+            this.tabPageChallanPrint.Controls.Add(this.buttonChallanPrintRefresh);
+            this.tabPageChallanPrint.Controls.Add(this.dgvChallanList);
+            this.tabPageChallanPrint.Controls.Add(this.textBoxChallan);
+            this.tabPageChallanPrint.Controls.Add(this.reportViewerChallanPrint);
+            this.tabPageChallanPrint.Controls.Add(this.panel1);
+            this.tabPageChallanPrint.Location = new System.Drawing.Point(4, 22);
+            this.tabPageChallanPrint.Name = "tabPageChallanPrint";
+            this.tabPageChallanPrint.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageChallanPrint.Size = new System.Drawing.Size(1256, 655);
+            this.tabPageChallanPrint.TabIndex = 0;
+            this.tabPageChallanPrint.Text = "Challan Print";
+            this.tabPageChallanPrint.UseVisualStyleBackColor = true;
             // 
             // btnGenChallan
             // 
             this.btnGenChallan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
-            this.btnGenChallan.Location = new System.Drawing.Point(427, 4);
+            this.btnGenChallan.Location = new System.Drawing.Point(383, 6);
             this.btnGenChallan.Name = "btnGenChallan";
-            this.btnGenChallan.Size = new System.Drawing.Size(155, 30);
+            this.btnGenChallan.Size = new System.Drawing.Size(145, 30);
             this.btnGenChallan.TabIndex = 6;
             this.btnGenChallan.Text = "&Generate Challan";
             this.btnGenChallan.UseVisualStyleBackColor = true;
             this.btnGenChallan.Click += new System.EventHandler(this.btnGenChallan_Click);
+            // 
+            // btnTallyExport
+            // 
+            this.btnTallyExport.Location = new System.Drawing.Point(552, 6);
+            this.btnTallyExport.Name = "btnTallyExport";
+            this.btnTallyExport.Size = new System.Drawing.Size(145, 30);
+            this.btnTallyExport.TabIndex = 2;
+            this.btnTallyExport.Text = "Export Tally XML";
+            this.btnTallyExport.UseVisualStyleBackColor = true;
+            this.btnTallyExport.Click += new System.EventHandler(this.btnTallyExport_Click);
             // 
             // buttonChallanPrintRefresh
             // 
@@ -561,10 +633,10 @@
             // 
             this.textBoxChallan.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBoxChallan.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.textBoxChallan.Location = new System.Drawing.Point(85, 5);
+            this.textBoxChallan.Location = new System.Drawing.Point(92, 8);
             this.textBoxChallan.MaxLength = 7;
             this.textBoxChallan.Name = "textBoxChallan";
-            this.textBoxChallan.Size = new System.Drawing.Size(317, 26);
+            this.textBoxChallan.Size = new System.Drawing.Size(259, 26);
             this.textBoxChallan.TabIndex = 5;
             this.textBoxChallan.Text = "CH/0542";
             // 
@@ -608,20 +680,20 @@
             this.progressBar1.TabIndex = 0;
             this.progressBar1.Value = 75;
             // 
-            // tabPage2
+            // tabPageGodownTransfer
             // 
-            this.tabPage2.Controls.Add(this.dgvGodownTrfPSlips);
-            this.tabPage2.Controls.Add(this.btnGetGodownTrfSlips);
-            this.tabPage2.Controls.Add(this.dtpTo);
-            this.tabPage2.Controls.Add(this.dtpFrom);
-            this.tabPage2.Controls.Add(this.dgvGodownTrfDetail);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1256, 655);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Godown Transfer";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPageGodownTransfer.Controls.Add(this.dgvGodownTrfPSlips);
+            this.tabPageGodownTransfer.Controls.Add(this.btnGetGodownTrfSlips);
+            this.tabPageGodownTransfer.Controls.Add(this.dtpTo);
+            this.tabPageGodownTransfer.Controls.Add(this.dtpFrom);
+            this.tabPageGodownTransfer.Controls.Add(this.dgvGodownTrfDetail);
+            this.tabPageGodownTransfer.Location = new System.Drawing.Point(4, 22);
+            this.tabPageGodownTransfer.Name = "tabPageGodownTransfer";
+            this.tabPageGodownTransfer.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageGodownTransfer.Size = new System.Drawing.Size(1256, 655);
+            this.tabPageGodownTransfer.TabIndex = 1;
+            this.tabPageGodownTransfer.Text = "Godown Transfer";
+            this.tabPageGodownTransfer.UseVisualStyleBackColor = true;
             // 
             // dgvGodownTrfPSlips
             // 
@@ -805,17 +877,17 @@
             this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.tabControl1.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.tabPageNewChallan.ResumeLayout(false);
+            this.tabPageNewChallan.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNewChallan)).EndInit();
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.tabPageChallanPrint.ResumeLayout(false);
+            this.tabPageChallanPrint.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvChallanList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewChallanListBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.aA_2023_2024DataSet)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
+            this.tabPageGodownTransfer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvGodownTrfPSlips)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.vwGodownTrfSlipsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvGodownTrfDetail)).EndInit();
@@ -835,7 +907,7 @@
         private AA_2023_2024DataSetTableAdapters.TableAdapterManager tableAdapterManager;
         private AA_2023_2024DataSet aA_2023_2024DataSet1;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPageGodownTransfer;
         private System.Windows.Forms.DataGridView dgvGodownTrfDetail;
         private System.Windows.Forms.BindingSource vwGodownTrfSlipsBindingSource;
         private AA_2023_2024DataSetTableAdapters.vwGodownTrfSlipsTableAdapter vwGodownTrfSlipsTableAdapter;
@@ -851,7 +923,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Unit;
         private System.Windows.Forms.DataGridView dgvGodownTrfPSlips;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn17;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPageChallanPrint;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lblChallanProgress;
         private System.Windows.Forms.ProgressBar progressBar1;
@@ -865,7 +937,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxQty;
         private System.Windows.Forms.BindingSource viewChallanListBindingSource;
         private AA_2023_2024DataSetTableAdapters.ViewChallanListTableAdapter viewChallanListTableAdapter1;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPageNewChallan;
         private System.Windows.Forms.DataGridView dgvNewChallan;
         private AA_2023_2024DataSetTableAdapters.NewChallanItemTableAdapter newChallanItemTableAdapter1;
         private System.Windows.Forms.BindingSource newChallanBindingSource;
@@ -873,6 +945,13 @@
         private System.Windows.Forms.Label labelDealerName;
         private System.Windows.Forms.ComboBox comboBoxDealerName;
         private System.Windows.Forms.Button buttonNewChallanInsert;
+        private System.Windows.Forms.TextBox textBoxNewChallanRemark;
+        private System.Windows.Forms.Label labelNewChallanRemark;
+        private System.Windows.Forms.Label labelNewChallanNumber;
+        private System.Windows.Forms.DateTimePicker dateNewChallan;
+        private System.Windows.Forms.Button buttonChallanPrintRefresh;
+        private System.Windows.Forms.Label labelDealerDetails;
+        private System.Windows.Forms.Button buttonResetChallan;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemNameFilter;
         private System.Windows.Forms.DataGridViewComboBoxColumn ItemName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Size_35;
@@ -895,11 +974,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Size_120_6XL;
         private System.Windows.Forms.DataGridViewTextBoxColumn Size_Misc;
         private System.Windows.Forms.DataGridViewTextBoxColumn UnitName;
-        private System.Windows.Forms.TextBox textBoxNewChallanRemark;
-        private System.Windows.Forms.Label labelNewChallanRemark;
-        private System.Windows.Forms.Label labelNewChallanNumber;
-        private System.Windows.Forms.DateTimePicker dateNewChallan;
-        private System.Windows.Forms.Button buttonChallanPrintRefresh;
+        private System.Windows.Forms.DataGridViewTextBoxColumn rowTotal;
+        private System.Windows.Forms.Button btnTallyExport;
     }
 }
 

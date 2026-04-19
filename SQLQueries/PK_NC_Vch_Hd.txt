@@ -1,0 +1,6 @@
+USE [AA_2023_2024]
+GO
+CREATE NONCLUSTERED INDEX [PK_NC_Vch_Hd]
+ON [dbo].[Vch_Hd] ([Vch_Type],[BillNo])
+
+GO

@@ -1,0 +1,40 @@
+<ENVELOPE>
+  <HEADER>
+    <TALLYREQUEST>Import Data</TALLYREQUEST>
+  </HEADER>
+  <BODY>
+    <IMPORTDATA>
+      <REQUESTDESC>
+        <REPORTNAME>Vouchers</REPORTNAME>
+        <STATICVARIABLES>
+          <SVCURRENTCOMPANY>R.B. SANTANI (from 1-Apr-25)</SVCURRENTCOMPANY>
+        </STATICVARIABLES>
+      </REQUESTDESC>
+      <REQUESTDATA>
+        <TALLYMESSAGE xmlns:UDF="TallyUDF">
+          <VOUCHER VCHTYPE="Delivery Note" ACTION="Create">
+            <DATE>20260410</DATE>
+            <VOUCHERNUMBER>DN-001</VOUCHERNUMBER>
+            <PARTYLEDGERNAME>Saraswati Trading</PARTYLEDGERNAME>
+            <ISINVOICE>Yes</ISINVOICE>
+            <PERSISTEDVIEW>Invoice Voucher View</PERSISTEDVIEW>
+            <VCHENTRYMODE>Item Invoice</VCHENTRYMODE>
+
+            <!-- Item entry -->
+            <ALLINVENTORYENTRIES.LIST>
+              <STOCKITEMNAME>DIVYA PREMIUM Fine Colour RNS 035</STOCKITEMNAME>
+              <ACTUALQTY>2</ACTUALQTY>
+              <BILLEDQTY>2</BILLEDQTY>
+              <BATCHALLOCATIONS.LIST>
+                <GODOWNNAME>Main Location</GODOWNNAME>
+                <BATCHNAME>Primary Batch</BATCHNAME>
+                <ACTUALQTY>2</ACTUALQTY>
+                <BILLEDQTY>2</BILLEDQTY>
+              </BATCHALLOCATIONS.LIST>
+            </ALLINVENTORYENTRIES.LIST>
+          </VOUCHER>
+        </TALLYMESSAGE>
+      </REQUESTDATA>
+    </IMPORTDATA>
+  </BODY>
+</ENVELOPE>

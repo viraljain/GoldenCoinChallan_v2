@@ -1,0 +1,6 @@
+CREATE TABLE [dbo].[tblNewChallanTemp_Header](
+	[DealerName] [varchar](999) NULL,
+	[DealerCode] [smallint] NULL,
+	[Remarks] [varchar](999) NULL,
+	[TotalItemQty] [smallint] NULL
+)

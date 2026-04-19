@@ -1,0 +1,2 @@
+CREATE NONCLUSTERED INDEX IX_VchDtl_ItemName ON dbo.Vch_Dtl(ItemName);
+CREATE NONCLUSTERED INDEX IX_VchDtl_ItemSize ON dbo.Vch_Dtl(ItemSize);

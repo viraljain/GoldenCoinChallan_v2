@@ -1,0 +1,15 @@
+USE [AA_2023_2024]
+GO
+
+/****** Object:  Index [<Name of Missing Index, sysname,>]    Script Date: 4/13/2026 7:02:52 PM ******/
+CREATE NONCLUSTERED INDEX [<Name of Missing Index, sysname,>] ON [dbo].[Vch_Hd]
+(
+	[Vch_Type] ASC
+)
+INCLUDE ( 	[TotQty],
+	[Date],
+	[BillNo],
+	[PartyCode]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+GO
+
+

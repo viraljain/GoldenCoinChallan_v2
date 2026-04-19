@@ -1,0 +1,66 @@
+import requests
+
+# Tally server URL (default port 9000)
+url = "http://localhost:9000"
+
+# Sample XML payload with multiple vouchers
+xml_payload = """
+<ENVELOPE>
+  <HEADER>
+    <TALLYREQUEST>Import Data</TALLYREQUEST>
+  </HEADER>
+  <BODY>
+    <IMPORTDATA>
+      <REQUESTDESC>
+        <REPORTNAME>Vouchers</REPORTNAME>
+        <STATICVARIABLES>
+          <SVCURRENTCOMPANY>Your Company Name</SVCURRENTCOMPANY>
+        </STATICVARIABLES>
+      </REQUESTDESC>
+      <REQUESTDATA>
+        <!-- Voucher 1 -->
+        <TALLYMESSAGE>
+          <VOUCHER VCHTYPE="Sales" ACTION="Create">
+            <DATE>20260411</DATE>
+            <VOUCHERNUMBER>INV-201</VOUCHERNUMBER>
+            <PARTYLEDGERNAME>Customer A</PARTYLEDGERNAME>
+            <ALLLEDGERENTRIES.LIST>
+              <LEDGERNAME>Sales</LEDGERNAME>
+              <AMOUNT>1000</AMOUNT>
+            </ALLLEDGERENTRIES.LIST>
+            <ALLLEDGERENTRIES.LIST>
+              <LEDGERNAME>Customer A</LEDGERNAME>
+              <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+              <AMOUNT>-1000</AMOUNT>
+            </ALLLEDGERENTRIES.LIST>
+          </VOUCHER>
+        </TALLYMESSAGE>
+
+        <!-- Voucher 2 -->
+        <TALLYMESSAGE>
+          <VOUCHER VCHTYPE="Sales" ACTION="Create">
+            <DATE>20260411</DATE>
+            <VOUCHERNUMBER>INV-202</VOUCHERNUMBER>
+            <PARTYLEDGERNAME>Customer B</PARTYLEDGERNAME>
+            <ALLLEDGERENTRIES.LIST>
+              <LEDGERNAME>Sales</LEDGERNAME>
+              <AMOUNT>2000</AMOUNT>
+            </ALLLEDGERENTRIES.LIST>
+            <ALLLEDGERENTRIES.LIST>
+              <LEDGERNAME>Customer B</LEDGERNAME>
+              <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+              <AMOUNT>-2000</AMOUNT>
+            </ALLLEDGERENTRIES.LIST>
+          </VOUCHER>
+        </TALLYMESSAGE>
+      </REQUESTDATA>
+    </IMPORTDATA>
+  </BODY>
+</ENVELOPE>
+"""
+
+# Send to Tally
+response = requests.post(url, data=xml_payload.encode("utf-8"))
+
+print("Response from Tally:")
+print(response.text)

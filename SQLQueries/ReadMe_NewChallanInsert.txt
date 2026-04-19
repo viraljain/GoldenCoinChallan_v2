@@ -106,3 +106,14 @@ select * from dbo.Vch_Dtl where BillNo = 'PI-0001664'
 SELECT CODE, Name, Add1, Add2, Add3, TinCst, PinCode
 FROM DBO.AccountMaster
 where GrpCode = 8 and CODE = 258
+
+----------------------
+
+/*
+1) Fetch ChallanNo. - select top 1 BillNo from dbo.Vch_Hd order by CreatedDate desc;
+2) Fetch DealerName & PartyCode - SELECT CODE, Name, Add1, Add2, Add3, TinCst, PinCode FROM DBO.AccountMaster where GrpCode = 8 - Done
+3) ItemCode Code
+4) Unit Code
+5) ChallanCode & VchId needs to be checked
+6) CREATE AN SP or FUNCTION & PROCESS ITEM DATA, DEALER DETAILS & CHALLAN ETC. & INSERT INTODB POST VERIFICATION 
+7) ChallanTemp needs to be cleared/emptied before new insertion */

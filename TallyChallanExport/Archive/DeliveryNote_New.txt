@@ -1,0 +1,46 @@
+<ENVELOPE>
+    <HEADER>
+        <TALLYREQUEST>Import Data</TALLYREQUEST>
+    </HEADER>
+    <BODY>
+        <IMPORTDATA>
+            <REQUESTDESC>
+                <REPORTNAME>Vouchers</REPORTNAME>
+                <STATICVARIABLES>
+                    <SVCURRENTCOMPANY>R.B. SANTANI (from 1-Apr-25)</SVCURRENTCOMPANY>
+                </STATICVARIABLES>
+            </REQUESTDESC>
+            <REQUESTDATA>
+                <TALLYMESSAGE xmlns:UDF="TallyUDF">
+                    <VOUCHER VCHTYPE="Delivery Note" ACTION="Create">
+                        <DATE>20260411</DATE> <!-- Format: YYYYMMDD -->
+                        <VOUCHERTYPENAME>Delivery Note</VOUCHERTYPENAME>
+                        <PARTYNAME>Saraswati Trading</PARTYNAME>
+                        <PARTYLEDGERNAME>Saraswati Trading</PARTYLEDGERNAME>
+                        <REFERENCE>DN-001</REFERENCE>
+                        <NARRATION>Goods dispatched as per order</NARRATION>
+                        <EFFECTIVEDATE>20260411</EFFECTIVEDATE>
+
+                        <!-- Inventory Entries -->
+                        <ALLINVENTORYENTRIES.LIST>
+                            <STOCKITEMNAME>DIVYA PREMIUM Fine Colour RNS 095</STOCKITEMNAME>
+                            <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+                            <RATE>500</RATE>
+                            <AMOUNT>1000</AMOUNT>
+                            <ACTUALQTY>2 Nos</ACTUALQTY>
+                            <BILLEDQTY>2 Nos</BILLEDQTY>
+							<BATCHALLOCATIONS.LIST>
+								<GODOWNNAME>SHASTRI NAGAR</GODOWNNAME>
+								<BATCHNAME>Primary Batch</BATCHNAME>
+								<DESTINATIONGODOWNNAME>SHASTRI NAGAR</DESTINATIONGODOWNNAME>
+								<TRACKINGNUMBER>333</TRACKINGNUMBER>
+								<ACTUALQTY> 2 Nos</ACTUALQTY>
+								<BILLEDQTY> 2 Nos</BILLEDQTY>								
+						   </BATCHALLOCATIONS.LIST>
+                        </ALLINVENTORYENTRIES.LIST>                        
+                    </VOUCHER>
+                </TALLYMESSAGE>
+            </REQUESTDATA>
+        </IMPORTDATA>
+    </BODY>
+</ENVELOPE>

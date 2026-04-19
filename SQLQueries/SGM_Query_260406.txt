@@ -1,0 +1,96 @@
+USE [AA_2023_2024]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_NewChallan]    Script Date: 2026/04/06 19:40:32 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		VIRAL JAIN
+-- Create date: 06-Apr-2026 15:16, Amaryllis Phase 1 Library, Delhi, India
+-- Description:	To create New Challan from Santani Godown Manager Tool - Only product needs to be selected.
+-- =============================================
+ALTER PROCEDURE [dbo].[sp_NewChallan] 
+	--@NewChallanID varchar(20) OUTPUT
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	BEGIN TRY
+		-- Insert statements for procedure here
+		DECLARE @ChallanPrefix varchar(15), @ChallanNum int, @PartyCode smallint, @VchId int, @Vch_Type int, @SerType int;
+		SET @Vch_Type = 5; SET @SerType=81;
+
+		SELECT @VchId = MAX(Code)+1
+		FROM dbo.Vch_Hd;
+
+		DECLARE @VchDtlRowId int;
+		SELECT @VchDtlRowId=max(code)
+		FROM dbo.Vch_Dtl;
+
+		DECLARE @Date DATETIME;
+		SET @Date = GETDATE();
+
+		/****	FETCHING NEW CHALLAN NO. FROM MASTER TABLE ****/
+		SELECT @ChallanPrefix=FieldValue3, @ChallanNum=FieldValue5+1
+		FROM DBO.Master
+		where code=81 and fieldvalue2='Challan RBS';
+
+		BEGIN TRANSACTION;
+			
+			/****	VOUCHER HEADER BEGINS	****/
+			insert into dbo.Vch_Hd
+			(TotQty, NumBillNo, UpdateDateTime, DueDate, code, SerType,Vch_Type,Date,BillNo,PartyCode, SaleType, StkUptTag, TransTypeTag, DateOfPre, TimeOfPre, CreatedBy, CreatedDate,CreatedIp,CompName, STATION, Remark)
+			select TotalItemQty, @ChallanNum, @Date, @Date, @VchId, @SerType, @Vch_Type, CAST(@Date AS DATE), CONCAT(@ChallanPrefix,FORMAT(@ChallanNum,'0000')), DealerCode, 1,1,1, CAST(@Date AS DATE), FORMAT(@Date,'hh:mm:ss tt'), 'Admin', @Date, '192.168.1.1', 'OfficeSN', 'State', Remarks
+			from tblNewChallanTemp_Header;
+			--(899, 2709, DATETIME, DATETIME, 11182,81,5,DATETIME,'CH/2709','229', 1, 1,1, DATE, TIME, USERNAME,DATETIME,IPADDRESS,MACHINENAME, STATENAME)
+			--(899, 2709, '2026-03-24 18:34:25.000', '2026-03-24 00:00:00.000', 11182,81,5,'2026-03-24 00:00:00.000','CH/2709','229', 1, 1,1, '2026-03-24 00:00:00.000', '6:02:07 PM', 'Admin','2026-03-24 18:34:25.000','192.168.1.11','OfficeSN', 'Uttar Pradesh')
+
+
+			/****	VOUCHER DETAIL BEGINS	****/
+			SELECT @PartyCode=DealerCode
+			FROM tblNewChallanTemp_Header; 
+
+			insert into dbo.Vch_Dtl
+			(BillNo, code, partycode, BillDate, ItemCode, ItemDesc, Qty, Unit, Descp, InOutTag, VchId, Vch_Type /*Srno,*/ ,ItemUcode, SelfShow,SerType)
+			SELECT 
+				CONCAT(@ChallanPrefix,FORMAT(@ChallanNum,'0000')) as BillNo, @VchDtlRowId+ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) as BillDtlCode, @PartyCode as PartyCode, 
+				CAST(@Date AS DATE)as BillDate, material.Code as ItemCode, material.Name as ItemDesc, 
+				tblNewChallanTemp.ItemQty as Qty, Material.UnitCode as Unit, 'Challan v2 Issue' as Descp,
+				1 as InOutTag, @VchId as VchId, @Vch_Type as VchType, Material.Ucode as ItemUCode, 1 as SelfShow,@SerType  
+			from tblNewChallanTemp
+			inner join dbo.Material
+			on material.name like tblNewChallanTemp.ItemName + '%'+ tblNewChallanTemp.ItemSize +'%' and CHECKSUM(tblNewChallanTemp.ItemName) = CHECKSUM(LEFT(Material.Name, len(Material.Name) - charindex(' ', reverse(Material.Name), 0)));
+
+			/****	UPDATING	DUMMY	VALUES		****/
+			UPDATE	VCH_DTL
+			SET		
+			JobTag=0,	AltQty=0,	MainAltQtyTag=0,	DisValue=0,	TaxValue=0,	TaxName=0,	DisRate_Item=0,	RoundOff=0,	BillValue=0,	NetRateOrDisTag=0,	UDF_2='',	UDF_3='',	StdPkg=0,	NoOfPkts=0,	LooseQty=0,	SaleDiscType=0,	Chg1Type=0,	Chg2Type=0,	Chg1Rate=0,	Chg2Rate=0,	Chg1CalVal=0,	Chg2CalVal=0,	Chg1Code=0,	Chg2Code=0,	ChgOnAmt=0,	ChargePer=0,	WasteTag=0,		LinkCode=0,	LinkVchId=0,	Price=0,	Dis=0,	Dis2=0,	DisRate=0,	DisRate2=0,	Amount=0,	cess=0,	cess_Amt=0,	UDF='',	GodID=0,	AltCurr=0,	TaxId=0,	TaxRate=0,	TaxAmt=0,	NetRateTag=0,	IGSTPer=0,	SGSTPer=0,	CGSTPer=0,	IGSTAmt=0,	SGSTAmt=0,	CGSTAmt=0,	BatchWireQty='',	TaxableValue=0,	ValueAfterDisc=0,	DisFullAmt='',	ExemptOrZeroTag=0,	Dis3=0,	RebateDis=0,	HSNCode='',	UDF_4=''
+			where	BillNo=CONCAT(@ChallanPrefix,FORMAT(@ChallanNum,'0000'));
+
+			UPDATE	VCH_hd
+			SET
+			RoadPermit='',	TotJobCharges=0,	JobberId=0,	noofPacket='',	RawConvTag=0,	DisRate_Item=0,	disValue=0,	TaxName=0,	roundoff=0,	TaxValue=0,	TotalSaleValue=0,	TotPriceItem=0,	TotDisItem=0,	RefrenceNo='',	JobTransTag=0,	CreditDays=0,	PvtMark='',	IsFormDueTag=0,	AccUdf1='',	AccUdf2='',	AccUdf3='',	AccUdf4='',	AccUdf1Cap='',	AccUdf2Cap='',	AccUdf3Cap='',	AccUdf4Cap='',	AltPartyName='',	TotNoOfPkts=0,	Chg1Code=0,	Chg2Code=0,	Chg2CalVal=0,	Chg1CalVal=0,	ShipAdd3='',	ShipAdd4='',	TransportTag=1,	VEH_CODE=0,	EngineNo='',	Survier='',	TotalListValue=0,	CashAmt=0,	ChqAmt=0,	ShipPartyName='',	ShipAdd1='',	ShipAdd2='',	TransportCode=0,	GrNo='',	VehicleNo='',	LedUptTag=0,	GodID=0,	Bef_Tax_Val=0,	Tax_Val=0,	Total_Val=0,	Cst_Rate=0,	Cst_Amt=0,	InclusiveTag=0,	Dis1=0,	Dis2=0,	AltCurrString='',	PicName='',	AgentCode=0,	AgentPercent=0,	MultiTaxCaption='',	LocalInterTag=0,	ActiveTag=0,	IGSTAMT=0,	SGSTAMT=0,	CGSTAMT=0,	PriceDecFormat=2,	TransactionTag=0,	ShippingDate='',	ShippingBillno='',	PortCode='',	DealerTypeTag=0,	ReturnReason='',	PINCODE='',	DISTANCE='',	TRANSMODE='',	EWayBillNo='',	EwayBillTag=0,	RebateDis=0,	Dis3=0,	Dis2Type=0,	TaxForCalc=0,	IRN='',	QrData='',	AckNo='',	AckDate='',	is_service=0,	CreditTxt='',	ShipPinCode='',	KM='',	Advisor=''
+			where	BillNo=CONCAT(@ChallanPrefix,FORMAT(@ChallanNum,'0000'));
+
+			/****	UPDATING Value in MASTER Table	****/
+			update [dbo].[Master]
+			set fieldvalue5 = fieldvalue5+1
+			where code=81 and fieldvalue2='Challan RBS';
+
+			/****	DELETE FROM TEMP TABLES	****/
+			delete from tblNewChallanTemp;
+			delete from tblNewChallanTemp_Header;
+
+		COMMIT TRANSACTION;
+		SELECT CONCAT(@ChallanPrefix,FORMAT(@ChallanNum,'0000'));
+		RETURN 0;
+	END TRY
+	BEGIN CATCH
+		IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+		RETURN -1;
+	END CATCH
+END
