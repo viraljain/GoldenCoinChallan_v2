@@ -551,7 +551,7 @@
             // 
             this.btnGenChallan.BackColor = System.Drawing.Color.GreenYellow;
             this.btnGenChallan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
-            this.btnGenChallan.Location = new System.Drawing.Point(367, 6);
+            this.btnGenChallan.Location = new System.Drawing.Point(170, 6);
             this.btnGenChallan.Name = "btnGenChallan";
             this.btnGenChallan.Size = new System.Drawing.Size(145, 30);
             this.btnGenChallan.TabIndex = 6;
@@ -564,7 +564,7 @@
             this.btnTallyExport.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.btnTallyExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
             this.btnTallyExport.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnTallyExport.Location = new System.Drawing.Point(520, 6);
+            this.btnTallyExport.Location = new System.Drawing.Point(323, 6);
             this.btnTallyExport.Name = "btnTallyExport";
             this.btnTallyExport.Size = new System.Drawing.Size(145, 30);
             this.btnTallyExport.TabIndex = 2;
@@ -639,10 +639,10 @@
             // 
             this.textBoxChallan.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBoxChallan.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.textBoxChallan.Location = new System.Drawing.Point(4, 8);
+            this.textBoxChallan.Location = new System.Drawing.Point(7, 8);
             this.textBoxChallan.MaxLength = 7;
             this.textBoxChallan.Name = "textBoxChallan";
-            this.textBoxChallan.Size = new System.Drawing.Size(347, 26);
+            this.textBoxChallan.Size = new System.Drawing.Size(159, 26);
             this.textBoxChallan.TabIndex = 5;
             this.textBoxChallan.Text = "CH/0542";
             // 
@@ -660,10 +660,10 @@
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(677, 11);
-            this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(0, 13);
             this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.labelStatus.Location = new System.Drawing.Point(475, 11);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(0, 20);
             this.labelStatus.TabIndex = 1;
             // 
             // panel1

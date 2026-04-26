@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 
 namespace GoldenCoinChallan
 {
@@ -21,7 +22,7 @@ namespace GoldenCoinChallan
 
         public Form1(IChallanService challanService) => _challanService = challanService;
 
-        public Form1():this(Program.ServiceProvider.GetService<IChallanService>())
+        public Form1() : this(Program.ServiceProvider.GetService<IChallanService>())
         {
             InitializeComponent();
             //tabControl1.SelectedTab = tabControl1.TabPages["tabPageNewChallan"];
@@ -353,7 +354,7 @@ namespace GoldenCoinChallan
 
                 return true; // handled
             }
-            
+
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
@@ -365,20 +366,39 @@ namespace GoldenCoinChallan
                 string challanNo = textBoxChallan.Text; // from a textbox
                 string xml = await _challanService.GenerateTallyXMLAsync(challanNo);
                 string fileName = $"Challan_{challanNo.Replace("/", "_").Replace("\\", "_")}.xml";
-                // Save to file
+                string exportPath = fileName;
+                //Save to file using SAVE DIALOG as a backup option if export path is not set or does not exist in settings
                 var saveDialog = new SaveFileDialog
                 {
                     Filter = "XML Files|*.xml",
                     FileName = fileName
                 };
 
-                if (saveDialog.ShowDialog() == DialogResult.OK)
+                //if (saveDialog.ShowDialog() == DialogResult.OK)
+                //{
+                //    System.IO.File.WriteAllText(saveDialog.FileName, xml);
+                //    //MessageBox.Show("Tally XML exported successfully!");
+                //    labelStatus.Text = fileName + " exported successfully";
+                //    labelStatus.BackColor = Color.LightGreen;
+                //}
+
+                if (Directory.Exists(Properties.Settings.Default.ExportPathXML))
                 {
-                    System.IO.File.WriteAllText(saveDialog.FileName, xml);
-                    //MessageBox.Show("Tally XML exported successfully!");
-                    labelStatus.Text = fileName + " exported successfully";
-                    labelStatus.BackColor = Color.LightGreen;
+                    exportPath = Path.Combine(Properties.Settings.Default.ExportPathXML, fileName);
                 }
+                else if (saveDialog.ShowDialog() == DialogResult.OK)
+                {
+                    exportPath = saveDialog.FileName;
+                }
+                else
+                {
+                    labelStatus.Text = "Export path does not exist. Please check the settings.";
+                    labelStatus.BackColor = Color.LightCoral;
+                    return;
+                }
+                System.IO.File.WriteAllText(exportPath, xml);
+                labelStatus.Text = fileName + " exported successfully to " + Properties.Settings.Default.ExportPathXML;
+                labelStatus.BackColor = Color.LightGreen;
             }
             catch (Exception ex)
             {
