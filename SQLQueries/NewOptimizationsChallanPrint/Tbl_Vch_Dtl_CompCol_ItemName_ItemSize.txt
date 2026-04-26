@@ -1,0 +1,7 @@
+ALTER TABLE dbo.Vch_Dtl
+ADD
+[ItemName]  AS (left([ItemDesc],len([ItemDesc])-charindex(' ',reverse([ItemDesc])))) PERSISTED;
+
+ALTER TABLE dbo.Vch_Dtl
+ADD
+	[ItemSize]  AS (right([ItemDesc],case when charindex(' ',reverse([ItemDesc]),(0))=(0) then (1) else charindex(' ',reverse([ItemDesc]),(0)) end-(1))) PERSISTED;

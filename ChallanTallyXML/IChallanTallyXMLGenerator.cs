@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace GoldenCoinChallan
 {
-    internal interface IChallanTallyXMLGenerator
+    public interface IChallanTallyXMLGenerator
     {
-        string Generate(string ChallanNo);  
+        string Generate(Challan challan);  
     }
 }

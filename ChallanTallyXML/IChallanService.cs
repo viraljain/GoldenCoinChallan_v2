@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GoldenCoinChallan
 {
-    internal interface IChallanService
+    public interface IChallanService
     {
         Task<string> GenerateTallyXMLAsync(string challanNo);
     }

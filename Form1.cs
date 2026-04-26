@@ -11,12 +11,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GoldenCoinChallan
 {
     public partial class Form1 : Form
     {
-        public Form1()
+        private readonly IChallanService _challanService;
+
+        public Form1(IChallanService challanService) => _challanService = challanService;
+
+        public Form1():this(Program.ServiceProvider.GetService<IChallanService>())
         {
             InitializeComponent();
             //tabControl1.SelectedTab = tabControl1.TabPages["tabPageNewChallan"];
@@ -352,10 +357,35 @@ namespace GoldenCoinChallan
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void btnTallyExport_Click(object sender, EventArgs e)
+        private async void btnTallyExport_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Tally XML Export - Work in Progress. -> " + textBoxChallan.Text);
+            //MessageBox.Show("Tally XML Export - Work in Progress. -> " + textBoxChallan.Text);
+            try
+            {
+                string challanNo = textBoxChallan.Text; // from a textbox
+                string xml = await _challanService.GenerateTallyXMLAsync(challanNo);
+                string fileName = $"Challan_{challanNo.Replace("/", "_").Replace("\\", "_")}.xml";
+                // Save to file
+                var saveDialog = new SaveFileDialog
+                {
+                    Filter = "XML Files|*.xml",
+                    FileName = fileName
+                };
 
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                {
+                    System.IO.File.WriteAllText(saveDialog.FileName, xml);
+                    //MessageBox.Show("Tally XML exported successfully!");
+                    labelStatus.Text = fileName + " exported successfully";
+                    labelStatus.BackColor = Color.LightGreen;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+                labelStatus.Text = $"Error: {ex.Message}";
+                labelStatus.BackColor = Color.LightCoral;
+            }
         }
     }
 }

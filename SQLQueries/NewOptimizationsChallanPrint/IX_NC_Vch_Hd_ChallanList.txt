@@ -1,8 +1,8 @@
 USE [AA_2023_2024]
 GO
 
-/****** Object:  Index [<Name of Missing Index, sysname,>]    Script Date: 4/13/2026 7:02:52 PM ******/
-CREATE NONCLUSTERED INDEX [<Name of Missing Index, sysname,>] ON [dbo].[Vch_Hd]
+/****** Object:  Index [<IX_NC_Vch_Hd_ChallanList, sysname,>]    Script Date: 4/13/2026 7:02:52 PM ******/
+CREATE NONCLUSTERED INDEX IX_NC_Vch_Hd_ChallanList ON [dbo].[Vch_Hd]
 (
 	[Vch_Type] ASC
 )

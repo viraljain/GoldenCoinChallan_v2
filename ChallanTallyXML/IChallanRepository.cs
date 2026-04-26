@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace GoldenCoinChallan
 {
-    internal interface IChallanRepository
+    public interface IChallanRepository
     {
-        string GetChallanById(string challanNo);
+        Challan GetChallanById(string challanNo);
     }
 }

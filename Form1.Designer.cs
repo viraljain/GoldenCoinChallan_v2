@@ -82,6 +82,7 @@
             this.aA_2023_2024DataSet = new GoldenCoinChallan.AA_2023_2024DataSet();
             this.textBoxChallan = new System.Windows.Forms.TextBox();
             this.reportViewerChallanPrint = new Microsoft.Reporting.WinForms.ReportViewer();
+            this.labelStatus = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblChallanProgress = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -536,6 +537,7 @@
             this.tabPageChallanPrint.Controls.Add(this.dgvChallanList);
             this.tabPageChallanPrint.Controls.Add(this.textBoxChallan);
             this.tabPageChallanPrint.Controls.Add(this.reportViewerChallanPrint);
+            this.tabPageChallanPrint.Controls.Add(this.labelStatus);
             this.tabPageChallanPrint.Controls.Add(this.panel1);
             this.tabPageChallanPrint.Location = new System.Drawing.Point(4, 22);
             this.tabPageChallanPrint.Name = "tabPageChallanPrint";
@@ -547,29 +549,33 @@
             // 
             // btnGenChallan
             // 
+            this.btnGenChallan.BackColor = System.Drawing.Color.GreenYellow;
             this.btnGenChallan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
-            this.btnGenChallan.Location = new System.Drawing.Point(383, 6);
+            this.btnGenChallan.Location = new System.Drawing.Point(367, 6);
             this.btnGenChallan.Name = "btnGenChallan";
             this.btnGenChallan.Size = new System.Drawing.Size(145, 30);
             this.btnGenChallan.TabIndex = 6;
             this.btnGenChallan.Text = "&Generate Challan";
-            this.btnGenChallan.UseVisualStyleBackColor = true;
+            this.btnGenChallan.UseVisualStyleBackColor = false;
             this.btnGenChallan.Click += new System.EventHandler(this.btnGenChallan_Click);
             // 
             // btnTallyExport
             // 
-            this.btnTallyExport.Location = new System.Drawing.Point(552, 6);
+            this.btnTallyExport.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.btnTallyExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.btnTallyExport.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnTallyExport.Location = new System.Drawing.Point(520, 6);
             this.btnTallyExport.Name = "btnTallyExport";
             this.btnTallyExport.Size = new System.Drawing.Size(145, 30);
             this.btnTallyExport.TabIndex = 2;
-            this.btnTallyExport.Text = "Export Tally XML";
-            this.btnTallyExport.UseVisualStyleBackColor = true;
+            this.btnTallyExport.Text = "Export Tally &XML";
+            this.btnTallyExport.UseVisualStyleBackColor = false;
             this.btnTallyExport.Click += new System.EventHandler(this.btnTallyExport_Click);
             // 
             // buttonChallanPrintRefresh
             // 
             this.buttonChallanPrintRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
-            this.buttonChallanPrintRefresh.Location = new System.Drawing.Point(930, 4);
+            this.buttonChallanPrintRefresh.Location = new System.Drawing.Point(1026, 4);
             this.buttonChallanPrintRefresh.Name = "buttonChallanPrintRefresh";
             this.buttonChallanPrintRefresh.Size = new System.Drawing.Size(199, 30);
             this.buttonChallanPrintRefresh.TabIndex = 8;
@@ -633,10 +639,10 @@
             // 
             this.textBoxChallan.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBoxChallan.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.textBoxChallan.Location = new System.Drawing.Point(92, 8);
+            this.textBoxChallan.Location = new System.Drawing.Point(4, 8);
             this.textBoxChallan.MaxLength = 7;
             this.textBoxChallan.Name = "textBoxChallan";
-            this.textBoxChallan.Size = new System.Drawing.Size(259, 26);
+            this.textBoxChallan.Size = new System.Drawing.Size(347, 26);
             this.textBoxChallan.TabIndex = 5;
             this.textBoxChallan.Text = "CH/0542";
             // 
@@ -650,6 +656,15 @@
             this.reportViewerChallanPrint.ServerReport.BearerToken = null;
             this.reportViewerChallanPrint.Size = new System.Drawing.Size(772, 614);
             this.reportViewerChallanPrint.TabIndex = 4;
+            // 
+            // labelStatus
+            // 
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Location = new System.Drawing.Point(677, 11);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(0, 13);
+            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.labelStatus.TabIndex = 1;
             // 
             // panel1
             // 
@@ -976,6 +991,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn UnitName;
         private System.Windows.Forms.DataGridViewTextBoxColumn rowTotal;
         private System.Windows.Forms.Button btnTallyExport;
+        private System.Windows.Forms.Label labelStatus;
     }
 }
 
