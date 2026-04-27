@@ -397,8 +397,8 @@ namespace GoldenCoinChallan
                     return;
                 }
                 System.IO.File.WriteAllText(exportPath, xml);
-                labelStatus.Text = fileName + " exported successfully to " + Properties.Settings.Default.ExportPathXML;
-                labelStatus.BackColor = Color.LightGreen;
+                labelStatus.Text = fileName + " exported successfully to " + exportPath.Replace(fileName,"");
+                labelStatus.BackColor = Color.LightGreen;                
             }
             catch (Exception ex)
             {

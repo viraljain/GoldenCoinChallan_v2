@@ -70,7 +70,8 @@ namespace GoldenCoinChallan
                         },
                         Accounting = new AccountingAllocation
                         {
-                            LedgerName = "CENTRAL SALES@5%",
+                            //LedgerName = "CENTRAL SALES@5%",
+                            LedgerName = (row["StateCode"].ToString() == "7") ? "Local Sales @ 5%" : "CENTRAL SALES@5%",
                             Amount = 1
                         }
                     };
@@ -85,7 +86,7 @@ namespace GoldenCoinChallan
                     Id = challanNo,
                     Date = resTable.Rows[0]["Date"].ToString() != string.Empty ? Convert.ToDateTime(resTable.Rows[0]["Date"]) : DateTime.MinValue,
                     VoucherType = "Delivery Note",
-                    PartyLedgerName = resTable.Rows[0]["Name"].ToString().Replace("&","&amp;").Replace("<D>","(D)"),
+                    PartyLedgerName = resTable.Rows[0]["Name"].ToString().Replace("&", "&amp;").Replace("<D>", "(D)"),
                     Narration = resTable.Rows[0]["Remark"].ToString(),
                     ShippedBy = "SELF", //To be modified & fetched in SP_GetChallanData //resTable.Rows[0]["ShippedBy"].ToString(),
                     Items = challanItems
