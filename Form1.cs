@@ -50,7 +50,7 @@ namespace GoldenCoinChallan
                  * Below code is used to popuplate the DataGridView on the right to current challan details
                  */
                 this.viewChallanListTableAdapter1.Fill(this.aA_2023_2024DataSet.ViewChallanList);
-            }
+            }            
         }
         #region FORM RESIZE LOGIC
         /*		FORM RESIZE LOGIC START		*/
@@ -405,6 +405,35 @@ namespace GoldenCoinChallan
                 MessageBox.Show($"Error: {ex.Message}");
                 labelStatus.Text = $"Error: {ex.Message}";
                 labelStatus.BackColor = Color.LightCoral;
+            }
+        }
+
+        private void radioButtonPackingSlipTransfer_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonPackingSlipTransfer.Checked)
+            {
+                labelDealerDetails.Visible = labelDealerName.Visible = comboBoxDealerName.Visible = labelNewChallanRemark.Visible = textBoxNewChallanRemark.Visible = false;
+
+                labelPackingSlip.Visible=textBoxPackingSlip.Visible= true;
+
+                labelNewChallanNumber.Visible = false;
+
+                buttonNewChallanInsert.Text = "Transfer Packing Sl&ip";
+                buttonResetChallan.Text = "&Reset Packing Slip";
+            }
+        }
+
+        private void radioButtonNewChallan_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonNewChallan.Checked)
+            {
+                labelDealerDetails.Visible = labelDealerName.Visible = comboBoxDealerName.Visible = labelNewChallanRemark.Visible = textBoxNewChallanRemark.Visible = true;
+
+                labelPackingSlip.Visible = textBoxPackingSlip.Visible = false;
+                labelNewChallanNumber.Visible = true;
+
+                buttonNewChallanInsert.Text = "&Insert Challan";
+                buttonResetChallan.Text = "&Reset Challan";
             }
         }
     }

@@ -35,6 +35,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageNewChallan = new System.Windows.Forms.TabPage();
+            this.textBoxPackingSlip = new System.Windows.Forms.TextBox();
+            this.labelPackingSlip = new System.Windows.Forms.Label();
+            this.groupBoxChallanPackingSlip = new System.Windows.Forms.GroupBox();
+            this.radioButtonPackingSlipTransfer = new System.Windows.Forms.RadioButton();
+            this.radioButtonNewChallan = new System.Windows.Forms.RadioButton();
             this.buttonResetChallan = new System.Windows.Forms.Button();
             this.labelDealerDetails = new System.Windows.Forms.Label();
             this.dateNewChallan = new System.Windows.Forms.DateTimePicker();
@@ -111,6 +116,7 @@
             this.newChallanBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPageNewChallan.SuspendLayout();
+            this.groupBoxChallanPackingSlip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNewChallan)).BeginInit();
             this.tabPageChallanPrint.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvChallanList)).BeginInit();
@@ -150,6 +156,9 @@
             // 
             // tabPageNewChallan
             // 
+            this.tabPageNewChallan.Controls.Add(this.textBoxPackingSlip);
+            this.tabPageNewChallan.Controls.Add(this.labelPackingSlip);
+            this.tabPageNewChallan.Controls.Add(this.groupBoxChallanPackingSlip);
             this.tabPageNewChallan.Controls.Add(this.buttonResetChallan);
             this.tabPageNewChallan.Controls.Add(this.labelDealerDetails);
             this.tabPageNewChallan.Controls.Add(this.dateNewChallan);
@@ -170,9 +179,61 @@
             this.tabPageNewChallan.UseVisualStyleBackColor = true;
             this.tabPageNewChallan.Enter += new System.EventHandler(this.tabPageNewChallan_Enter);
             // 
+            // textBoxPackingSlip
+            // 
+            this.textBoxPackingSlip.Location = new System.Drawing.Point(446, 7);
+            this.textBoxPackingSlip.Name = "textBoxPackingSlip";
+            this.textBoxPackingSlip.Size = new System.Drawing.Size(184, 20);
+            this.textBoxPackingSlip.TabIndex = 19;
+            this.textBoxPackingSlip.Visible = false;
+            // 
+            // labelPackingSlip
+            // 
+            this.labelPackingSlip.AutoSize = true;
+            this.labelPackingSlip.Location = new System.Drawing.Point(375, 9);
+            this.labelPackingSlip.Name = "labelPackingSlip";
+            this.labelPackingSlip.Size = new System.Drawing.Size(66, 13);
+            this.labelPackingSlip.TabIndex = 18;
+            this.labelPackingSlip.Text = "Packing Slip";
+            this.labelPackingSlip.Visible = false;
+            // 
+            // groupBoxChallanPackingSlip
+            // 
+            this.groupBoxChallanPackingSlip.Controls.Add(this.radioButtonPackingSlipTransfer);
+            this.groupBoxChallanPackingSlip.Controls.Add(this.radioButtonNewChallan);
+            this.groupBoxChallanPackingSlip.Location = new System.Drawing.Point(5, 1);
+            this.groupBoxChallanPackingSlip.Name = "groupBoxChallanPackingSlip";
+            this.groupBoxChallanPackingSlip.Size = new System.Drawing.Size(354, 30);
+            this.groupBoxChallanPackingSlip.TabIndex = 17;
+            this.groupBoxChallanPackingSlip.TabStop = false;
+            // 
+            // radioButtonPackingSlipTransfer
+            // 
+            this.radioButtonPackingSlipTransfer.AutoSize = true;
+            this.radioButtonPackingSlipTransfer.Location = new System.Drawing.Point(121, 6);
+            this.radioButtonPackingSlipTransfer.Name = "radioButtonPackingSlipTransfer";
+            this.radioButtonPackingSlipTransfer.Size = new System.Drawing.Size(126, 17);
+            this.radioButtonPackingSlipTransfer.TabIndex = 1;
+            this.radioButtonPackingSlipTransfer.Text = "Packing Slip Transfer";
+            this.radioButtonPackingSlipTransfer.UseVisualStyleBackColor = true;
+            this.radioButtonPackingSlipTransfer.CheckedChanged += new System.EventHandler(this.radioButtonPackingSlipTransfer_CheckedChanged);
+            // 
+            // radioButtonNewChallan
+            // 
+            this.radioButtonNewChallan.AutoSize = true;
+            this.radioButtonNewChallan.Checked = true;
+            this.radioButtonNewChallan.Location = new System.Drawing.Point(7, 8);
+            this.radioButtonNewChallan.Name = "radioButtonNewChallan";
+            this.radioButtonNewChallan.Size = new System.Drawing.Size(85, 17);
+            this.radioButtonNewChallan.TabIndex = 0;
+            this.radioButtonNewChallan.TabStop = true;
+            this.radioButtonNewChallan.Text = "New Challan";
+            this.radioButtonNewChallan.UseVisualStyleBackColor = true;
+            this.radioButtonNewChallan.CheckedChanged += new System.EventHandler(this.radioButtonNewChallan_CheckedChanged);
+            // 
             // buttonResetChallan
             // 
-            this.buttonResetChallan.Location = new System.Drawing.Point(1109, 423);
+            this.buttonResetChallan.Location = new System.Drawing.Point(1109, 451);
             this.buttonResetChallan.Name = "buttonResetChallan";
             this.buttonResetChallan.Size = new System.Drawing.Size(139, 35);
             this.buttonResetChallan.TabIndex = 16;
@@ -186,7 +247,7 @@
             this.labelDealerDetails.AutoSize = true;
             this.labelDealerDetails.BackColor = System.Drawing.Color.LightCyan;
             this.labelDealerDetails.Font = new System.Drawing.Font("Calibri", 12F);
-            this.labelDealerDetails.Location = new System.Drawing.Point(5, 6);
+            this.labelDealerDetails.Location = new System.Drawing.Point(5, 34);
             this.labelDealerDetails.MaximumSize = new System.Drawing.Size(750, 0);
             this.labelDealerDetails.Name = "labelDealerDetails";
             this.labelDealerDetails.Size = new System.Drawing.Size(0, 19);
@@ -196,7 +257,7 @@
             // 
             this.dateNewChallan.CustomFormat = "dd-mm-yyyy";
             this.dateNewChallan.Enabled = false;
-            this.dateNewChallan.Location = new System.Drawing.Point(1109, 216);
+            this.dateNewChallan.Location = new System.Drawing.Point(1109, 244);
             this.dateNewChallan.Name = "dateNewChallan";
             this.dateNewChallan.Size = new System.Drawing.Size(139, 20);
             this.dateNewChallan.TabIndex = 14;
@@ -206,7 +267,7 @@
             this.labelNewChallanNumber.AutoSize = true;
             this.labelNewChallanNumber.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.labelNewChallanNumber.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold);
-            this.labelNewChallanNumber.Location = new System.Drawing.Point(1109, 189);
+            this.labelNewChallanNumber.Location = new System.Drawing.Point(1109, 217);
             this.labelNewChallanNumber.Name = "labelNewChallanNumber";
             this.labelNewChallanNumber.Size = new System.Drawing.Size(87, 19);
             this.labelNewChallanNumber.TabIndex = 13;
@@ -226,13 +287,13 @@
             this.textBoxNewChallanRemark.Location = new System.Drawing.Point(759, 29);
             this.textBoxNewChallanRemark.Multiline = true;
             this.textBoxNewChallanRemark.Name = "textBoxNewChallanRemark";
-            this.textBoxNewChallanRemark.Size = new System.Drawing.Size(489, 80);
+            this.textBoxNewChallanRemark.Size = new System.Drawing.Size(489, 108);
             this.textBoxNewChallanRemark.TabIndex = 3;
             // 
             // buttonNewChallanInsert
             // 
             this.buttonNewChallanInsert.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.buttonNewChallanInsert.Location = new System.Drawing.Point(1109, 119);
+            this.buttonNewChallanInsert.Location = new System.Drawing.Point(1109, 147);
             this.buttonNewChallanInsert.Name = "buttonNewChallanInsert";
             this.buttonNewChallanInsert.Size = new System.Drawing.Size(139, 58);
             this.buttonNewChallanInsert.TabIndex = 4;
@@ -243,7 +304,7 @@
             // labelDealerName
             // 
             this.labelDealerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDealerName.Location = new System.Drawing.Point(5, 73);
+            this.labelDealerName.Location = new System.Drawing.Point(5, 101);
             this.labelDealerName.Name = "labelDealerName";
             this.labelDealerName.Size = new System.Drawing.Size(60, 45);
             this.labelDealerName.TabIndex = 9;
@@ -256,7 +317,7 @@
             this.comboBoxDealerName.FormattingEnabled = true;
             this.comboBoxDealerName.IntegralHeight = false;
             this.comboBoxDealerName.ItemHeight = 16;
-            this.comboBoxDealerName.Location = new System.Drawing.Point(68, 85);
+            this.comboBoxDealerName.Location = new System.Drawing.Point(68, 113);
             this.comboBoxDealerName.Name = "comboBoxDealerName";
             this.comboBoxDealerName.Size = new System.Drawing.Size(685, 24);
             this.comboBoxDealerName.TabIndex = 1;
@@ -272,7 +333,7 @@
             this.labelTotal.AutoSize = true;
             this.labelTotal.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.labelTotal.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
-            this.labelTotal.Location = new System.Drawing.Point(1109, 255);
+            this.labelTotal.Location = new System.Drawing.Point(1109, 283);
             this.labelTotal.Name = "labelTotal";
             this.labelTotal.Size = new System.Drawing.Size(37, 17);
             this.labelTotal.TabIndex = 7;
@@ -316,7 +377,7 @@
             this.Size_Misc,
             this.UnitName,
             this.rowTotal});
-            this.dgvNewChallan.Location = new System.Drawing.Point(3, 119);
+            this.dgvNewChallan.Location = new System.Drawing.Point(3, 147);
             this.dgvNewChallan.MultiSelect = false;
             this.dgvNewChallan.Name = "dgvNewChallan";
             this.dgvNewChallan.RowHeadersWidth = 24;
@@ -894,6 +955,8 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPageNewChallan.ResumeLayout(false);
             this.tabPageNewChallan.PerformLayout();
+            this.groupBoxChallanPackingSlip.ResumeLayout(false);
+            this.groupBoxChallanPackingSlip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNewChallan)).EndInit();
             this.tabPageChallanPrint.ResumeLayout(false);
             this.tabPageChallanPrint.PerformLayout();
@@ -992,6 +1055,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn rowTotal;
         private System.Windows.Forms.Button btnTallyExport;
         private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.GroupBox groupBoxChallanPackingSlip;
+        private System.Windows.Forms.RadioButton radioButtonPackingSlipTransfer;
+        private System.Windows.Forms.RadioButton radioButtonNewChallan;
+        private System.Windows.Forms.TextBox textBoxPackingSlip;
+        private System.Windows.Forms.Label labelPackingSlip;
     }
 }
 

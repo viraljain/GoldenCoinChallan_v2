@@ -112,6 +112,7 @@
     <Compile Include="Form1_Controller_PrintChallan.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PackingSlipTransfer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />

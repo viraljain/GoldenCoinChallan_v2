@@ -71,6 +71,7 @@ namespace GoldenCoinChallan
                         Accounting = new AccountingAllocation
                         {
                             //LedgerName = "CENTRAL SALES@5%",
+                            /// As per value of StateCode in DB Table Masters, Delhi stateCode is 7, if stateCode is 7 then ledgerName should be "Local Sales @ 5%" else "CENTRAL SALES@5%"
                             LedgerName = (row["StateCode"].ToString() == "7") ? "Local Sales @ 5%" : "CENTRAL SALES@5%",
                             Amount = 1
                         }
