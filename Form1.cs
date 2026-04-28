@@ -35,6 +35,8 @@ namespace GoldenCoinChallan
             {
                 //For GODOWNTRANSFER Tab - Call the method to populate the DataGridView on the right to show PSlips transferred to Godown in the specified date range
                 this.vwGodownTrfSlipsTableAdapter.FillBy(this.aA_2023_2024DataSet.vwGodownTrfSlips, dtpFrom.Value.Date, dtpTo.Value.Date);
+
+                getGodownTransferSlips();
             }
             else if (tabControl1.SelectedTab.Text == "New Challan")
             {
@@ -420,6 +422,8 @@ namespace GoldenCoinChallan
 
                 buttonNewChallanInsert.Text = "Transfer Packing Sl&ip";
                 buttonResetChallan.Text = "&Reset Packing Slip";
+
+                tabPageNewChallan.BackColor = Color.LightBlue;
             }
         }
 
@@ -434,6 +438,8 @@ namespace GoldenCoinChallan
 
                 buttonNewChallanInsert.Text = "&Insert Challan";
                 buttonResetChallan.Text = "&Reset Challan";
+
+                tabPageNewChallan.BackColor = Color.Transparent;
             }
         }
     }

@@ -362,7 +362,7 @@ namespace GoldenCoinChallan
                 int itemQty = 0;
 
                 //Check for mandatory Packing Slip No. before proceeding with DB insertion
-                if (radioButtonPackingSlipTransfer.Checked && textBoxPackingSlip.Text.Length==0)
+                if (radioButtonPackingSlipTransfer.Checked && textBoxPackingSlip.Text.Length == 0)
                 {
                     MessageBox.Show("Please enter Packing Slip No.");
                     return;
@@ -425,7 +425,7 @@ namespace GoldenCoinChallan
                             sqlCmdChallanHeader.Parameters.AddWithValue("@DealerName", comboBoxDealerName.Text.ToString());
                             sqlCmdChallanHeader.Parameters.AddWithValue("@DealerCode", comboBoxDealerName.SelectedValue.ToString());
                             sqlCmdChallanHeader.Parameters.AddWithValue("@Remarks", textBoxNewChallanRemark.Text);
-                            sqlCmdChallanHeader.Parameters.AddWithValue("@TotalItemQty", challanTotal); 
+                            sqlCmdChallanHeader.Parameters.AddWithValue("@TotalItemQty", challanTotal);
                         }
                         //PackingSlip Transfer - Hardcoded as per DB AccountMaster Table value - PackkingSlip (684)
                         else
@@ -460,7 +460,14 @@ namespace GoldenCoinChallan
                         {
                             while (reader.Read())
                             {
-                                MessageBox.Show("Challan created successfully! Challan No. is " + reader.GetString(0));
+                                if (radioButtonNewChallan.Checked)
+                                {
+                                    MessageBox.Show("Challan created successfully! Challan No. is " + reader.GetString(0));
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Packing Slip " + textBoxPackingSlip.Text + "transferred successfully! Voucher No. is " + reader.GetString(0));
+                                }
                                 dgvNewChallan.Rows.Clear();
                                 challanTotal = 0;
                                 labelTotal.Text = "Total 0";
