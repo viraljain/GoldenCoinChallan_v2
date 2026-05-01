@@ -184,7 +184,7 @@
             this.textBoxPackingSlip.Location = new System.Drawing.Point(446, 7);
             this.textBoxPackingSlip.Name = "textBoxPackingSlip";
             this.textBoxPackingSlip.Size = new System.Drawing.Size(184, 20);
-            this.textBoxPackingSlip.TabIndex = 19;
+            this.textBoxPackingSlip.TabIndex = 1;
             this.textBoxPackingSlip.Visible = false;
             // 
             // labelPackingSlip
@@ -204,7 +204,7 @@
             this.groupBoxChallanPackingSlip.Location = new System.Drawing.Point(5, 1);
             this.groupBoxChallanPackingSlip.Name = "groupBoxChallanPackingSlip";
             this.groupBoxChallanPackingSlip.Size = new System.Drawing.Size(354, 30);
-            this.groupBoxChallanPackingSlip.TabIndex = 17;
+            this.groupBoxChallanPackingSlip.TabIndex = 0;
             this.groupBoxChallanPackingSlip.TabStop = false;
             // 
             // radioButtonPackingSlipTransfer

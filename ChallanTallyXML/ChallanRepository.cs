@@ -52,7 +52,8 @@ namespace GoldenCoinChallan
                 DataTable resTable = tempViewChallanPrintTableAdapter.GetDataBy(challanNo);
 
                 List<InventoryEntry> challanItems = new List<InventoryEntry>();
-                foreach (DataRow row in resTable.Select("ItemDesc IS NOT NULL").OrderBy(r => r["Srno"]))
+                //foreach (DataRow row in resTable.Select("ItemDesc IS NOT NULL").OrderBy(r => r["Srno"]))
+                foreach (DataRow row in resTable.Select("ItemDesc IS NOT NULL AND Qty>0").OrderBy(r => r["Srno"]))
                 {
                     var entry = new InventoryEntry
                     {

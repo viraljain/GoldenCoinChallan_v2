@@ -383,7 +383,7 @@ namespace GoldenCoinChallan
                         DataGridViewComboBoxCell cmbItemName = row.Cells["ItemName"] as DataGridViewComboBoxCell;
                         itemUnit = cmbItemName.Value.ToString().Split(new String[] { "|||" }, StringSplitOptions.RemoveEmptyEntries)[1];
                         itemName = cmbItemName.FormattedValue.ToString();
-                        foreach (DataGridViewCell cell in row.Cells.Cast<DataGridViewCell>().ToList().Where(cell => cell.Value != null && cell.OwningColumn.Name.Contains("Size")))
+                        foreach (DataGridViewCell cell in row.Cells.Cast<DataGridViewCell>().ToList().Where(cell => cell.Value != null && Convert.ToInt16(cell.Value) > 0 && cell.OwningColumn.Name.Contains("Size")))
                         {
                             if (cell.Value.ToString().Length > 0)
                             {
