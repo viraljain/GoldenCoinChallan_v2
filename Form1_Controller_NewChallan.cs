@@ -383,14 +383,15 @@ namespace GoldenCoinChallan
                         DataGridViewComboBoxCell cmbItemName = row.Cells["ItemName"] as DataGridViewComboBoxCell;
                         itemUnit = cmbItemName.Value.ToString().Split(new String[] { "|||" }, StringSplitOptions.RemoveEmptyEntries)[1];
                         itemName = cmbItemName.FormattedValue.ToString();
-                        foreach (DataGridViewCell cell in row.Cells.Cast<DataGridViewCell>().ToList().Where(cell => cell.Value != null && Convert.ToInt16(cell.Value) > 0 && cell.OwningColumn.Name.Contains("Size")))
+                        foreach (DataGridViewCell cell in row.Cells.Cast<DataGridViewCell>().ToList().Where(cell => cell.Value != null && cell.OwningColumn.Name.Contains("Size")))
                         {
                             if (cell.Value.ToString().Length > 0)
                             {
                                 itemSize = cell.OwningColumn.Name.Split('_')[1];
                                 int.TryParse(cell.Value.ToString(), out itemQty);
 
-                                dtNewChallan.Rows.Add(itemName, itemSize, itemQty, itemUnit);
+                                if (itemQty > 0)
+                                    dtNewChallan.Rows.Add(itemName, itemSize, itemQty, itemUnit);
                             }
                         }
                     }
@@ -456,6 +457,8 @@ namespace GoldenCoinChallan
                     using (SqlCommand sqlCmdSPNewChallan = new SqlCommand("sp_NewChallan", sqlConnection))
                     {
                         sqlCmdSPNewChallan.CommandType = CommandType.StoredProcedure;
+                        sqlCmdSPNewChallan.Parameters.Add("@Date",SqlDbType.DateTime).Value = dateNewChallan.Value;
+
                         using (SqlDataReader reader = sqlCmdSPNewChallan.ExecuteReader())
                         {
                             while (reader.Read())
@@ -463,16 +466,18 @@ namespace GoldenCoinChallan
                                 if (radioButtonNewChallan.Checked)
                                 {
                                     MessageBox.Show("Challan created successfully! Challan No. is " + reader.GetString(0));
+                                    comboBoxDealerName.Focus();
                                 }
                                 else
                                 {
                                     MessageBox.Show("Packing Slip " + textBoxPackingSlip.Text + "transferred successfully! Voucher No. is " + reader.GetString(0));
+                                    textBoxPackingSlip.Focus();
                                 }
                                 dgvNewChallan.Rows.Clear();
                                 challanTotal = 0;
                                 labelTotal.Text = "Total 0";
                                 textBoxNewChallanRemark.Text = "";
-                                comboBoxDealerName.Focus();
+                                textBoxPackingSlip.Text = "";
                             }
                         }
                     }
@@ -527,6 +532,7 @@ namespace GoldenCoinChallan
                     bsDealerName.RemoveFilter();
                     comboBoxDealerName.Focus();
                     labelDealerName.Text = "";
+                    textBoxPackingSlip.Text = "";
                 }
             }
         }

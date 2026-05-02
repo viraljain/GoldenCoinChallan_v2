@@ -255,9 +255,11 @@
             // 
             // dateNewChallan
             // 
-            this.dateNewChallan.CustomFormat = "dd-mm-yyyy";
-            this.dateNewChallan.Enabled = false;
+            this.dateNewChallan.CustomFormat = "dd-MMM-yyyy (ddd)";
+            this.dateNewChallan.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dateNewChallan.Location = new System.Drawing.Point(1109, 244);
+            this.dateNewChallan.MaxDate = new System.DateTime(2099, 12, 31, 0, 0, 0, 0);
+            this.dateNewChallan.MinDate = new System.DateTime(2026, 4, 1, 0, 0, 0, 0);
             this.dateNewChallan.Name = "dateNewChallan";
             this.dateNewChallan.Size = new System.Drawing.Size(139, 20);
             this.dateNewChallan.TabIndex = 14;
