@@ -53,6 +53,13 @@ namespace GoldenCoinChallan
                  * Below code is used to popuplate the DataGridView on the right to current challan details
                  */
                 this.viewChallanListTableAdapter1.Fill(this.aA_2023_2024DataSet.ViewChallanList);
+
+                var adapter = new vwGodownTrfSlipsTableAdapter();
+                viewPackingSlipListBindingSource.DataSource = adapter.GetPSlipForModify();
+                dgvPSlipList.DataSource = viewPackingSlipListBindingSource;
+                //this.vwGodownTrfSlipsTableAdapter.Fill(this.vwGodownTrfSlipsTableAdapter.GetPSlipForModify());
+                //viewPackingSlipListBindingSource.DataSource = adapter.GetPSlipForModify();
+                //dgvPSlipList.DataSource = viewPackingSlipListBindingSource;
             }
         }
         #region FORM RESIZE LOGIC
@@ -603,6 +610,12 @@ namespace GoldenCoinChallan
             {
                 MessageBox.Show($"Error fetching challan: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void dgvPSlipList_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            textBoxChallan.Text = dgvPSlipList["dgvPSlipTextBoxBillNo", e.RowIndex].Value.ToString();
+            showChallanData();
         }
     }
 }

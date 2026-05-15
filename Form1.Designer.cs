@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -80,14 +81,17 @@
             this.btnModifyChallan = new System.Windows.Forms.Button();
             this.buttonChallanPrintRefresh = new System.Windows.Forms.Button();
             this.dgvChallanList = new System.Windows.Forms.DataGridView();
+            this.dgvTextBoxDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvTextBoxBillNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvTextBoxName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvTextBoxQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.viewChallanListBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.aA_2023_2024DataSet = new GoldenCoinChallan.AA_2023_2024DataSet();
             this.textBoxChallan = new System.Windows.Forms.TextBox();
             this.reportViewerChallanPrint = new Microsoft.Reporting.WinForms.ReportViewer();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.lblChallanProgress = new System.Windows.Forms.Label();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.dgvPSlipList = new System.Windows.Forms.DataGridView();
+            this.viewPackingSlipListBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabPageGodownTransfer = new System.Windows.Forms.TabPage();
             this.dgvGodownTrfPSlips = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn17 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -103,6 +107,7 @@
             this.ItemDesc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.qtyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Unit = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.aA20232024DataSetBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.viewChallanPrintBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.viewChallanPrintTableAdapter = new GoldenCoinChallan.AA_2023_2024DataSetTableAdapters.ViewChallanPrintTableAdapter();
             this.tableAdapterManager = new GoldenCoinChallan.AA_2023_2024DataSetTableAdapters.TableAdapterManager();
@@ -111,10 +116,12 @@
             this.viewChallanListTableAdapter1 = new GoldenCoinChallan.AA_2023_2024DataSetTableAdapters.ViewChallanListTableAdapter();
             this.newChallanItemTableAdapter1 = new GoldenCoinChallan.AA_2023_2024DataSetTableAdapters.NewChallanItemTableAdapter();
             this.newChallanBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dgvTextBoxDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvTextBoxBillNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvTextBoxName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvTextBoxQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.getPSlipForModifyToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dateDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPSlipTextBoxBillNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.remarkDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totQtyDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1.SuspendLayout();
             this.tabPageNewChallan.SuspendLayout();
             this.groupBoxChallanPackingSlip.SuspendLayout();
@@ -123,11 +130,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvChallanList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewChallanListBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.aA_2023_2024DataSet)).BeginInit();
-            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPSlipList)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewPackingSlipListBindingSource)).BeginInit();
             this.tabPageGodownTransfer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvGodownTrfPSlips)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vwGodownTrfSlipsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvGodownTrfDetail)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.aA20232024DataSetBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewChallanPrintBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.aA_2023_2024DataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.newChallanBindingSource)).BeginInit();
@@ -606,7 +615,7 @@
             this.tabPageChallanPrint.Controls.Add(this.textBoxChallan);
             this.tabPageChallanPrint.Controls.Add(this.reportViewerChallanPrint);
             this.tabPageChallanPrint.Controls.Add(this.labelStatus);
-            this.tabPageChallanPrint.Controls.Add(this.panel1);
+            this.tabPageChallanPrint.Controls.Add(this.dgvPSlipList);
             this.tabPageChallanPrint.Location = new System.Drawing.Point(4, 22);
             this.tabPageChallanPrint.Name = "tabPageChallanPrint";
             this.tabPageChallanPrint.Padding = new System.Windows.Forms.Padding(3);
@@ -678,9 +687,38 @@
             this.dgvChallanList.Location = new System.Drawing.Point(886, 38);
             this.dgvChallanList.Name = "dgvChallanList";
             this.dgvChallanList.RowHeadersVisible = false;
-            this.dgvChallanList.Size = new System.Drawing.Size(367, 614);
+            this.dgvChallanList.Size = new System.Drawing.Size(367, 331);
             this.dgvChallanList.TabIndex = 7;
             this.dgvChallanList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.viewChallanPrintDataGridView_RowEnter);
+            // 
+            // dgvTextBoxDate
+            // 
+            this.dgvTextBoxDate.DataPropertyName = "BillDate";
+            this.dgvTextBoxDate.HeaderText = "Date";
+            this.dgvTextBoxDate.Name = "dgvTextBoxDate";
+            this.dgvTextBoxDate.ReadOnly = true;
+            this.dgvTextBoxDate.Width = 75;
+            // 
+            // dgvTextBoxBillNo
+            // 
+            this.dgvTextBoxBillNo.DataPropertyName = "BillNo";
+            this.dgvTextBoxBillNo.HeaderText = "BillNo";
+            this.dgvTextBoxBillNo.Name = "dgvTextBoxBillNo";
+            this.dgvTextBoxBillNo.Width = 57;
+            // 
+            // dgvTextBoxName
+            // 
+            this.dgvTextBoxName.DataPropertyName = "Name";
+            this.dgvTextBoxName.HeaderText = "Name";
+            this.dgvTextBoxName.Name = "dgvTextBoxName";
+            this.dgvTextBoxName.Width = 165;
+            // 
+            // dgvTextBoxQty
+            // 
+            this.dgvTextBoxQty.DataPropertyName = "TotQty";
+            this.dgvTextBoxQty.HeaderText = "TotQty";
+            this.dgvTextBoxQty.Name = "dgvTextBoxQty";
+            this.dgvTextBoxQty.Width = 48;
             // 
             // viewChallanListBindingSource
             // 
@@ -723,34 +761,28 @@
             this.labelStatus.Size = new System.Drawing.Size(0, 20);
             this.labelStatus.TabIndex = 1;
             // 
-            // panel1
+            // dgvPSlipList
             // 
-            this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.panel1.Controls.Add(this.lblChallanProgress);
-            this.panel1.Controls.Add(this.progressBar1);
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1250, 652);
-            this.panel1.TabIndex = 0;
-            this.panel1.Visible = false;
+            this.dgvPSlipList.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.dgvPSlipList.AutoGenerateColumns = false;
+            this.dgvPSlipList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvPSlipList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dateDataGridViewTextBoxColumn1,
+            this.dgvPSlipTextBoxBillNo,
+            this.remarkDataGridViewTextBoxColumn1,
+            this.totQtyDataGridViewTextBoxColumn1});
+            this.dgvPSlipList.DataSource = this.viewPackingSlipListBindingSource;
+            this.dgvPSlipList.Location = new System.Drawing.Point(886, 372);
+            this.dgvPSlipList.Name = "dgvPSlipList";
+            this.dgvPSlipList.RowHeadersVisible = false;
+            this.dgvPSlipList.Size = new System.Drawing.Size(366, 272);
+            this.dgvPSlipList.TabIndex = 8;
+            this.dgvPSlipList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPSlipList_RowEnter);
             // 
-            // lblChallanProgress
+            // viewPackingSlipListBindingSource
             // 
-            this.lblChallanProgress.AutoSize = true;
-            this.lblChallanProgress.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblChallanProgress.Location = new System.Drawing.Point(364, 193);
-            this.lblChallanProgress.Name = "lblChallanProgress";
-            this.lblChallanProgress.Size = new System.Drawing.Size(528, 37);
-            this.lblChallanProgress.TabIndex = 0;
-            this.lblChallanProgress.Text = "Challan is being loaded…Kindly wait!";
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(268, 269);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(721, 23);
-            this.progressBar1.TabIndex = 0;
-            this.progressBar1.Value = 75;
+            this.viewPackingSlipListBindingSource.DataMember = "vwGodownTrfSlips";
+            this.viewPackingSlipListBindingSource.DataSource = this.aA_2023_2024DataSet;
             // 
             // tabPageGodownTransfer
             // 
@@ -896,6 +928,11 @@
             this.Unit.Name = "Unit";
             this.Unit.ReadOnly = true;
             // 
+            // aA20232024DataSetBindingSource
+            // 
+            this.aA20232024DataSetBindingSource.DataSource = this.aA_2023_2024DataSet;
+            this.aA20232024DataSetBindingSource.Position = 0;
+            // 
             // viewChallanPrintBindingSource
             // 
             this.viewChallanPrintBindingSource.DataMember = "ViewChallanPrint";
@@ -933,34 +970,49 @@
             this.newChallanBindingSource.DataMember = "ViewNewChallan";
             this.newChallanBindingSource.DataSource = this.aA_2023_2024DataSet;
             // 
-            // dgvTextBoxDate
+            // getPSlipForModifyToolStripButton
             // 
-            this.dgvTextBoxDate.DataPropertyName = "BillDate";
-            this.dgvTextBoxDate.HeaderText = "Date";
-            this.dgvTextBoxDate.Name = "dgvTextBoxDate";
-            this.dgvTextBoxDate.ReadOnly = true;
-            this.dgvTextBoxDate.Width = 75;
+            this.getPSlipForModifyToolStripButton.Name = "getPSlipForModifyToolStripButton";
+            this.getPSlipForModifyToolStripButton.Size = new System.Drawing.Size(23, 23);
             // 
-            // dgvTextBoxBillNo
+            // dataGridViewTextBoxColumn1
             // 
-            this.dgvTextBoxBillNo.DataPropertyName = "BillNo";
-            this.dgvTextBoxBillNo.HeaderText = "BillNo";
-            this.dgvTextBoxBillNo.Name = "dgvTextBoxBillNo";
-            this.dgvTextBoxBillNo.Width = 57;
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "BillDate";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Date";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.Width = 75;
             // 
-            // dgvTextBoxName
+            // dateDataGridViewTextBoxColumn1
             // 
-            this.dgvTextBoxName.DataPropertyName = "Name";
-            this.dgvTextBoxName.HeaderText = "Name";
-            this.dgvTextBoxName.Name = "dgvTextBoxName";
-            this.dgvTextBoxName.Width = 165;
+            this.dateDataGridViewTextBoxColumn1.DataPropertyName = "Date";
+            dataGridViewCellStyle3.Format = "dd-MMM-yyy";
+            dataGridViewCellStyle3.NullValue = null;
+            this.dateDataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle3;
+            this.dateDataGridViewTextBoxColumn1.HeaderText = "Date";
+            this.dateDataGridViewTextBoxColumn1.Name = "dateDataGridViewTextBoxColumn1";
+            this.dateDataGridViewTextBoxColumn1.Width = 75;
             // 
-            // dgvTextBoxQty
+            // dgvPSlipTextBoxBillNo
             // 
-            this.dgvTextBoxQty.DataPropertyName = "TotQty";
-            this.dgvTextBoxQty.HeaderText = "TotQty";
-            this.dgvTextBoxQty.Name = "dgvTextBoxQty";
-            this.dgvTextBoxQty.Width = 48;
+            this.dgvPSlipTextBoxBillNo.DataPropertyName = "BillNo";
+            this.dgvPSlipTextBoxBillNo.HeaderText = "BillNo";
+            this.dgvPSlipTextBoxBillNo.Name = "dgvPSlipTextBoxBillNo";
+            this.dgvPSlipTextBoxBillNo.Width = 57;
+            // 
+            // remarkDataGridViewTextBoxColumn1
+            // 
+            this.remarkDataGridViewTextBoxColumn1.DataPropertyName = "Remark";
+            this.remarkDataGridViewTextBoxColumn1.HeaderText = "Remark";
+            this.remarkDataGridViewTextBoxColumn1.Name = "remarkDataGridViewTextBoxColumn1";
+            this.remarkDataGridViewTextBoxColumn1.Width = 165;
+            // 
+            // totQtyDataGridViewTextBoxColumn1
+            // 
+            this.totQtyDataGridViewTextBoxColumn1.DataPropertyName = "TotQty";
+            this.totQtyDataGridViewTextBoxColumn1.HeaderText = "TotQty";
+            this.totQtyDataGridViewTextBoxColumn1.Name = "totQtyDataGridViewTextBoxColumn1";
+            this.totQtyDataGridViewTextBoxColumn1.Width = 48;
             // 
             // Form1
             // 
@@ -988,12 +1040,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvChallanList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewChallanListBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.aA_2023_2024DataSet)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPSlipList)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewPackingSlipListBindingSource)).EndInit();
             this.tabPageGodownTransfer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvGodownTrfPSlips)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.vwGodownTrfSlipsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvGodownTrfDetail)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.aA20232024DataSetBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewChallanPrintBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.aA_2023_2024DataSet1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.newChallanBindingSource)).EndInit();
@@ -1027,9 +1080,6 @@
         private System.Windows.Forms.DataGridView dgvGodownTrfPSlips;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn17;
         private System.Windows.Forms.TabPage tabPageChallanPrint;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label lblChallanProgress;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button btnGenChallan;
         private System.Windows.Forms.DataGridView dgvChallanList;
         private System.Windows.Forms.TextBox textBoxChallan;
@@ -1086,6 +1136,15 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxBillNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxName;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxQty;
+        private System.Windows.Forms.DataGridView dgvPSlipList;
+        private System.Windows.Forms.BindingSource viewPackingSlipListBindingSource;
+        private System.Windows.Forms.ToolStripButton getPSlipForModifyToolStripButton;
+        private System.Windows.Forms.BindingSource aA20232024DataSetBindingSource;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvPSlipTextBoxBillNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn remarkDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn totQtyDataGridViewTextBoxColumn1;
     }
 }
 
