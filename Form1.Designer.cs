@@ -77,12 +77,9 @@
             this.tabPageChallanPrint = new System.Windows.Forms.TabPage();
             this.btnGenChallan = new System.Windows.Forms.Button();
             this.btnTallyExport = new System.Windows.Forms.Button();
+            this.btnModifyChallan = new System.Windows.Forms.Button();
             this.buttonChallanPrintRefresh = new System.Windows.Forms.Button();
             this.dgvChallanList = new System.Windows.Forms.DataGridView();
-            this.dgvTextBoxDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvTextBoxBillNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvTextBoxName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvTextBoxQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.viewChallanListBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.aA_2023_2024DataSet = new GoldenCoinChallan.AA_2023_2024DataSet();
             this.textBoxChallan = new System.Windows.Forms.TextBox();
@@ -114,6 +111,10 @@
             this.viewChallanListTableAdapter1 = new GoldenCoinChallan.AA_2023_2024DataSetTableAdapters.ViewChallanListTableAdapter();
             this.newChallanItemTableAdapter1 = new GoldenCoinChallan.AA_2023_2024DataSetTableAdapters.NewChallanItemTableAdapter();
             this.newChallanBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dgvTextBoxDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvTextBoxBillNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvTextBoxName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvTextBoxQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1.SuspendLayout();
             this.tabPageNewChallan.SuspendLayout();
             this.groupBoxChallanPackingSlip.SuspendLayout();
@@ -181,18 +182,19 @@
             // 
             // textBoxPackingSlip
             // 
-            this.textBoxPackingSlip.Location = new System.Drawing.Point(446, 7);
+            this.textBoxPackingSlip.Location = new System.Drawing.Point(405, 8);
             this.textBoxPackingSlip.Name = "textBoxPackingSlip";
-            this.textBoxPackingSlip.Size = new System.Drawing.Size(184, 20);
+            this.textBoxPackingSlip.Size = new System.Drawing.Size(105, 20);
             this.textBoxPackingSlip.TabIndex = 1;
             this.textBoxPackingSlip.Visible = false;
             // 
             // labelPackingSlip
             // 
             this.labelPackingSlip.AutoSize = true;
-            this.labelPackingSlip.Location = new System.Drawing.Point(375, 9);
+            this.labelPackingSlip.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.labelPackingSlip.Location = new System.Drawing.Point(325, 10);
             this.labelPackingSlip.Name = "labelPackingSlip";
-            this.labelPackingSlip.Size = new System.Drawing.Size(66, 13);
+            this.labelPackingSlip.Size = new System.Drawing.Size(82, 16);
             this.labelPackingSlip.TabIndex = 18;
             this.labelPackingSlip.Text = "Packing Slip";
             this.labelPackingSlip.Visible = false;
@@ -203,16 +205,17 @@
             this.groupBoxChallanPackingSlip.Controls.Add(this.radioButtonNewChallan);
             this.groupBoxChallanPackingSlip.Location = new System.Drawing.Point(5, 1);
             this.groupBoxChallanPackingSlip.Name = "groupBoxChallanPackingSlip";
-            this.groupBoxChallanPackingSlip.Size = new System.Drawing.Size(354, 30);
+            this.groupBoxChallanPackingSlip.Size = new System.Drawing.Size(291, 30);
             this.groupBoxChallanPackingSlip.TabIndex = 0;
             this.groupBoxChallanPackingSlip.TabStop = false;
             // 
             // radioButtonPackingSlipTransfer
             // 
             this.radioButtonPackingSlipTransfer.AutoSize = true;
-            this.radioButtonPackingSlipTransfer.Location = new System.Drawing.Point(121, 6);
+            this.radioButtonPackingSlipTransfer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.radioButtonPackingSlipTransfer.Location = new System.Drawing.Point(121, 7);
             this.radioButtonPackingSlipTransfer.Name = "radioButtonPackingSlipTransfer";
-            this.radioButtonPackingSlipTransfer.Size = new System.Drawing.Size(126, 17);
+            this.radioButtonPackingSlipTransfer.Size = new System.Drawing.Size(153, 20);
             this.radioButtonPackingSlipTransfer.TabIndex = 1;
             this.radioButtonPackingSlipTransfer.Text = "Packing Slip Transfer";
             this.radioButtonPackingSlipTransfer.UseVisualStyleBackColor = true;
@@ -222,9 +225,10 @@
             // 
             this.radioButtonNewChallan.AutoSize = true;
             this.radioButtonNewChallan.Checked = true;
-            this.radioButtonNewChallan.Location = new System.Drawing.Point(7, 8);
+            this.radioButtonNewChallan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.radioButtonNewChallan.Location = new System.Drawing.Point(7, 7);
             this.radioButtonNewChallan.Name = "radioButtonNewChallan";
-            this.radioButtonNewChallan.Size = new System.Drawing.Size(85, 17);
+            this.radioButtonNewChallan.Size = new System.Drawing.Size(100, 20);
             this.radioButtonNewChallan.TabIndex = 0;
             this.radioButtonNewChallan.TabStop = true;
             this.radioButtonNewChallan.Text = "New Challan";
@@ -257,7 +261,7 @@
             // 
             this.dateNewChallan.CustomFormat = "dd-MMM-yyyy (ddd)";
             this.dateNewChallan.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateNewChallan.Location = new System.Drawing.Point(1109, 244);
+            this.dateNewChallan.Location = new System.Drawing.Point(530, 7);
             this.dateNewChallan.MaxDate = new System.DateTime(2099, 12, 31, 0, 0, 0, 0);
             this.dateNewChallan.MinDate = new System.DateTime(2026, 4, 1, 0, 0, 0, 0);
             this.dateNewChallan.Name = "dateNewChallan";
@@ -278,9 +282,9 @@
             // labelNewChallanRemark
             // 
             this.labelNewChallanRemark.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.labelNewChallanRemark.Location = new System.Drawing.Point(754, 4);
+            this.labelNewChallanRemark.Location = new System.Drawing.Point(755, 7);
             this.labelNewChallanRemark.Name = "labelNewChallanRemark";
-            this.labelNewChallanRemark.Size = new System.Drawing.Size(73, 22);
+            this.labelNewChallanRemark.Size = new System.Drawing.Size(73, 20);
             this.labelNewChallanRemark.TabIndex = 12;
             this.labelNewChallanRemark.Text = "Remarks";
             // 
@@ -596,6 +600,7 @@
             // 
             this.tabPageChallanPrint.Controls.Add(this.btnGenChallan);
             this.tabPageChallanPrint.Controls.Add(this.btnTallyExport);
+            this.tabPageChallanPrint.Controls.Add(this.btnModifyChallan);
             this.tabPageChallanPrint.Controls.Add(this.buttonChallanPrintRefresh);
             this.tabPageChallanPrint.Controls.Add(this.dgvChallanList);
             this.tabPageChallanPrint.Controls.Add(this.textBoxChallan);
@@ -635,6 +640,19 @@
             this.btnTallyExport.UseVisualStyleBackColor = false;
             this.btnTallyExport.Click += new System.EventHandler(this.btnTallyExport_Click);
             // 
+            // btnModifyChallan
+            // 
+            this.btnModifyChallan.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.btnModifyChallan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.btnModifyChallan.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.btnModifyChallan.Location = new System.Drawing.Point(471, 3);
+            this.btnModifyChallan.Name = "btnModifyChallan";
+            this.btnModifyChallan.Size = new System.Drawing.Size(145, 30);
+            this.btnModifyChallan.TabIndex = 9;
+            this.btnModifyChallan.Text = "&Modify Challan";
+            this.btnModifyChallan.UseVisualStyleBackColor = false;
+            this.btnModifyChallan.Click += new System.EventHandler(this.btnModifyChallan_Click);
+            // 
             // buttonChallanPrintRefresh
             // 
             this.buttonChallanPrintRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
@@ -657,36 +675,12 @@
             this.dgvTextBoxName,
             this.dgvTextBoxQty});
             this.dgvChallanList.DataSource = this.viewChallanListBindingSource;
-            this.dgvChallanList.Location = new System.Drawing.Point(787, 38);
+            this.dgvChallanList.Location = new System.Drawing.Point(886, 38);
             this.dgvChallanList.Name = "dgvChallanList";
-            this.dgvChallanList.Size = new System.Drawing.Size(466, 614);
+            this.dgvChallanList.RowHeadersVisible = false;
+            this.dgvChallanList.Size = new System.Drawing.Size(367, 614);
             this.dgvChallanList.TabIndex = 7;
             this.dgvChallanList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.viewChallanPrintDataGridView_RowEnter);
-            // 
-            // dgvTextBoxDate
-            // 
-            this.dgvTextBoxDate.DataPropertyName = "BillDate";
-            this.dgvTextBoxDate.HeaderText = "Date";
-            this.dgvTextBoxDate.Name = "dgvTextBoxDate";
-            this.dgvTextBoxDate.ReadOnly = true;
-            // 
-            // dgvTextBoxBillNo
-            // 
-            this.dgvTextBoxBillNo.DataPropertyName = "BillNo";
-            this.dgvTextBoxBillNo.HeaderText = "BillNo";
-            this.dgvTextBoxBillNo.Name = "dgvTextBoxBillNo";
-            // 
-            // dgvTextBoxName
-            // 
-            this.dgvTextBoxName.DataPropertyName = "Name";
-            this.dgvTextBoxName.HeaderText = "Name";
-            this.dgvTextBoxName.Name = "dgvTextBoxName";
-            // 
-            // dgvTextBoxQty
-            // 
-            this.dgvTextBoxQty.DataPropertyName = "TotQty";
-            this.dgvTextBoxQty.HeaderText = "TotQty";
-            this.dgvTextBoxQty.Name = "dgvTextBoxQty";
             // 
             // viewChallanListBindingSource
             // 
@@ -717,7 +711,7 @@
             this.reportViewerChallanPrint.Location = new System.Drawing.Point(4, 38);
             this.reportViewerChallanPrint.Name = "reportViewerChallanPrint";
             this.reportViewerChallanPrint.ServerReport.BearerToken = null;
-            this.reportViewerChallanPrint.Size = new System.Drawing.Size(772, 614);
+            this.reportViewerChallanPrint.Size = new System.Drawing.Size(818, 412);
             this.reportViewerChallanPrint.TabIndex = 4;
             // 
             // labelStatus
@@ -939,6 +933,35 @@
             this.newChallanBindingSource.DataMember = "ViewNewChallan";
             this.newChallanBindingSource.DataSource = this.aA_2023_2024DataSet;
             // 
+            // dgvTextBoxDate
+            // 
+            this.dgvTextBoxDate.DataPropertyName = "BillDate";
+            this.dgvTextBoxDate.HeaderText = "Date";
+            this.dgvTextBoxDate.Name = "dgvTextBoxDate";
+            this.dgvTextBoxDate.ReadOnly = true;
+            this.dgvTextBoxDate.Width = 75;
+            // 
+            // dgvTextBoxBillNo
+            // 
+            this.dgvTextBoxBillNo.DataPropertyName = "BillNo";
+            this.dgvTextBoxBillNo.HeaderText = "BillNo";
+            this.dgvTextBoxBillNo.Name = "dgvTextBoxBillNo";
+            this.dgvTextBoxBillNo.Width = 57;
+            // 
+            // dgvTextBoxName
+            // 
+            this.dgvTextBoxName.DataPropertyName = "Name";
+            this.dgvTextBoxName.HeaderText = "Name";
+            this.dgvTextBoxName.Name = "dgvTextBoxName";
+            this.dgvTextBoxName.Width = 165;
+            // 
+            // dgvTextBoxQty
+            // 
+            this.dgvTextBoxQty.DataPropertyName = "TotQty";
+            this.dgvTextBoxQty.HeaderText = "TotQty";
+            this.dgvTextBoxQty.Name = "dgvTextBoxQty";
+            this.dgvTextBoxQty.Width = 48;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1011,10 +1034,6 @@
         private System.Windows.Forms.DataGridView dgvChallanList;
         private System.Windows.Forms.TextBox textBoxChallan;
         private Microsoft.Reporting.WinForms.ReportViewer reportViewerChallanPrint;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxBillNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxQty;
         private System.Windows.Forms.BindingSource viewChallanListBindingSource;
         private AA_2023_2024DataSetTableAdapters.ViewChallanListTableAdapter viewChallanListTableAdapter1;
         private System.Windows.Forms.TabPage tabPageNewChallan;
@@ -1062,6 +1081,11 @@
         private System.Windows.Forms.RadioButton radioButtonNewChallan;
         private System.Windows.Forms.TextBox textBoxPackingSlip;
         private System.Windows.Forms.Label labelPackingSlip;
+        private System.Windows.Forms.Button btnModifyChallan;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxBillNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvTextBoxQty;
     }
 }
 

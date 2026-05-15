@@ -1,18 +1,19 @@
 ﻿using GoldenCoinChallan.AA_2023_2024DataSetTableAdapters;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Reporting.WinForms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.IO;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ScrollBar;
 
 namespace GoldenCoinChallan
 {
@@ -52,7 +53,7 @@ namespace GoldenCoinChallan
                  * Below code is used to popuplate the DataGridView on the right to current challan details
                  */
                 this.viewChallanListTableAdapter1.Fill(this.aA_2023_2024DataSet.ViewChallanList);
-            }            
+            }
         }
         #region FORM RESIZE LOGIC
         /*		FORM RESIZE LOGIC START		*/
@@ -399,8 +400,8 @@ namespace GoldenCoinChallan
                     return;
                 }
                 System.IO.File.WriteAllText(exportPath, xml);
-                labelStatus.Text = fileName + " exported successfully to " + exportPath.Replace(fileName,"");
-                labelStatus.BackColor = Color.LightGreen;                
+                labelStatus.Text = fileName + " exported successfully to " + exportPath.Replace(fileName, "");
+                labelStatus.BackColor = Color.LightGreen;
             }
             catch (Exception ex)
             {
@@ -416,7 +417,7 @@ namespace GoldenCoinChallan
             {
                 labelDealerDetails.Visible = labelDealerName.Visible = comboBoxDealerName.Visible = labelNewChallanRemark.Visible = textBoxNewChallanRemark.Visible = false;
 
-                labelPackingSlip.Visible=textBoxPackingSlip.Visible= true;
+                labelPackingSlip.Visible = textBoxPackingSlip.Visible = true;
 
                 labelNewChallanNumber.Visible = false;
 
@@ -440,6 +441,167 @@ namespace GoldenCoinChallan
                 buttonResetChallan.Text = "&Reset Challan";
 
                 tabPageNewChallan.BackColor = Color.Transparent;
+            }
+        }
+
+        private void btnModifyChallan_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string challanNo = textBoxChallan.Text.Trim();
+                if (string.IsNullOrEmpty(challanNo)) return;
+
+                using (var conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["GoldenCoinChallan.Properties.Settings.AA_2023_2024ConnectionString"].ConnectionString))
+                using (var cmdGetChallan = new SqlCommand("sp_GetChallanData", conn))
+                {
+                    cmdGetChallan.CommandType = CommandType.StoredProcedure;
+                    cmdGetChallan.Parameters.AddWithValue("@ChallanNo", challanNo);
+
+                    var dtGetChallan = new DataTable();
+                    conn.Open();
+
+                    using (var reader = cmdGetChallan.ExecuteReader())
+                    {
+                        dtGetChallan.Load(reader);
+                    }
+
+                    if (dtGetChallan.Rows.Count > 0)
+                    {
+                        newChallan_Load();
+                        dgvNewChallan.Rows.Clear();
+                        challanTotal = 0;
+                        labelTotal.Text = "Total 0";
+                        textBoxNewChallanRemark.Text = "";
+                        labelDealerName.Text = "";
+                        textBoxPackingSlip.Text = "";
+
+                        var row = dtGetChallan.Rows[0];
+                        labelNewChallanNumber.Text = row.Field<string>("BillNo");
+                        dateNewChallan.Value = row.Field<DateTime>("Date");
+                        labelTotal.Text = "Total " + row.Field<Double>("TotQty").ToString();
+
+                        if (challanNo.ToUpper().StartsWith("PI"))
+                        {
+                            radioButtonPackingSlipTransfer.Checked = true;
+                            radioButtonPackingSlipTransfer_CheckedChanged(sender, EventArgs.Empty);
+                            //comboBoxDealerName.SelectedIndex = comboBoxDealerName.FindString(row.Field<string>("NAME"));
+                            textBoxPackingSlip.Text = row.Field<string>("Remark");
+                            buttonNewChallanInsert.Text = "&Update Packing Slip";
+                        }
+                        else
+                        {
+                            radioButtonNewChallan.Checked = true;
+                            radioButtonNewChallan_CheckedChanged(sender, EventArgs.Empty);
+                            comboBoxDealerName.SelectedIndex = comboBoxDealerName.FindString(row.Field<string>("NAME"));
+                            textBoxNewChallanRemark.Text = row.Field<string>("Remark");
+                            buttonNewChallanInsert.Text = "&Update Challan";
+                        }
+
+                        tabControl1.SelectedTab = tabPageNewChallan; // switch to edit tab
+
+                        /**************** DETAILS DISPLAY LOGIC ****************/
+                        var rows = dtGetChallan.AsEnumerable();
+
+                        var challanItemGroup = rows
+                            .Where(r => !string.IsNullOrWhiteSpace(r.Field<string>("ItemName")))
+                            .GroupBy(r => new
+                            {
+                                ItemName = r.Field<string>("ItemName").Trim(),
+                                Unit = dtGetChallan.Columns.Contains("FieldValue1") ? (r["FieldValue1"]?.ToString() ?? "") : ""
+                            });
+
+
+                        var itemNameColumn = dgvNewChallan.Columns["ItemName"] as DataGridViewComboBoxColumn;
+                        foreach (var challanItem in challanItemGroup)
+                        {
+                            string itemName = challanItem.Key.ItemName.Replace("D.", "Divya").Replace("M.", "Maestro").Replace("Cmndr", "Commander");
+                            string unit = challanItem.Key.Unit;
+
+                            // add single row per distinct item+unit
+                            int newIndex = dgvNewChallan.Rows.Add();
+                            var targetRow = dgvNewChallan.Rows[newIndex];
+
+                            // set item name + unit once using your existing helper
+                            var nameCell = targetRow.Cells["ItemName"];
+                            //setComboCellByDisplayOrValue(nameCell, itemName, unit);
+                            //var dsSource = itemNameColumn.DataSource as DataTable;
+                            var dsSource1 = itemNameColumn.DataSource as BindingSource;
+                            var dsSource = dsSource1.DataSource as DataTable; // try both if not sure which one is set
+                            if (dsSource != null)
+                            {
+                                var displayMember = itemNameColumn.DisplayMember;
+                                var valueMember = itemNameColumn.ValueMember;
+                                var found = dsSource.AsEnumerable()
+                                                    .FirstOrDefault(r => string.Equals(r.Field<string>(displayMember), itemName, StringComparison.OrdinalIgnoreCase));
+                                if (found != null)
+                                {
+                                    // if ValueMember contains unit concatenated, use that; otherwise just set the value
+                                    nameCell.Value = found[valueMember];
+                                    //comboboxItemName_TextChanged(nameCell, EventArgs.Empty); // trigger size column population if needed
+                                    dgvNewChallan.CurrentCell = nameCell;
+                                    dgvNewChallan.BeginEdit(true);
+
+                                    if (dgvNewChallan.EditingControl is ComboBox cb)
+                                    {
+                                        //cb.Text = "SomeValue"; // set programmatically
+                                        comboboxItemName_TextChanged(cb, EventArgs.Empty); // manually trigger
+                                    }
+
+                                }
+                            }
+                            int challanItemSum = 0;
+                            // populate size columns from group's rows
+                            foreach (var dr in challanItem)
+                            {
+                                string itemSize = dr.Table.Columns.Contains("ItemSize") ? (dr["ItemSize"]?.ToString().Split('/')[0] ?? "") : "";
+                                // adjust if quantity is in a different column (ItemDesc / Qty)
+                                int qty = 0;
+                                //int.TryParse(dr.Table.Columns.Contains("ItemDesc") ? dr["ItemDesc"]?.ToString() : dr["Qty"]?.ToString(), out qty);
+                                int.TryParse(dr["Qty"]?.ToString(), out qty);
+
+                                if (string.IsNullOrWhiteSpace(itemSize)) continue;
+
+                                var sizeCol = dgvNewChallan.Columns.Cast<DataGridViewColumn>()
+                                                .FirstOrDefault(c => c.Name.Contains("_" + itemSize) ||
+                                                                     string.Equals(c.HeaderText, itemSize, StringComparison.OrdinalIgnoreCase));
+                                if (sizeCol != null)
+                                {
+                                    // if multiple rows in same group map to same size, sum them (optional)
+                                    var curVal = targetRow.Cells[sizeCol.Index].Value;
+                                    int curQty = 0;
+                                    int.TryParse(curVal?.ToString() ?? "0", out curQty);
+                                    targetRow.Cells[sizeCol.Index].Value = (curQty + qty).ToString();
+                                    challanItemSum += qty;
+                                    challanTotal += qty;
+                                }
+                                else
+                                {
+                                    // size column not found - skip or handle (e.g., add column)
+                                }
+                            }
+                            targetRow.Cells["rowTotal"].Value = challanItemSum.ToString();
+                        }
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("Challan/Packing Slip not found!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    if (challanNo.ToUpper().StartsWith("PI"))
+                    {
+                        textBoxPackingSlip.Focus();
+                    }
+                    else
+                        textBoxNewChallanRemark.Focus();
+                    // Bind details to DataGridView (allow edits/add/remove)
+                    //dgvNewChallan.DataSource = detailDt;                    
+                    //dgvNewChallan.Columns["Id"].Visible = false; // hide PK if not needed
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching challan: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

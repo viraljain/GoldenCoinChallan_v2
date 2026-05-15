@@ -453,31 +453,68 @@ namespace GoldenCoinChallan
                         sqlBulkCopy.DestinationTableName = "tblNewChallanTemp";
                         sqlBulkCopy.WriteToServer(dtNewChallan);
                     }
-
-                    using (SqlCommand sqlCmdSPNewChallan = new SqlCommand("sp_NewChallan", sqlConnection))
+                    if (labelNewChallanNumber.Text == "Challan No." || buttonNewChallanInsert.Text == "&Insert Challan")
                     {
-                        sqlCmdSPNewChallan.CommandType = CommandType.StoredProcedure;
-                        sqlCmdSPNewChallan.Parameters.Add("@Date",SqlDbType.DateTime).Value = dateNewChallan.Value;
-
-                        using (SqlDataReader reader = sqlCmdSPNewChallan.ExecuteReader())
+                        /*******    NEW CHALLAN    ******/
+                        using (SqlCommand sqlCmdSPNewChallan = new SqlCommand("sp_NewChallan", sqlConnection))
                         {
-                            while (reader.Read())
+                            sqlCmdSPNewChallan.CommandType = CommandType.StoredProcedure;
+                            sqlCmdSPNewChallan.Parameters.Add("@Date", SqlDbType.DateTime).Value = dateNewChallan.Value;
+
+                            using (SqlDataReader reader = sqlCmdSPNewChallan.ExecuteReader())
                             {
-                                if (radioButtonNewChallan.Checked)
+                                while (reader.Read())
                                 {
-                                    MessageBox.Show("Challan created successfully! Challan No. is " + reader.GetString(0));
-                                    comboBoxDealerName.Focus();
+                                    if (radioButtonNewChallan.Checked)
+                                    {
+                                        MessageBox.Show("Challan created successfully! Challan No. is " + reader.GetString(0));
+                                        comboBoxDealerName.Focus();
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Packing Slip " + textBoxPackingSlip.Text + " transferred successfully! Voucher No. is " + reader.GetString(0));
+                                        textBoxPackingSlip.Focus();
+                                    }
+                                    dgvNewChallan.Rows.Clear();
+                                    challanTotal = 0;
+                                    labelTotal.Text = "Total 0";
+                                    textBoxNewChallanRemark.Text = "";
+                                    textBoxPackingSlip.Text = "";
                                 }
-                                else
+                            }
+                        }
+                    }
+                    else
+                    {
+                        /**** MODIFY CHALLAN ***************/
+                        using (SqlCommand sqlCmdSPNewChallan = new SqlCommand("sp_ModifyChallan", sqlConnection))
+                        {
+                            sqlCmdSPNewChallan.CommandType = CommandType.StoredProcedure;
+                            sqlCmdSPNewChallan.Parameters.AddWithValue("@ChallanID", labelNewChallanNumber.Text);
+                            sqlCmdSPNewChallan.Parameters.AddWithValue("@DeleteFlag", "N");
+                            sqlCmdSPNewChallan.Parameters.Add("@Date", SqlDbType.DateTime).Value = dateNewChallan.Value;
+
+                            using (SqlDataReader reader = sqlCmdSPNewChallan.ExecuteReader())
+                            {
+                                while (reader.Read())
                                 {
-                                    MessageBox.Show("Packing Slip " + textBoxPackingSlip.Text + "transferred successfully! Voucher No. is " + reader.GetString(0));
-                                    textBoxPackingSlip.Focus();
+                                    if (radioButtonNewChallan.Checked)
+                                    {
+                                        MessageBox.Show("Challan " + reader.GetString(0) + " UPDATED successfully!");
+                                        
+                                        comboBoxDealerName.Focus();
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Packing Slip " + textBoxPackingSlip.Text + " UPDATED successfully! Voucher No. is " + reader.GetString(0));
+                                        textBoxPackingSlip.Focus();
+                                    }
+                                    dgvNewChallan.Rows.Clear();
+                                    challanTotal = 0;
+                                    labelTotal.Text = "Total 0";
+                                    textBoxNewChallanRemark.Text = "";
+                                    textBoxPackingSlip.Text = "";
                                 }
-                                dgvNewChallan.Rows.Clear();
-                                challanTotal = 0;
-                                labelTotal.Text = "Total 0";
-                                textBoxNewChallanRemark.Text = "";
-                                textBoxPackingSlip.Text = "";
                             }
                         }
                     }
