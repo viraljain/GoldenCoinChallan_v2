@@ -453,7 +453,7 @@ namespace GoldenCoinChallan
                         sqlBulkCopy.DestinationTableName = "tblNewChallanTemp";
                         sqlBulkCopy.WriteToServer(dtNewChallan);
                     }
-                    if (labelNewChallanNumber.Text == "Challan No." || buttonNewChallanInsert.Text == "&Insert Challan")
+                    if (labelNewChallanNumber.Text == "" || buttonNewChallanInsert.Text == "&Insert Challan" || buttonNewChallanInsert.Text == "Transfer Packing Sl&ip")
                     {
                         /*******    NEW CHALLAN    ******/
                         using (SqlCommand sqlCmdSPNewChallan = new SqlCommand("sp_NewChallan", sqlConnection))
@@ -480,6 +480,7 @@ namespace GoldenCoinChallan
                                     labelTotal.Text = "Total 0";
                                     textBoxNewChallanRemark.Text = "";
                                     textBoxPackingSlip.Text = "";
+                                    labelNewChallanNumber.Text = "";                                    
                                 }
                             }
                         }
@@ -501,12 +502,13 @@ namespace GoldenCoinChallan
                                     if (radioButtonNewChallan.Checked)
                                     {
                                         MessageBox.Show("Challan " + reader.GetString(0) + " UPDATED successfully!");
-                                        
+                                        buttonNewChallanInsert.Text = "&Insert Challan";
                                         comboBoxDealerName.Focus();
                                     }
                                     else
                                     {
                                         MessageBox.Show("Packing Slip " + textBoxPackingSlip.Text + " UPDATED successfully! Voucher No. is " + reader.GetString(0));
+                                        buttonNewChallanInsert.Text = "Transfer Packing Sl&ip";
                                         textBoxPackingSlip.Focus();
                                     }
                                     dgvNewChallan.Rows.Clear();
@@ -514,6 +516,7 @@ namespace GoldenCoinChallan
                                     labelTotal.Text = "Total 0";
                                     textBoxNewChallanRemark.Text = "";
                                     textBoxPackingSlip.Text = "";
+                                    labelNewChallanNumber.Text = "";
                                 }
                             }
                         }
@@ -570,6 +573,7 @@ namespace GoldenCoinChallan
                     comboBoxDealerName.Focus();
                     labelDealerName.Text = "";
                     textBoxPackingSlip.Text = "";
+                    labelNewChallanNumber.Text = "";
                 }
             }
         }

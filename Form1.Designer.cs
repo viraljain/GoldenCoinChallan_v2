@@ -91,6 +91,10 @@
             this.reportViewerChallanPrint = new Microsoft.Reporting.WinForms.ReportViewer();
             this.labelStatus = new System.Windows.Forms.Label();
             this.dgvPSlipList = new System.Windows.Forms.DataGridView();
+            this.dateDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPSlipTextBoxBillNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.remarkDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totQtyDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.viewPackingSlipListBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabPageGodownTransfer = new System.Windows.Forms.TabPage();
             this.dgvGodownTrfPSlips = new System.Windows.Forms.DataGridView();
@@ -118,10 +122,6 @@
             this.newChallanBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.getPSlipForModifyToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dateDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvPSlipTextBoxBillNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.remarkDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totQtyDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1.SuspendLayout();
             this.tabPageNewChallan.SuspendLayout();
             this.groupBoxChallanPackingSlip.SuspendLayout();
@@ -191,7 +191,7 @@
             // 
             // textBoxPackingSlip
             // 
-            this.textBoxPackingSlip.Location = new System.Drawing.Point(405, 8);
+            this.textBoxPackingSlip.Location = new System.Drawing.Point(365, 8);
             this.textBoxPackingSlip.Name = "textBoxPackingSlip";
             this.textBoxPackingSlip.Size = new System.Drawing.Size(105, 20);
             this.textBoxPackingSlip.TabIndex = 1;
@@ -201,7 +201,7 @@
             // 
             this.labelPackingSlip.AutoSize = true;
             this.labelPackingSlip.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
-            this.labelPackingSlip.Location = new System.Drawing.Point(325, 10);
+            this.labelPackingSlip.Location = new System.Drawing.Point(285, 10);
             this.labelPackingSlip.Name = "labelPackingSlip";
             this.labelPackingSlip.Size = new System.Drawing.Size(82, 16);
             this.labelPackingSlip.TabIndex = 18;
@@ -214,7 +214,7 @@
             this.groupBoxChallanPackingSlip.Controls.Add(this.radioButtonNewChallan);
             this.groupBoxChallanPackingSlip.Location = new System.Drawing.Point(5, 1);
             this.groupBoxChallanPackingSlip.Name = "groupBoxChallanPackingSlip";
-            this.groupBoxChallanPackingSlip.Size = new System.Drawing.Size(291, 30);
+            this.groupBoxChallanPackingSlip.Size = new System.Drawing.Size(276, 30);
             this.groupBoxChallanPackingSlip.TabIndex = 0;
             this.groupBoxChallanPackingSlip.TabStop = false;
             // 
@@ -270,7 +270,7 @@
             // 
             this.dateNewChallan.CustomFormat = "dd-MMM-yyyy (ddd)";
             this.dateNewChallan.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateNewChallan.Location = new System.Drawing.Point(530, 7);
+            this.dateNewChallan.Location = new System.Drawing.Point(476, 8);
             this.dateNewChallan.MaxDate = new System.DateTime(2099, 12, 31, 0, 0, 0, 0);
             this.dateNewChallan.MinDate = new System.DateTime(2026, 4, 1, 0, 0, 0, 0);
             this.dateNewChallan.Name = "dateNewChallan";
@@ -282,7 +282,7 @@
             this.labelNewChallanNumber.AutoSize = true;
             this.labelNewChallanNumber.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.labelNewChallanNumber.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold);
-            this.labelNewChallanNumber.Location = new System.Drawing.Point(1109, 217);
+            this.labelNewChallanNumber.Location = new System.Drawing.Point(621, 8);
             this.labelNewChallanNumber.Name = "labelNewChallanNumber";
             this.labelNewChallanNumber.Size = new System.Drawing.Size(87, 19);
             this.labelNewChallanNumber.TabIndex = 13;
@@ -641,7 +641,7 @@
             this.btnTallyExport.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.btnTallyExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
             this.btnTallyExport.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnTallyExport.Location = new System.Drawing.Point(323, 6);
+            this.btnTallyExport.Location = new System.Drawing.Point(321, 6);
             this.btnTallyExport.Name = "btnTallyExport";
             this.btnTallyExport.Size = new System.Drawing.Size(145, 30);
             this.btnTallyExport.TabIndex = 2;
@@ -654,7 +654,7 @@
             this.btnModifyChallan.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.btnModifyChallan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
             this.btnModifyChallan.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.btnModifyChallan.Location = new System.Drawing.Point(471, 3);
+            this.btnModifyChallan.Location = new System.Drawing.Point(470, 6);
             this.btnModifyChallan.Name = "btnModifyChallan";
             this.btnModifyChallan.Size = new System.Drawing.Size(145, 30);
             this.btnModifyChallan.TabIndex = 9;
@@ -746,7 +746,7 @@
             this.reportViewerChallanPrint.AutoSize = true;
             this.reportViewerChallanPrint.DocumentMapWidth = 1;
             this.reportViewerChallanPrint.LocalReport.ReportEmbeddedResource = "GoldenCoinChallan.Report_ChallanPrint.rdlc";
-            this.reportViewerChallanPrint.Location = new System.Drawing.Point(4, 38);
+            this.reportViewerChallanPrint.Location = new System.Drawing.Point(7, 38);
             this.reportViewerChallanPrint.Name = "reportViewerChallanPrint";
             this.reportViewerChallanPrint.ServerReport.BearerToken = null;
             this.reportViewerChallanPrint.Size = new System.Drawing.Size(818, 412);
@@ -778,6 +778,37 @@
             this.dgvPSlipList.Size = new System.Drawing.Size(366, 272);
             this.dgvPSlipList.TabIndex = 8;
             this.dgvPSlipList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPSlipList_RowEnter);
+            // 
+            // dateDataGridViewTextBoxColumn1
+            // 
+            this.dateDataGridViewTextBoxColumn1.DataPropertyName = "Date";
+            dataGridViewCellStyle3.Format = "dd-MMM-yyy";
+            dataGridViewCellStyle3.NullValue = null;
+            this.dateDataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle3;
+            this.dateDataGridViewTextBoxColumn1.HeaderText = "Date";
+            this.dateDataGridViewTextBoxColumn1.Name = "dateDataGridViewTextBoxColumn1";
+            this.dateDataGridViewTextBoxColumn1.Width = 75;
+            // 
+            // dgvPSlipTextBoxBillNo
+            // 
+            this.dgvPSlipTextBoxBillNo.DataPropertyName = "BillNo";
+            this.dgvPSlipTextBoxBillNo.HeaderText = "BillNo";
+            this.dgvPSlipTextBoxBillNo.Name = "dgvPSlipTextBoxBillNo";
+            this.dgvPSlipTextBoxBillNo.Width = 57;
+            // 
+            // remarkDataGridViewTextBoxColumn1
+            // 
+            this.remarkDataGridViewTextBoxColumn1.DataPropertyName = "Remark";
+            this.remarkDataGridViewTextBoxColumn1.HeaderText = "Remark";
+            this.remarkDataGridViewTextBoxColumn1.Name = "remarkDataGridViewTextBoxColumn1";
+            this.remarkDataGridViewTextBoxColumn1.Width = 165;
+            // 
+            // totQtyDataGridViewTextBoxColumn1
+            // 
+            this.totQtyDataGridViewTextBoxColumn1.DataPropertyName = "TotQty";
+            this.totQtyDataGridViewTextBoxColumn1.HeaderText = "TotQty";
+            this.totQtyDataGridViewTextBoxColumn1.Name = "totQtyDataGridViewTextBoxColumn1";
+            this.totQtyDataGridViewTextBoxColumn1.Width = 48;
             // 
             // viewPackingSlipListBindingSource
             // 
@@ -982,37 +1013,6 @@
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
             this.dataGridViewTextBoxColumn1.Width = 75;
-            // 
-            // dateDataGridViewTextBoxColumn1
-            // 
-            this.dateDataGridViewTextBoxColumn1.DataPropertyName = "Date";
-            dataGridViewCellStyle3.Format = "dd-MMM-yyy";
-            dataGridViewCellStyle3.NullValue = null;
-            this.dateDataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle3;
-            this.dateDataGridViewTextBoxColumn1.HeaderText = "Date";
-            this.dateDataGridViewTextBoxColumn1.Name = "dateDataGridViewTextBoxColumn1";
-            this.dateDataGridViewTextBoxColumn1.Width = 75;
-            // 
-            // dgvPSlipTextBoxBillNo
-            // 
-            this.dgvPSlipTextBoxBillNo.DataPropertyName = "BillNo";
-            this.dgvPSlipTextBoxBillNo.HeaderText = "BillNo";
-            this.dgvPSlipTextBoxBillNo.Name = "dgvPSlipTextBoxBillNo";
-            this.dgvPSlipTextBoxBillNo.Width = 57;
-            // 
-            // remarkDataGridViewTextBoxColumn1
-            // 
-            this.remarkDataGridViewTextBoxColumn1.DataPropertyName = "Remark";
-            this.remarkDataGridViewTextBoxColumn1.HeaderText = "Remark";
-            this.remarkDataGridViewTextBoxColumn1.Name = "remarkDataGridViewTextBoxColumn1";
-            this.remarkDataGridViewTextBoxColumn1.Width = 165;
-            // 
-            // totQtyDataGridViewTextBoxColumn1
-            // 
-            this.totQtyDataGridViewTextBoxColumn1.DataPropertyName = "TotQty";
-            this.totQtyDataGridViewTextBoxColumn1.HeaderText = "TotQty";
-            this.totQtyDataGridViewTextBoxColumn1.Name = "totQtyDataGridViewTextBoxColumn1";
-            this.totQtyDataGridViewTextBoxColumn1.Width = 48;
             // 
             // Form1
             // 

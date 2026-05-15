@@ -100,20 +100,20 @@ namespace GoldenCoinChallan
         }
         private void Form1_SizeChanged(object sender, EventArgs e)
         {
-            try
-            {
-                if (Form1.ActiveForm != null && Form1.ActiveForm.Height > 0 && Form1.ActiveForm.Width > 0)
-                {
-                    Int32 windowHeight = Convert.ToInt32(Form1.ActiveForm.Height);
-                    Int32 windowWidth = Convert.ToInt32(Form1.ActiveForm.Width);
-                    reportViewerChallanPrint.Height = Convert.ToInt32(windowHeight * .8745);
-                    reportViewerChallanPrint.Width = Convert.ToInt32(windowWidth * .54);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("A windows resize error has occurred. Kindly restart the application");
-            }
+            //try
+            //{
+            //    if (Form1.ActiveForm != null && Form1.ActiveForm.Height > 0 && Form1.ActiveForm.Width > 0)
+            //    {
+            //        Int32 windowHeight = Convert.ToInt32(Form1.ActiveForm.Height);
+            //        Int32 windowWidth = Convert.ToInt32(Form1.ActiveForm.Width);
+            //        reportViewerChallanPrint.Height = Convert.ToInt32(windowHeight * .8745);
+            //        reportViewerChallanPrint.Width = Convert.ToInt32(windowWidth * .54);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show("A windows resize error has occurred. Kindly restart the application");
+            //}
         }
         /*		FORM RESIZE LOGIC ENDS		*/
         #endregion

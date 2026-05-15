@@ -7,10 +7,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
 -- Author:		VIRAL JAIN
--- Create date: 06-Apr-2026 15:16, Amaryllis Phase 1 Library, Delhi, India
--- Description:	To create New Challan from Santani Godown Manager Tool - Only product needs to be selected.
+-- Create date: 14-May-2026 15:16, Amaryllis Phase 1 Library, Delhi, India
+-- Description:	To Modify Challan/Packing Slip from Santani Godown Manager Tool - Only product needs to be selected.
 -- =============================================
-ALTER PROCEDURE [dbo].[sp_ModifyChallan] 
+CREATE PROCEDURE [dbo].[sp_ModifyChallan] 
 	@ChallanID varchar(20), @DeleteFlag varchar(1),
 	@Date DATETIME = NULL
 AS
