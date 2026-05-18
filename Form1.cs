@@ -13,7 +13,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ScrollBar;
 
 namespace GoldenCoinChallan
 {
@@ -474,7 +473,7 @@ namespace GoldenCoinChallan
 
                     if (dtGetChallan.Rows.Count > 0)
                     {
-                        newChallan_Load();
+                        //newChallan_Load();
                         dgvNewChallan.Rows.Clear();
                         challanTotal = 0;
                         labelTotal.Text = "Total 0";

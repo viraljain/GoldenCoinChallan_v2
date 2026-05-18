@@ -628,7 +628,7 @@
             // 
             this.btnGenChallan.BackColor = System.Drawing.Color.GreenYellow;
             this.btnGenChallan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
-            this.btnGenChallan.Location = new System.Drawing.Point(170, 6);
+            this.btnGenChallan.Location = new System.Drawing.Point(167, 6);
             this.btnGenChallan.Name = "btnGenChallan";
             this.btnGenChallan.Size = new System.Drawing.Size(145, 30);
             this.btnGenChallan.TabIndex = 6;
@@ -654,7 +654,7 @@
             this.btnModifyChallan.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.btnModifyChallan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
             this.btnModifyChallan.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.btnModifyChallan.Location = new System.Drawing.Point(470, 6);
+            this.btnModifyChallan.Location = new System.Drawing.Point(472, 6);
             this.btnModifyChallan.Name = "btnModifyChallan";
             this.btnModifyChallan.Size = new System.Drawing.Size(145, 30);
             this.btnModifyChallan.TabIndex = 9;
@@ -665,11 +665,11 @@
             // buttonChallanPrintRefresh
             // 
             this.buttonChallanPrintRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
-            this.buttonChallanPrintRefresh.Location = new System.Drawing.Point(1026, 4);
+            this.buttonChallanPrintRefresh.Location = new System.Drawing.Point(1108, 4);
             this.buttonChallanPrintRefresh.Name = "buttonChallanPrintRefresh";
-            this.buttonChallanPrintRefresh.Size = new System.Drawing.Size(199, 30);
+            this.buttonChallanPrintRefresh.Size = new System.Drawing.Size(145, 30);
             this.buttonChallanPrintRefresh.TabIndex = 8;
-            this.buttonChallanPrintRefresh.Text = "Refresh Challan List";
+            this.buttonChallanPrintRefresh.Text = "Refresh";
             this.buttonChallanPrintRefresh.UseVisualStyleBackColor = true;
             this.buttonChallanPrintRefresh.Click += new System.EventHandler(this.buttonChallanPrintRefresh_Click);
             // 
@@ -756,7 +756,7 @@
             // 
             this.labelStatus.AutoSize = true;
             this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.labelStatus.Location = new System.Drawing.Point(475, 11);
+            this.labelStatus.Location = new System.Drawing.Point(9, 454);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(0, 20);
             this.labelStatus.TabIndex = 1;

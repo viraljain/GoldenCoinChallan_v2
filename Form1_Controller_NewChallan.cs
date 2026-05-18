@@ -22,16 +22,19 @@ namespace GoldenCoinChallan
 
             dt_ItemNameSize = this.newChallanItemTableAdapter1.GetItemNameWithSizes().Distinct().CopyToDataTable();
 
-            DataRow rowSelectItem = dt_ItemNameSize.NewRow();
-            rowSelectItem["ItemName"] = "Select Item";
-            rowSelectItem["ItemSize"] = "0";
+            //DataRow rowSelectItem = dt_ItemNameSize.NewRow();
+            //rowSelectItem["ItemName"] = "Select Item";
+            //rowSelectItem["ItemSize"] = "0";
 
             //dt_ItemNameSize.Rows.InsertAt(rowSelectItem, 0);
             //dgvNewItem.DataSource = dt_ItemNameSize;
             bsItemName.DataSource = dt_ItemNameSize;
-            dgvNewItem.DataSource = bsItemName;
-            dgvNewItem.DisplayMember = "ItemName";
-            dgvNewItem.ValueMember = "ItemSize";
+            if (dgvNewItem.DataSource == null)
+            {
+                dgvNewItem.DataSource = bsItemName;
+                dgvNewItem.DisplayMember = "ItemName";
+                dgvNewItem.ValueMember = "ItemSize";
+            }
 
 
             /* Dealer Name Fetching */
@@ -480,7 +483,7 @@ namespace GoldenCoinChallan
                                     labelTotal.Text = "Total 0";
                                     textBoxNewChallanRemark.Text = "";
                                     textBoxPackingSlip.Text = "";
-                                    labelNewChallanNumber.Text = "";                                    
+                                    labelNewChallanNumber.Text = "";
                                 }
                             }
                         }
