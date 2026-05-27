@@ -22,16 +22,19 @@ namespace GoldenCoinChallan
 
             dt_ItemNameSize = this.newChallanItemTableAdapter1.GetItemNameWithSizes().Distinct().CopyToDataTable();
 
-            DataRow rowSelectItem = dt_ItemNameSize.NewRow();
-            rowSelectItem["ItemName"] = "Select Item";
-            rowSelectItem["ItemSize"] = "0";
+            //DataRow rowSelectItem = dt_ItemNameSize.NewRow();
+            //rowSelectItem["ItemName"] = "Select Item";
+            //rowSelectItem["ItemSize"] = "0";
 
             //dt_ItemNameSize.Rows.InsertAt(rowSelectItem, 0);
             //dgvNewItem.DataSource = dt_ItemNameSize;
             bsItemName.DataSource = dt_ItemNameSize;
-            dgvNewItem.DataSource = bsItemName;
-            dgvNewItem.DisplayMember = "ItemName";
-            dgvNewItem.ValueMember = "ItemSize";
+            if (dgvNewItem.DataSource == null)
+            {
+                dgvNewItem.DataSource = bsItemName;
+                dgvNewItem.DisplayMember = "ItemName";
+                dgvNewItem.ValueMember = "ItemSize";
+            }
 
 
             /* Dealer Name Fetching */
@@ -361,6 +364,13 @@ namespace GoldenCoinChallan
                 string itemName = string.Empty, itemUnit = String.Empty, itemSize = String.Empty;
                 int itemQty = 0;
 
+                //Check for mandatory Packing Slip No. before proceeding with DB insertion
+                if (radioButtonPackingSlipTransfer.Checked && textBoxPackingSlip.Text.Length == 0)
+                {
+                    MessageBox.Show("Please enter Packing Slip No.");
+                    return;
+                }
+
                 foreach (DataGridViewRow row in dgvNewChallan.Rows)
                 {
                     if (row.IsNewRow)
@@ -383,7 +393,8 @@ namespace GoldenCoinChallan
                                 itemSize = cell.OwningColumn.Name.Split('_')[1];
                                 int.TryParse(cell.Value.ToString(), out itemQty);
 
-                                dtNewChallan.Rows.Add(itemName, itemSize, itemQty, itemUnit);
+                                if (itemQty > 0)
+                                    dtNewChallan.Rows.Add(itemName, itemSize, itemQty, itemUnit);
                             }
                         }
                     }
@@ -412,10 +423,22 @@ namespace GoldenCoinChallan
                         "VALUES (@DealerName, @DealerCode, @Remarks, @TotalItemQty)";
                     using (SqlCommand sqlCmdChallanHeader = new SqlCommand(sqlQueryChallanHeader, sqlConnection))
                     {
-                        sqlCmdChallanHeader.Parameters.AddWithValue("@DealerName", comboBoxDealerName.Text.ToString());
-                        sqlCmdChallanHeader.Parameters.AddWithValue("@DealerCode", comboBoxDealerName.SelectedValue.ToString());
-                        sqlCmdChallanHeader.Parameters.AddWithValue("@Remarks", textBoxNewChallanRemark.Text);
-                        sqlCmdChallanHeader.Parameters.AddWithValue("@TotalItemQty", challanTotal);
+                        //New Challan Creation
+                        if (radioButtonNewChallan.Checked)
+                        {
+                            sqlCmdChallanHeader.Parameters.AddWithValue("@DealerName", comboBoxDealerName.Text.ToString());
+                            sqlCmdChallanHeader.Parameters.AddWithValue("@DealerCode", comboBoxDealerName.SelectedValue.ToString());
+                            sqlCmdChallanHeader.Parameters.AddWithValue("@Remarks", textBoxNewChallanRemark.Text);
+                            sqlCmdChallanHeader.Parameters.AddWithValue("@TotalItemQty", challanTotal);
+                        }
+                        //PackingSlip Transfer - Hardcoded as per DB AccountMaster Table value - PackkingSlip (684)
+                        else
+                        {
+                            sqlCmdChallanHeader.Parameters.AddWithValue("@DealerName", "PackingSlip");
+                            sqlCmdChallanHeader.Parameters.AddWithValue("@DealerCode", "684");
+                            sqlCmdChallanHeader.Parameters.AddWithValue("@Remarks", textBoxPackingSlip.Text);
+                            sqlCmdChallanHeader.Parameters.AddWithValue("@TotalItemQty", challanTotal);
+                        }
 
                         sqlConnection.Open();
                         sqlCmdChallanHeader.ExecuteNonQuery();
@@ -433,20 +456,71 @@ namespace GoldenCoinChallan
                         sqlBulkCopy.DestinationTableName = "tblNewChallanTemp";
                         sqlBulkCopy.WriteToServer(dtNewChallan);
                     }
-
-                    using (SqlCommand sqlCmdSPNewChallan = new SqlCommand("sp_NewChallan", sqlConnection))
+                    if (labelNewChallanNumber.Text == "" || buttonNewChallanInsert.Text == "&Insert Challan" || buttonNewChallanInsert.Text == "Transfer Packing Sl&ip")
                     {
-                        sqlCmdSPNewChallan.CommandType = CommandType.StoredProcedure;
-                        using (SqlDataReader reader = sqlCmdSPNewChallan.ExecuteReader())
+                        /*******    NEW CHALLAN    ******/
+                        using (SqlCommand sqlCmdSPNewChallan = new SqlCommand("sp_NewChallan", sqlConnection))
                         {
-                            while (reader.Read())
+                            sqlCmdSPNewChallan.CommandType = CommandType.StoredProcedure;
+                            sqlCmdSPNewChallan.Parameters.Add("@Date", SqlDbType.DateTime).Value = dateNewChallan.Value;
+
+                            using (SqlDataReader reader = sqlCmdSPNewChallan.ExecuteReader())
                             {
-                                MessageBox.Show("Challan created successfully! Challan No. is " + reader.GetString(0));
-                                dgvNewChallan.Rows.Clear();
-                                challanTotal = 0;
-                                labelTotal.Text = "Total 0";
-                                textBoxNewChallanRemark.Text = "";
-                                comboBoxDealerName.Focus();
+                                while (reader.Read())
+                                {
+                                    if (radioButtonNewChallan.Checked)
+                                    {
+                                        MessageBox.Show("Challan created successfully! Challan No. is " + reader.GetString(0));
+                                        comboBoxDealerName.Focus();
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Packing Slip " + textBoxPackingSlip.Text + " transferred successfully! Voucher No. is " + reader.GetString(0));
+                                        textBoxPackingSlip.Focus();
+                                    }
+                                    dgvNewChallan.Rows.Clear();
+                                    challanTotal = 0;
+                                    labelTotal.Text = "Total 0";
+                                    textBoxNewChallanRemark.Text = "";
+                                    textBoxPackingSlip.Text = "";
+                                    labelNewChallanNumber.Text = "";
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        /**** MODIFY CHALLAN ***************/
+                        using (SqlCommand sqlCmdSPNewChallan = new SqlCommand("sp_ModifyChallan", sqlConnection))
+                        {
+                            sqlCmdSPNewChallan.CommandType = CommandType.StoredProcedure;
+                            sqlCmdSPNewChallan.Parameters.AddWithValue("@ChallanID", labelNewChallanNumber.Text);
+                            sqlCmdSPNewChallan.Parameters.AddWithValue("@DeleteFlag", "N");
+                            sqlCmdSPNewChallan.Parameters.Add("@Date", SqlDbType.DateTime).Value = dateNewChallan.Value;
+
+                            using (SqlDataReader reader = sqlCmdSPNewChallan.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    if (radioButtonNewChallan.Checked)
+                                    {
+                                        MessageBox.Show("Challan " + reader.GetString(0) + " UPDATED successfully!");
+                                        buttonNewChallanInsert.Text = "&Insert Challan";
+                                        comboBoxDealerName.Focus();
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Packing Slip " + textBoxPackingSlip.Text + " UPDATED successfully! Voucher No. is " + reader.GetString(0));
+                                        buttonNewChallanInsert.Text = "Transfer Packing Sl&ip";
+                                        textBoxPackingSlip.Focus();
+                                    }
+                                    dgvNewChallan.Rows.Clear();
+                                    challanTotal = 0;
+                                    labelTotal.Text = "Total 0";
+                                    textBoxNewChallanRemark.Text = "";
+                                    textBoxPackingSlip.Text = "";
+                                    labelNewChallanNumber.Text = "";
+                                }
                             }
                         }
                     }
@@ -501,6 +575,8 @@ namespace GoldenCoinChallan
                     bsDealerName.RemoveFilter();
                     comboBoxDealerName.Focus();
                     labelDealerName.Text = "";
+                    textBoxPackingSlip.Text = "";
+                    labelNewChallanNumber.Text = "";
                 }
             }
         }

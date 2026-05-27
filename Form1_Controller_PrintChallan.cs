@@ -35,16 +35,16 @@ namespace GoldenCoinChallan
 
         private void generateChallan() 
         {
-            panel1.Visible = lblChallanProgress.Visible = progressBar1.Visible = true;
-            panel1.BringToFront();
+            //panel1.Visible = lblChallanProgress.Visible = progressBar1.Visible = true;
+            //panel1.BringToFront();
 
-            System.Threading.Thread.Sleep(30);
-            MessageBox.Show("Challan is being generated!!!");
+            //System.Threading.Thread.Sleep(30);
+            //MessageBox.Show("Challan is being generated!!!");
 
             //Call the method to populate the DataGridView on the right to current challan details & ReportViewer
             showChallanData();
 
-            panel1.Visible = lblChallanProgress.Visible = false;
+            //panel1.Visible = lblChallanProgress.Visible = false;
 
             /* DataGridView is linked to viewChallanPrintBindingSource which is linked to ViewChallanPrintTableAdapter
 			 * and the DataGridView is populated with the data from the DataSet
@@ -56,6 +56,10 @@ namespace GoldenCoinChallan
         private void buttonChallanPrintRefresh_Click(object sender, EventArgs e)
         {
             this.viewChallanListTableAdapter1.Fill(this.aA_2023_2024DataSet.ViewChallanList);
+
+            var adapter = new vwGodownTrfSlipsTableAdapter();
+            viewPackingSlipListBindingSource.DataSource = adapter.GetPSlipForModify();
+            dgvPSlipList.DataSource = viewPackingSlipListBindingSource;
         }
     }
 }

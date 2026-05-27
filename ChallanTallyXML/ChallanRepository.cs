@@ -52,7 +52,8 @@ namespace GoldenCoinChallan
                 DataTable resTable = tempViewChallanPrintTableAdapter.GetDataBy(challanNo);
 
                 List<InventoryEntry> challanItems = new List<InventoryEntry>();
-                foreach (DataRow row in resTable.Select("ItemDesc IS NOT NULL").OrderBy(r => r["Srno"]))
+                //foreach (DataRow row in resTable.Select("ItemDesc IS NOT NULL").OrderBy(r => r["Srno"]))
+                foreach (DataRow row in resTable.Select("ItemDesc IS NOT NULL AND Qty>0").OrderBy(r => r["Srno"]))
                 {
                     var entry = new InventoryEntry
                     {
@@ -71,6 +72,7 @@ namespace GoldenCoinChallan
                         Accounting = new AccountingAllocation
                         {
                             //LedgerName = "CENTRAL SALES@5%",
+                            /// As per value of StateCode in DB Table Masters, Delhi stateCode is 7, if stateCode is 7 then ledgerName should be "Local Sales @ 5%" else "CENTRAL SALES@5%"
                             LedgerName = (row["StateCode"].ToString() == "7") ? "Local Sales @ 5%" : "CENTRAL SALES@5%",
                             Amount = 1
                         }

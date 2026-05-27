@@ -1,0 +1,136 @@
+USE [AA_2023_2024]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_GetChallanData]    Script Date: 27-04-2026 20:45:00 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		VIRAL JAIN
+-- Create date: 03-07-2024
+-- Description:	
+-- =============================================
+ALTER PROCEDURE [dbo].[sp_GetChallanData] 
+	-- Add the parameters for the stored procedure here
+	@ChallanNo varchar(10) = 'CH/0542'
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	
+-- *************** WORKING BUT LESS OPTIMIZED ********************	
+--	WITH TempChallanView AS
+--	(
+--		SELECT        Srno, Date, BillNo, Remark, TotQty, Name, Add1, Add2, Add3, TinCst, PinCode, ItemName, ItemSize, Qty, FieldValue1, SizeSNo
+--      FROM            ViewChallanPrint
+--      WHERE        (BillNo = @ChallanNo) 
+--					AND
+--					Date = (SELECT max(Date) FROM ViewChallanPrint WHERE BillNo = @ChallanNo) 
+--	)
+--	SELECT
+--	iif(T3.Srno IS NULL, 999, T3.Srno) as Srno,
+--	iif(T1.ItemName IS NULL, T2.b, T1.ItemName) AS ItemName, 
+--	iif(T3.Date IS NULL,CONVERT (date, SYSDATETIME()), T3.Date) AS DATE, IIF(T3.BillNo IS NULL, '-',T3.BillNo) AS BillNo, IIF(T3.Remark IS NULL, '-',T3.Remark) as Remark , iif(T3.TotQty is null, 0, t3.TotQty) as TotQty, 
+--	iif(T3.Name IS NULL, '-', T3.Name) as Name, iif(T3.Add1 IS NULL, '-', T3.Add1) as Add1, iif(T3.Add2 IS NULL, '-', T3.Add2) as Add2, iif(T3.Add3 IS NULL, '-', T3.Add3) as Add3, 
+--	iif(T3.TinCst is null, '-', T3.TinCst) as TinCst, T3.PinCode, iif(T3.ItemSize is null, NULL, T3.ItemSize) as ItemSize, iif(T3.Qty is null, 0, T3.Qty) as Qty, 
+--	iif(T3.FieldValue1 is NULL, '-', T3.FieldValue1) as FieldValue1, iif(T3.SizeSNo is Null, NULL, T3.SizeSNo) AS SizeSNo 
+--FROM            (SELECT DISTINCT ROW_NUMBER() OVER (ORDER BY ItemName) AS SNo, ItemName
+--FROM            TempChallanView
+--GROUP BY ItemName) AS T1 RIGHT JOIN
+--    (SELECT        a, b
+--      FROM            (VALUES (1, ' '), (2, '  '), (3, '   '), (4, '    '), (5, '     '), (6, '      '), (7, '       '), (8, '        '), (9, '         '), (10, '          '), 
+--	  (11, '           '), (12, '            '), (13, '             '), (14, '              '), (15, '               '), (16, '                '), 
+--	  (17, '                 ')
+--	  --, (18, '~~'), (19, '~~~'), (20, '~~~~')
+--	  ) 
+--	  AS t (a, b)) AS T2 ON T1.SNo = T2.a LEFT JOIN
+--    (SELECT        Srno, Date, BillNo, Remark, TotQty, Name, Add1, Add2, Add3, TinCst, PinCode, ItemName, ItemSize, Qty, FieldValue1, SizeSNo
+--      FROM         TempChallanView
+--	 ) AS T3 ON T1.ItemName = T3.ItemName
+
+-- ****************	My Query with ChallanDate extracted first *************************
+DECLARE @ChallanDate DATETIME;
+
+SELECT @ChallanDate=max(Date) FROM ViewChallanPrint WHERE BillNo = @ChallanNo;
+
+WITH TempChallanView AS
+	(
+		--SELECT        Srno, Date, BillNo, Remark, TotQty, Name, Add1, Add2, Add3, TinCst, PinCode, ItemName, ItemSize, Qty, FieldValue1, SizeSNo
+		SELECT		VchDtlCode as Srno, Date, BillNo, Remark, TotQty, Name, 
+					Add1, Add2, Add3, Add4, StateCode, TinCst, PinCode, 
+					REPLACE(REPLACE(REPLACE(ItemName,'Divya','D.'),'Maestro', 'M.'),'Commander','Cmndr') AS ItemName,
+					ItemSize, Qty, 
+					Replace(Replace(Replace(FieldValue1,'Units', 'UNT'),'box','Box'),'Pcs.','Pcs') AS FieldValue1, SizeSNo,
+					ItemDesc
+      FROM			ViewChallanPrint
+      WHERE        (BillNo = @ChallanNo) AND DATE = @ChallanDate
+					--AND
+					--Date = (SELECT max(Date) FROM ViewChallanPrint WHERE BillNo = @ChallanNo)
+					--ORDER BY Date DESC 
+	)
+	SELECT
+	iif(T3.Srno IS NULL, 9999999, T3.Srno) as Srno,
+	iif(T1.ItemName IS NULL, T2.b, T1.ItemName) AS ItemName, 
+	iif(T3.Date IS NULL,CONVERT (date, SYSDATETIME()), T3.Date) AS DATE, IIF(T3.BillNo IS NULL, '-',T3.BillNo) AS BillNo, IIF(T3.Remark IS NULL, '-',T3.Remark) as Remark , iif(T3.TotQty is null, 0, t3.TotQty) as TotQty, 
+	iif(T3.Name IS NULL, '-', T3.Name) as Name, iif(T3.Add1 IS NULL, '-', T3.Add1) as Add1, iif(T3.Add2 IS NULL, '-', T3.Add2) as Add2, iif(T3.Add3 IS NULL, '-', T3.Add3) as Add3, iif(T3.Add4 IS NULL, '-', T3.Add4) as Add4, 
+	iif(T3.TinCst is null, '-', T3.TinCst) as TinCst, T3.PinCode, iif(T3.ItemSize is null, NULL, T3.ItemSize) as ItemSize, iif(T3.Qty is null, 0, T3.Qty) as Qty, 
+	iif(T3.FieldValue1 is NULL, '-', T3.FieldValue1) as FieldValue1, iif(T3.SizeSNo is Null, NULL, T3.SizeSNo) AS SizeSNo, T3.ItemDesc, T3.StateCode
+FROM            (SELECT DISTINCT ROW_NUMBER() OVER (ORDER BY ItemName) AS SNo, ItemName
+FROM            TempChallanView
+GROUP BY ItemName) AS T1 RIGHT JOIN
+    (SELECT        a, b
+      FROM            (VALUES (1, ' '), (2, '  '), (3, '   '), (4, '    '), (5, '     '), (6, '      '), (7, '       '), (8, '        '), (9, '         '), (10, '          '), 
+	  (11, '           '), (12, '            '), (13, '             '), (14, '              '), (15, '               '), (16, '                '), 
+	  (17, '                 ')
+	  --, (18, '~~'), (19, '~~~'), (20, '~~~~')
+	  ) 
+	  AS t (a, b)) AS T2 ON T1.SNo = T2.a LEFT JOIN
+    (SELECT        Srno, Date, BillNo, Remark, TotQty, Name, Add1, Add2, Add3, Add4, StateCode, TinCst, PinCode, ItemName, ItemSize, Qty, FieldValue1, SizeSNo, ItemDesc
+      FROM         TempChallanView
+	 ) AS T3 ON T1.ItemName = T3.ItemName
+ORDER BY Srno
+
+-- ****************	Suggested by Copilot	*************************
+--WITH TempChallanView AS
+--	(
+--		--SELECT        Srno, Date, BillNo, Remark, TotQty, Name, Add1, Add2, Add3, TinCst, PinCode, ItemName, ItemSize, Qty, FieldValue1, SizeSNo
+--		SELECT        Srno, Date, BillNo, Remark, TotQty, Name, Add1, Add2, Add3, TinCst, PinCode, ItemName, ItemSize, Qty, FieldValue1, SizeSNo
+--      FROM            ViewChallanPrint
+--      WHERE        (BillNo = @ChallanNo) AND DATE = @ChallanDate
+--					--AND
+--					--Date = (SELECT max(Date) FROM ViewChallanPrint WHERE BillNo = @ChallanNo)
+--					--ORDER BY Date DESC 
+--	)
+--	SELECT 
+--    ISNULL(T3.Srno, 999) AS Srno,
+--    ISNULL(T1.ItemName, T2.b) AS ItemName,
+--    ISNULL(T3.Date, CONVERT(date, SYSDATETIME())) AS Date,
+--    ISNULL(T3.BillNo, '-') AS BillNo,
+--    ISNULL(T3.Remark, '-') AS Remark,
+--    ISNULL(T3.TotQty, 0) AS TotQty,
+--    ISNULL(T3.Name, '-') AS Name,
+--    ISNULL(T3.Add1, '-') AS Add1,
+--    ISNULL(T3.Add2, '-') AS Add2,
+--    ISNULL(T3.Add3, '-') AS Add3,
+--    ISNULL(T3.TinCst, '-') AS TinCst,
+--    T3.PinCode,
+--    T3.ItemSize,
+--    ISNULL(T3.Qty, 0) AS Qty,
+--    ISNULL(T3.FieldValue1, '-') AS FieldValue1,
+--    T3.SizeSNo
+--FROM (SELECT DISTINCT ROW_NUMBER() OVER (ORDER BY ItemName) AS SNo, ItemName
+--      FROM TempChallanView) AS T1
+--RIGHT JOIN (VALUES (1, ' '), (2, '  '), (3, '   '), (4, '    '), (5, '     '), (6, '      '), (7, '       '), (8, '        '), (9, '         '), (10, '          '), 
+--	  (11, '           '), (12, '            '), (13, '             '), (14, '              '), (15, '               '), (16, '                '), 
+--	  (17, '                 ')
+--	  --, (18, '~~'), (19, '~~~'), (20, '~~~~')
+--	  ) AS T2(a,b)
+--    ON T1.SNo = T2.a
+--OUTER APPLY (SELECT TOP 1 * FROM TempChallanView WHERE ItemName = T1.ItemName) AS T3;
+
+
+END
+

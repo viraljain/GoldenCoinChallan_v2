@@ -672,7 +672,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                 <rd:DefaultName>Name</rd:DefaultName>
                 <Left>0.9525cm</Left>
                 <Height>0.4cm</Height>
-                <Width>8.66692cm</Width>
+                <Width>9.33367cm</Width>
                 <ZIndex>1</ZIndex>
                 <Style>
                   <Border>
@@ -701,7 +701,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                 <rd:DefaultName>Add1</rd:DefaultName>
                 <Top>0.39769cm</Top>
                 <Height>0.573cm</Height>
-                <Width>9.61942cm</Width>
+                <Width>10.28617cm</Width>
                 <ZIndex>2</ZIndex>
                 <Style>
                   <Border>
@@ -720,31 +720,22 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>CH No.</Value>
+                        <Value>1</Value>
                         <Style>
-                          <FontSize>8pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>1st Copy</Value>
-                        <Style>
-                          <FontSize>8pt</FontSize>
+                          <FontSize>20pt</FontSize>
                           <FontWeight>Normal</FontWeight>
+                          <Color>DimGray</Color>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Left>17.45699cm</Left>
+                <Left>18.11845cm</Left>
                 <Height>0.94125cm</Height>
-                <Width>1.20883cm</Width>
+                <Width>0.54737cm</Width>
                 <ZIndex>3</ZIndex>
                 <Style>
                   <Border>
@@ -806,7 +797,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                 </Paragraphs>
                 <rd:DefaultName>Remark</rd:DefaultName>
                 <Top>0.00352cm</Top>
-                <Left>9.65117cm</Left>
+                <Left>10.28617cm</Left>
                 <Height>0.973cm</Height>
                 <Width>6.00251cm</Width>
                 <ZIndex>5</ZIndex>
@@ -846,7 +837,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                 </Paragraphs>
                 <rd:DefaultName>Textbox13</rd:DefaultName>
                 <Top>0.00352cm</Top>
-                <Left>15.65368cm</Left>
+                <Left>16.28868cm</Left>
                 <Height>0.973cm</Height>
                 <Width>1.76975cm</Width>
                 <ZIndex>6</ZIndex>
@@ -858,7 +849,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
               </Textbox>
               <Line Name="Line3">
                 <Top>0.01427cm</Top>
-                <Left>16.6089cm</Left>
+                <Left>17.2439cm</Left>
                 <Height>0.92698cm</Height>
                 <Width>0cm</Width>
                 <ZIndex>7</ZIndex>
@@ -956,7 +947,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                 <rd:DefaultName>Name</rd:DefaultName>
                 <Left>0.9525cm</Left>
                 <Height>0.39769cm</Height>
-                <Width>8.66692cm</Width>
+                <Width>9.36956cm</Width>
                 <ZIndex>1</ZIndex>
                 <Style>
                   <Border>
@@ -987,7 +978,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                 <rd:DefaultName>Add1</rd:DefaultName>
                 <Top>0.4365cm</Top>
                 <Height>0.50624cm</Height>
-                <Width>9.61942cm</Width>
+                <Width>10.32206cm</Width>
                 <ZIndex>2</ZIndex>
                 <Style>
                   <Border>
@@ -1006,31 +997,22 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>CH No.</Value>
+                        <Value>2</Value>
                         <Style>
-                          <FontSize>8pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>2nd Cpy</Value>
-                        <Style>
-                          <FontSize>8pt</FontSize>
+                          <FontSize>20pt</FontSize>
                           <FontWeight>Normal</FontWeight>
+                          <Color>DimGray</Color>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Left>17.43223cm</Left>
+                <Left>18.09369cm</Left>
                 <Height>0.94125cm</Height>
-                <Width>1.23359cm</Width>
+                <Width>0.57213cm</Width>
                 <ZIndex>3</ZIndex>
                 <Style>
                   <Border>
@@ -1060,7 +1042,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                 </Paragraphs>
                 <rd:DefaultName>Remark</rd:DefaultName>
                 <Top>0.00352cm</Top>
-                <Left>9.68706cm</Left>
+                <Left>10.32206cm</Left>
                 <Height>0.973cm</Height>
                 <Width>5.94186cm</Width>
                 <ZIndex>4</ZIndex>
@@ -1132,7 +1114,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                 </Paragraphs>
                 <rd:DefaultName>Textbox13</rd:DefaultName>
                 <Top>0.00176cm</Top>
-                <Left>15.62892cm</Left>
+                <Left>16.26392cm</Left>
                 <Height>0.973cm</Height>
                 <Width>1.76975cm</Width>
                 <ZIndex>6</ZIndex>
@@ -1144,7 +1126,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
               </Textbox>
               <Line Name="Line4">
                 <Top>0.02477cm</Top>
-                <Left>16.58366cm</Left>
+                <Left>17.21866cm</Left>
                 <Height>0.92698cm</Height>
                 <Width>0cm</Width>
                 <ZIndex>7</ZIndex>
@@ -1218,7 +1200,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                 <rd:DefaultName>Name</rd:DefaultName>
                 <Left>0.9525cm</Left>
                 <Height>0.39769cm</Height>
-                <Width>8.66692cm</Width>
+                <Width>9.36956cm</Width>
                 <ZIndex>1</ZIndex>
                 <Style>
                   <Border>
@@ -1249,7 +1231,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                 <rd:DefaultName>Add1</rd:DefaultName>
                 <Top>0.4365cm</Top>
                 <Height>0.50624cm</Height>
-                <Width>9.61942cm</Width>
+                <Width>10.27664cm</Width>
                 <ZIndex>2</ZIndex>
                 <Style>
                   <Border>
@@ -1268,31 +1250,22 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>CH No.</Value>
+                        <Value>3</Value>
                         <Style>
-                          <FontSize>8pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>3rd Copy</Value>
-                        <Style>
-                          <FontSize>8pt</FontSize>
+                          <FontSize>20pt</FontSize>
                           <FontWeight>Normal</FontWeight>
+                          <Color>DimGray</Color>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Left>17.44746cm</Left>
+                <Left>18.10892cm</Left>
                 <Height>0.94125cm</Height>
-                <Width>1.21836cm</Width>
+                <Width>0.5569cm</Width>
                 <ZIndex>3</ZIndex>
                 <Style>
                   <Border>
@@ -1322,7 +1295,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                 </Paragraphs>
                 <rd:DefaultName>Remark</rd:DefaultName>
                 <Top>0.00352cm</Top>
-                <Left>9.68706cm</Left>
+                <Left>10.32206cm</Left>
                 <Height>0.973cm</Height>
                 <Width>5.95709cm</Width>
                 <ZIndex>4</ZIndex>
@@ -1394,7 +1367,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
                 </Paragraphs>
                 <rd:DefaultName>Textbox13</rd:DefaultName>
                 <Top>0.00176cm</Top>
-                <Left>15.64415cm</Left>
+                <Left>16.27915cm</Left>
                 <Height>0.973cm</Height>
                 <Width>1.76975cm</Width>
                 <ZIndex>6</ZIndex>
@@ -1406,7 +1379,7 @@ Sum(iif(Fields!FieldValue1.Value="Set",Fields!Qty.Value,0), "DSViewChallanPrint"
               </Textbox>
               <Line Name="Line5">
                 <Top>0.03175cm</Top>
-                <Left>16.59889cm</Left>
+                <Left>17.23389cm</Left>
                 <Height>0.92698cm</Height>
                 <Width>0cm</Width>
                 <ZIndex>7</ZIndex>
