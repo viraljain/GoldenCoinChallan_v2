@@ -122,6 +122,7 @@
             this.newChallanBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.getPSlipForModifyToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buttonFetchPSlip = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPageNewChallan.SuspendLayout();
             this.groupBoxChallanPackingSlip.SuspendLayout();
@@ -166,6 +167,7 @@
             // 
             // tabPageNewChallan
             // 
+            this.tabPageNewChallan.Controls.Add(this.buttonFetchPSlip);
             this.tabPageNewChallan.Controls.Add(this.textBoxPackingSlip);
             this.tabPageNewChallan.Controls.Add(this.labelPackingSlip);
             this.tabPageNewChallan.Controls.Add(this.groupBoxChallanPackingSlip);
@@ -246,7 +248,7 @@
             // 
             // buttonResetChallan
             // 
-            this.buttonResetChallan.Location = new System.Drawing.Point(1109, 451);
+            this.buttonResetChallan.Location = new System.Drawing.Point(1109, 452);
             this.buttonResetChallan.Name = "buttonResetChallan";
             this.buttonResetChallan.Size = new System.Drawing.Size(139, 35);
             this.buttonResetChallan.TabIndex = 16;
@@ -308,7 +310,7 @@
             // buttonNewChallanInsert
             // 
             this.buttonNewChallanInsert.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.buttonNewChallanInsert.Location = new System.Drawing.Point(1109, 147);
+            this.buttonNewChallanInsert.Location = new System.Drawing.Point(1109, 146);
             this.buttonNewChallanInsert.Name = "buttonNewChallanInsert";
             this.buttonNewChallanInsert.Size = new System.Drawing.Size(139, 58);
             this.buttonNewChallanInsert.TabIndex = 4;
@@ -1014,6 +1016,16 @@
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
             this.dataGridViewTextBoxColumn1.Width = 75;
             // 
+            // buttonFetchPSlip
+            // 
+            this.buttonFetchPSlip.Location = new System.Drawing.Point(365, 502);
+            this.buttonFetchPSlip.Name = "buttonFetchPSlip";
+            this.buttonFetchPSlip.Size = new System.Drawing.Size(105, 23);
+            this.buttonFetchPSlip.TabIndex = 19;
+            this.buttonFetchPSlip.Text = "Fetch Packing Slip";
+            this.buttonFetchPSlip.UseVisualStyleBackColor = true;
+            this.buttonFetchPSlip.Click += new System.EventHandler(this.buttonFetchPSlip_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1145,6 +1157,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvPSlipTextBoxBillNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn remarkDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn totQtyDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.Button buttonFetchPSlip;
     }
 }
 

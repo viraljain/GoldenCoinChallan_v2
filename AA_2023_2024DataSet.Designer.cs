@@ -3594,27 +3594,31 @@ namespace GoldenCoinChallan.AA_2023_2024DataSetTableAdapters {
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[2];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"SELECT  T1.ItemName, T1.ItemName + '|||' + T1.UnitName + '|||' + REPLACE(dbo.Group_CSV(iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize)), ',', '|||') 
-		AS ItemSize
-/*T1.UnitName, iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize) AS ItemSize, TblSizeMap.SizeSNo*/ 
-FROM 
-(
-	SELECT        
-		LEFT(Material.Name, len(Material.Name) - charindex(' ', reverse(Material.Name), 0)) 
-		AS ItemName, RIGHT(Material.Name, iif(charindex(' ', reverse(Material.Name), 0) = 0, 1, 
-		charindex(' ', reverse(Material.Name), 0)) - 1) AS ItemSize, dbo.Material.Code, Ucode, 
-		UnitCode, TblUnit.UnitName
-	FROM dbo.Material INNER JOIN
-	(	SELECT [Code], [FieldValue1] AS UnitName
-		FROM            [dbo].[Master]
-		WHERE        FieldName1 = 'Unit Name'
-	) AS TblUnit 
-	ON TblUnit.Code = Material.UnitCode/*	where Name like '%N-1%'*/ 
-) AS T1
-LEFT JOIN
-dbo.tblSizeMap AS TblSizeMap ON T1.ItemSize = TblSizeMap.ChildSize
-GROUP BY T1.ItemName, T1.UnitName
-";
+            this._commandCollection[0].CommandText = @"
+						SELECT  T1.ItemName, T1.ItemName + '|||' + T1.UnitName
+						--+ '|||' + REPLACE(dbo.Group_CSV(iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize)), ',', '|||')
+						--+ '|||' + REPLACE(STRING_AGG(iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize),','), ',', '|||')
+						+ '|||' + STRING_AGG(iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize),'|||')
+						AS ItemSize
+						/*T1.UnitName, iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize) AS ItemSize, TblSizeMap.SizeSNo*/
+						FROM
+						(
+						SELECT
+						LEFT(Material.Name, len(Material.Name) - charindex(' ', reverse(Material.Name), 0))
+						AS ItemName, RIGHT(Material.Name, iif(charindex(' ', reverse(Material.Name), 0) = 0, 1,
+						charindex(' ', reverse(Material.Name), 0)) - 1) AS ItemSize, dbo.Material.Code, Ucode,
+						UnitCode, TblUnit.UnitName
+						FROM dbo.Material INNER JOIN
+						(	SELECT [Code], [FieldValue1] AS UnitName
+						FROM            [dbo].[Master]
+						WHERE        FieldName1 = 'Unit Name'
+						) AS TblUnit
+						ON TblUnit.Code = Material.UnitCode/*	where Name like '%N-1%'*/
+						) AS T1
+						LEFT JOIN
+						dbo.tblSizeMap AS TblSizeMap ON T1.ItemSize = TblSizeMap.ChildSize
+						GROUP BY T1.ItemName, T1.UnitName
+					";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;

@@ -616,5 +616,121 @@ namespace GoldenCoinChallan
             textBoxChallan.Text = dgvPSlipList["dgvPSlipTextBoxBillNo", e.RowIndex].Value.ToString();
             showChallanData();
         }
+
+        private void buttonFetchPSlip_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string packingSlipNo = textBoxPackingSlip.Text.Trim();
+                if (string.IsNullOrEmpty(packingSlipNo)) return;
+
+                using (var conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["GoldenCoinChallan.Properties.Settings.AA_2023_2024ConnectionString"].ConnectionString))
+                using (var cmdGetChallan = new SqlCommand("select PartyName, Narration, ItemName, Quantity from TallyPurchaseTemp WHERE NARRATION = @PSNo;", conn))
+                {
+                    cmdGetChallan.CommandType = CommandType.Text;
+                    cmdGetChallan.Parameters.AddWithValue("@PSNo", packingSlipNo);
+
+                    var dtGetChallan = new DataTable();
+                    conn.Open();
+
+                    using (var reader = cmdGetChallan.ExecuteReader())
+                    {
+                        dtGetChallan.Load(reader);
+                    }
+
+                    if (dtGetChallan.Rows.Count > 0)
+                    {
+                        string ps = textBoxPackingSlip + " " + "\r\nContents";
+                        MessageBox.Show(dtGetChallan.Rows.Count.ToString());
+                        /**************** DETAILS DISPLAY LOGIC ****************/
+                        //var rows = dtGetChallan.AsEnumerable();
+
+                        //var challanItemGroup = rows
+                        //    .Where(r => !string.IsNullOrWhiteSpace(r.Field<string>("ItemName")))
+                        //    .GroupBy(r => new
+                        //    {
+                        //        ItemName = r.Field<string>("ItemName").Trim()
+                        //        //,Unit = dtGetChallan.Columns.Contains("FieldValue1") ? (r["FieldValue1"]?.ToString() ?? "") : ""
+                        //    });
+
+
+                        //var itemNameColumn = dgvNewChallan.Columns["ItemName"] as DataGridViewComboBoxColumn;
+                        //foreach (var challanItem in challanItemGroup)
+                        //{
+                        //    string itemName = challanItem.Key.ItemName.Replace("D.", "Divya").Replace("M.", "Maestro").Replace("Cmndr", "Commander");
+                        //    //string unit = challanItem.Key.Unit;
+
+                        //    // add single row per distinct item+unit
+                        //    int newIndex = dgvNewChallan.Rows.Add();
+                        //    var targetRow = dgvNewChallan.Rows[newIndex];
+
+                        //    // set item name + unit once using your existing helper
+                        //    var nameCell = targetRow.Cells["ItemName"];
+                        //    //setComboCellByDisplayOrValue(nameCell, itemName, unit);
+                        //    //var dsSource = itemNameColumn.DataSource as DataTable;
+                        //    var dsSource1 = itemNameColumn.DataSource as BindingSource;
+                        //    var dsSource = dsSource1.DataSource as DataTable; // try both if not sure which one is set
+                        //    if (dsSource != null)
+                        //    {
+                        //        var displayMember = itemNameColumn.DisplayMember;
+                        //        var valueMember = itemNameColumn.ValueMember;
+                        //        var found = dsSource.AsEnumerable()
+                        //                            .FirstOrDefault(r => string.Equals(r.Field<string>(displayMember), itemName, StringComparison.OrdinalIgnoreCase));
+                        //        if (found != null)
+                        //        {
+                        //            // if ValueMember contains unit concatenated, use that; otherwise just set the value
+                        //            nameCell.Value = found[valueMember];
+                        //            //comboboxItemName_TextChanged(nameCell, EventArgs.Empty); // trigger size column population if needed
+                        //            dgvNewChallan.CurrentCell = nameCell;
+                        //            dgvNewChallan.BeginEdit(true);
+
+                        //            if (dgvNewChallan.EditingControl is ComboBox cb)
+                        //            {
+                        //                //cb.Text = "SomeValue"; // set programmatically
+                        //                comboboxItemName_TextChanged(cb, EventArgs.Empty); // manually trigger
+                        //            }
+                        //        }
+                        //    }
+                        //    int challanItemSum = 0;
+                        //    // populate size columns from group's rows
+                        //    foreach (var dr in challanItem)
+                        //    {
+                        //        string itemSize = dr.Table.Columns.Contains("ItemSize") ? (dr["ItemSize"]?.ToString().Split('/')[0] ?? "") : "";
+                        //        // adjust if quantity is in a different column (ItemDesc / Qty)
+                        //        int qty = 0;
+                        //        //int.TryParse(dr.Table.Columns.Contains("ItemDesc") ? dr["ItemDesc"]?.ToString() : dr["Qty"]?.ToString(), out qty);
+                        //        int.TryParse(dr["Qty"]?.ToString(), out qty);
+
+                        //        if (string.IsNullOrWhiteSpace(itemSize)) continue;
+
+                        //        var sizeCol = dgvNewChallan.Columns.Cast<DataGridViewColumn>()
+                        //                        .FirstOrDefault(c => c.Name.Contains("_" + itemSize) ||
+                        //                                             string.Equals(c.HeaderText, itemSize, StringComparison.OrdinalIgnoreCase));
+                        //        if (sizeCol != null)
+                        //        {
+                        //            // if multiple rows in same group map to same size, sum them (optional)
+                        //            var curVal = targetRow.Cells[sizeCol.Index].Value;
+                        //            int curQty = 0;
+                        //            int.TryParse(curVal?.ToString() ?? "0", out curQty);
+                        //            targetRow.Cells[sizeCol.Index].Value = (curQty + qty).ToString();
+                        //            challanItemSum += qty;
+                        //            challanTotal += qty;
+                        //        }
+                        //        else
+                        //        {
+                        //            // size column not found - skip or handle (e.g., add column)
+                        //        }
+                        //    }
+                        //    targetRow.Cells["rowTotal"].Value = challanItemSum.ToString();
+                        //}
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error fetching PACKING SLIP: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
     }
 }
