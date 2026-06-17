@@ -1,0 +1,52 @@
+delete from dbo.tblNewChallanTemp_Header;
+delete  from dbo.tblNewChallanTemp;
+
+insert into dbo.tblNewChallanTemp_Header
+select DealerName, AccMst.Code, Remarks, TotalItemQty 
+from dbo.tblHFOChallanTemp_Header as HFOChTempHd
+inner join dbo.AccountMaster as AccMst
+on HFOChTempHd.DealerName=AccMst.Name;
+
+
+insert into dbo.tblNewChallanTemp
+select ItemName, 0, ItemSize, ItemQty
+from dbo.tblHFOChallanTemp;
+
+select top 100 * from dbo.tblHFOChallanTemp;
+
+select * from dbo.tblHFOChallanTemp_Header;
+
+select * from dbo.tblHFOChallanTemp;
+
+select top 100 * from dbo.AccountMaster where GrpCode=8 and Name like 'Subhash%';
+
+exec sp_NewChallan;
+
+select * from dbo.Vch_Dtl
+order by date desc;
+
+
+CREATE TABLE dbo.tblHFOChallanTemp_Header (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    OrderMatrixId UNIQUEIDENTIFIER NOT NULL UNIQUE,   -- link back to Supabase orders_matrix.id
+	[DealerName] [varchar](999),
+	[DealerSGMCode] [smallint] NULL,
+    DealerCode UNIQUEIDENTIFIER NULL,          -- maps to dealer_id
+    Remarks NVARCHAR(200) NULL,                -- narration
+    TotalItemQty INT NOT NULL,                 -- sum of all item quantities
+    ChallanDate DATETIME NOT NULL DEFAULT GETDATE(),
+    CreatedBy NVARCHAR(50) NULL DEFAULT 'HFOExport',
+    CreatedIp NVARCHAR(50) NULL,
+    CreatedAt DATETIME NOT NULL DEFAULT GETDATE()
+);
+
+CREATE TABLE dbo.tblHFOChallanTemp (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    HeaderOrderMatrixId UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES dbo.tblHFOChallanTemp_Header(OrderMatrixId),
+    ItemName NVARCHAR(100) NOT NULL,
+    ItemSize NVARCHAR(50) NULL,
+    ItemQty INT NOT NULL,
+    Price DECIMAL(18,2) NULL,
+    BaseId UNIQUEIDENTIFIER NULL,              -- maps to products_base.id
+    CreatedAt DATETIME NOT NULL DEFAULT GETDATE()
+);
