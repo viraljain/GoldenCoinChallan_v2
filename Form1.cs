@@ -60,6 +60,7 @@ namespace GoldenCoinChallan
                 //viewPackingSlipListBindingSource.DataSource = adapter.GetPSlipForModify();
                 //dgvPSlipList.DataSource = viewPackingSlipListBindingSource;
             }
+            newChallan_Load();
         }
         #region FORM RESIZE LOGIC
         /*		FORM RESIZE LOGIC START		*/
@@ -255,12 +256,15 @@ namespace GoldenCoinChallan
         #region CHALLAN PRINT LOGIC
         private void btnGenChallan_Click(object sender, EventArgs e)
         {
-            generateChallan();
+            if (textBoxChallan.Text.Trim().Length>0)
+            {
+                generateChallan(textBoxChallan.Text.Trim()); 
+            }
         }
         private void viewChallanPrintDataGridView_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             textBoxChallan.Text = dgvChallanList["dgvTextBoxBillNo", e.RowIndex].Value.ToString();
-            showChallanData();
+            showChallanData(dgvChallanList["dgvTextBoxBillNo", e.RowIndex].Value.ToString());
         }
         #endregion
 
@@ -486,6 +490,8 @@ namespace GoldenCoinChallan
                         dateNewChallan.Value = row.Field<DateTime>("Date");
                         labelTotal.Text = "Total " + row.Field<Double>("TotQty").ToString();
 
+                        tabControl1.SelectedTab = tabPageNewChallan; // switch to edit tab
+
                         if (challanNo.ToUpper().StartsWith("PI"))
                         {
                             radioButtonPackingSlipTransfer.Checked = true;
@@ -501,9 +507,7 @@ namespace GoldenCoinChallan
                             comboBoxDealerName.SelectedIndex = comboBoxDealerName.FindString(row.Field<string>("NAME"));
                             textBoxNewChallanRemark.Text = row.Field<string>("Remark");
                             buttonNewChallanInsert.Text = "&Update Challan";
-                        }
-
-                        tabControl1.SelectedTab = tabPageNewChallan; // switch to edit tab
+                        }                        
 
                         /**************** DETAILS DISPLAY LOGIC ****************/
                         var rows = dtGetChallan.AsEnumerable();
@@ -614,7 +618,7 @@ namespace GoldenCoinChallan
         private void dgvPSlipList_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             textBoxChallan.Text = dgvPSlipList["dgvPSlipTextBoxBillNo", e.RowIndex].Value.ToString();
-            showChallanData();
+            showChallanData(dgvPSlipList["dgvPSlipTextBoxBillNo", e.RowIndex].Value.ToString());
         }
 
         private void buttonFetchPSlip_Click(object sender, EventArgs e)

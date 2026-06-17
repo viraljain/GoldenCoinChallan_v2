@@ -129,6 +129,8 @@ namespace GoldenCoinChallan
         // Example method to filter items based on text input
         private void GetFilteredItems(string filterText)
         {
+            filterText = filterText.Trim().Replace("'", "").Replace("%", "").Replace("  "," ");
+
             int rowIndex = dgvNewChallan.CurrentCell.RowIndex;
 
             DataGridViewComboBoxCell comboBoxItemName = (DataGridViewComboBoxCell)dgvNewChallan.Rows[rowIndex].Cells["ItemName"];
