@@ -12,10 +12,10 @@ namespace GoldenCoinChallan
 {
     public partial class Form1
     {
-        private async Task showChallanData()
+        private async Task showChallanData(string challanNo)
         //private void showChallanData()
         {
-            string challanNo = textBoxChallan.Text;
+            //string challanNo = textBoxChallan.Text;
 
             using (var tempViewChallanPrintTableAdapter = new ViewChallanPrintTableAdapter())
             {
@@ -33,7 +33,7 @@ namespace GoldenCoinChallan
             }            
         }
 
-        private void generateChallan() 
+        private void generateChallan(string challanNo) 
         {
             //panel1.Visible = lblChallanProgress.Visible = progressBar1.Visible = true;
             //panel1.BringToFront();
@@ -42,7 +42,7 @@ namespace GoldenCoinChallan
             //MessageBox.Show("Challan is being generated!!!");
 
             //Call the method to populate the DataGridView on the right to current challan details & ReportViewer
-            showChallanData();
+            showChallanData(challanNo);
 
             //panel1.Visible = lblChallanProgress.Visible = false;
 

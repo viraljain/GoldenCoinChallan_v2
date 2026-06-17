@@ -3596,9 +3596,9 @@ namespace GoldenCoinChallan.AA_2023_2024DataSetTableAdapters {
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = @"
 						SELECT  T1.ItemName, T1.ItemName + '|||' + T1.UnitName
-						--+ '|||' + REPLACE(dbo.Group_CSV(iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize)), ',', '|||')
+						+ '|||' + REPLACE(dbo.Group_CSV(iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize)), ',', '|||')
 						--+ '|||' + REPLACE(STRING_AGG(iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize),','), ',', '|||')
-						+ '|||' + STRING_AGG(iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize),'|||')
+						--+ '|||' + STRING_AGG(iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize),'|||')
 						AS ItemSize
 						/*T1.UnitName, iif(TblSizeMap.ParentSize IS NULL, t1.ItemSize, TblSizeMap.ParentSize) AS ItemSize, TblSizeMap.SizeSNo*/
 						FROM

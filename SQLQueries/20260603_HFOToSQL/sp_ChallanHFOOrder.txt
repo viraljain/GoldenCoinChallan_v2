@@ -1,0 +1,71 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		VIRAL JAIN
+-- Create date: 03-June-2026
+-- Description:	To Export Order from HFO to Challan in SGM. Currently can be called in the laptop
+-- =============================================
+ALTER PROCEDURE sp_ChallanHFOOrder 
+	@OrderMatrixId UNIQUEIDENTIFIER
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	DECLARE @ErrorMessage VARCHAR(4000);
+	BEGIN TRY
+		
+		BEGIN TRANSACTION;
+
+		DECLARE @CreatedBy varchar(100);
+		SET @CreatedBy = Concat('HFO#',@OrderMatrixId);
+
+		--CHECK IF @CreatedBy = Concat('HFO#',@OrderMatrixId) already present in CreatedBy of VCH_HD or Descp of VCH_DTL, THEN RETURN/RAISE ERROR
+		--THROW/RAISEERROR
+		DECLARE @CheckIfOrderExists SMALLINT = 0, @BillNo VARCHAR(50) = '';
+		SELECT TOP 1 @BillNo += BillNo FROM dbo.Vch_Hd WHERE CreatedBy LIKE '%'+CONVERT(VARCHAR(36),@OrderMatrixId)+'%'; --HFO#0E7BEA56-03D8-450E-BBEA-4202B690EB96
+		SELECT TOP 1 @BillNo += '('+BillNo+')' FROM dbo.Vch_Dtl WHERE Descp LIKE '%'+CONVERT(VARCHAR(36),@OrderMatrixId)+'%'; --HFO#0E7BEA56-03D8-450E-BBEA-4202B690EB96
+
+		IF(LEN(@BillNo) >= 1)
+		BEGIN
+			SET @ErrorMessage = CONCAT('ORDER ',@OrderMatrixId,' already exists in ',@BillNo);
+			THROW 50001,@ErrorMessage , 1;
+		END
+
+		insert into dbo.tblNewChallanTemp_Header
+		select DealerName, AccMst.Code, Remarks, TotalItemQty 
+		from dbo.tblHFOChallanTemp_Header as HFOChTempHd
+		inner join dbo.AccountMaster as AccMst
+		on HFOChTempHd.DealerName=AccMst.Name;
+
+		--CHECK FOR HFODealerName in SGM & IF NOT FOUND, THEN RETURN/RAISE ERROR
+		--THROW/RAISEERROR
+
+		insert into dbo.tblNewChallanTemp
+		select ItemName, 0, ItemSize, ItemQty
+		from dbo.tblHFOChallanTemp;
+
+		
+		exec sp_NewChallan @Date = NULL, @CreatedBy =@CreatedBy;
+
+		SELECT (BillNo) AS ChallanNo FROM dbo.Vch_Hd WHERE CreatedBy LIKE '%'+CONVERT(VARCHAR(36),@OrderMatrixId)+'%'; 
+		
+		delete from dbo.tblHFOChallanTemp;
+		delete from dbo.tblHFOChallanTemp_Header;
+
+		COMMIT TRANSACTION;
+	END TRY
+	BEGIN CATCH
+		IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+		delete from dbo.tblHFOChallanTemp;
+		delete from dbo.tblHFOChallanTemp_Header;
+		
+		SET @ErrorMessage = CONCAT('Error in Stored Procedure - ',ERROR_MESSAGE());
+		THROW 50001,@ErrorMessage , 1;		
+	END CATCH
+END
+GO
