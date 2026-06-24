@@ -40,6 +40,12 @@ namespace GoldenCoinChallan
             }
             else if (tabControl1.SelectedTab.Text == "New Challan")
             {
+                //this.tabPageNewChallan.Leave += tabPageNewChallan_Leave;  //PARTIALLY WORKING
+                tabControl1.Selecting -= tabControl1_Selecting;
+                tabControl1.Deselecting -= tabControl1_Deselecting;
+                tabControl1.Selecting += tabControl1_Selecting;
+                tabControl1.Deselecting += tabControl1_Deselecting;
+
                 //For NEW CHALLAN Tab - Call the method to populate the DataGridView Item Name DropDown ComboBox
                 newChallan_Load();
             }
@@ -60,7 +66,7 @@ namespace GoldenCoinChallan
                 //viewPackingSlipListBindingSource.DataSource = adapter.GetPSlipForModify();
                 //dgvPSlipList.DataSource = viewPackingSlipListBindingSource;
             }
-            newChallan_Load();
+            //newChallan_Load();
         }
         #region FORM RESIZE LOGIC
         /*		FORM RESIZE LOGIC START		*/
@@ -188,6 +194,9 @@ namespace GoldenCoinChallan
                     comboboxItemName.SelectedIndexChanged -= comboboxItemName_TextChanged;
                     comboboxItemName.SelectedIndexChanged += comboboxItemName_TextChanged;
 
+                    comboboxItemName.Leave -= comboboxItemName_Leave;
+                    comboboxItemName.Leave += comboboxItemName_Leave;
+
                     //comboboxItemName.SelectionChangeCommitted -= comboboxItemName_SelectionChangeCommitted;
                     //comboboxItemName.SelectionChangeCommitted += comboboxItemName_SelectionChangeCommitted;
                     if (comboboxItemName.SelectedIndex == 0)
@@ -256,9 +265,9 @@ namespace GoldenCoinChallan
         #region CHALLAN PRINT LOGIC
         private void btnGenChallan_Click(object sender, EventArgs e)
         {
-            if (textBoxChallan.Text.Trim().Length>0)
+            if (textBoxChallan.Text.Trim().Length > 0)
             {
-                generateChallan(textBoxChallan.Text.Trim()); 
+                generateChallan(textBoxChallan.Text.Trim());
             }
         }
         private void viewChallanPrintDataGridView_RowEnter(object sender, DataGridViewCellEventArgs e)
@@ -280,12 +289,51 @@ namespace GoldenCoinChallan
         #endregion
 
 
-
+        bool tabMode = false;
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            tabMode = true;
             Form1_Load(sender, e);
+            tabMode = false;
         }
 
+        private TabPage lastTabPage;
+
+        private void tabControl1_Deselecting(object sender, TabControlCancelEventArgs e)
+        {
+            // Remember the tab we are leaving
+            lastTabPage = e.TabPage;
+        }
+
+        private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (e.TabPage != tabPageNewChallan && lastTabPage == tabPageNewChallan && dgvNewChallan.Rows.Count > 1)
+            {
+                DialogResult userResponse_deleteRow = MessageBox.Show(Text = "Are you sure you want to RESET the Challan? Data will be lost.", "Item Deletion Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if (userResponse_deleteRow == DialogResult.No)
+                    e.Cancel = true;
+                else
+                {
+                    userResponse_deleteRow = MessageBox.Show(Text = "Please confirm again that you want to RESET the Challan?", "Item Deletion Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (userResponse_deleteRow == DialogResult.No)
+                        e.Cancel = true;
+                    else
+                    {
+                        dgvNewChallan.Rows.Clear();
+                        challanTotal = 0;
+                        labelTotal.Text = "Total 0";
+                        textBoxNewChallanRemark.Text = "";
+                        bsDealerName.RemoveFilter();
+                        comboBoxDealerName.SelectedIndex = 0;
+                        comboBoxDealerName.Focus();
+                        labelDealerName.Text = "";
+                        textBoxPackingSlip.Text = "";
+                        labelNewChallanNumber.Text = "";
+                        mode = enumNewChallanMode.Insert;
+                    }
+                }
+            }
+        }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (keyData == Keys.Enter)
@@ -435,6 +483,7 @@ namespace GoldenCoinChallan
                 buttonResetChallan.Text = "&Reset Packing Slip";
 
                 tabPageNewChallan.BackColor = Color.LightBlue;
+                mode = enumNewChallanMode.Insert;
             }
         }
 
@@ -451,167 +500,7 @@ namespace GoldenCoinChallan
                 buttonResetChallan.Text = "&Reset Challan";
 
                 tabPageNewChallan.BackColor = Color.Transparent;
-            }
-        }
-
-        private void btnModifyChallan_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                string challanNo = textBoxChallan.Text.Trim();
-                if (string.IsNullOrEmpty(challanNo)) return;
-
-                using (var conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["GoldenCoinChallan.Properties.Settings.AA_2023_2024ConnectionString"].ConnectionString))
-                using (var cmdGetChallan = new SqlCommand("sp_GetChallanData", conn))
-                {
-                    cmdGetChallan.CommandType = CommandType.StoredProcedure;
-                    cmdGetChallan.Parameters.AddWithValue("@ChallanNo", challanNo);
-
-                    var dtGetChallan = new DataTable();
-                    conn.Open();
-
-                    using (var reader = cmdGetChallan.ExecuteReader())
-                    {
-                        dtGetChallan.Load(reader);
-                    }
-
-                    if (dtGetChallan.Rows.Count > 0)
-                    {
-                        //newChallan_Load();
-                        dgvNewChallan.Rows.Clear();
-                        challanTotal = 0;
-                        labelTotal.Text = "Total 0";
-                        textBoxNewChallanRemark.Text = "";
-                        labelDealerName.Text = "";
-                        textBoxPackingSlip.Text = "";
-
-                        var row = dtGetChallan.Rows[0];
-                        labelNewChallanNumber.Text = row.Field<string>("BillNo");
-                        dateNewChallan.Value = row.Field<DateTime>("Date");
-                        labelTotal.Text = "Total " + row.Field<Double>("TotQty").ToString();
-
-                        tabControl1.SelectedTab = tabPageNewChallan; // switch to edit tab
-
-                        if (challanNo.ToUpper().StartsWith("PI"))
-                        {
-                            radioButtonPackingSlipTransfer.Checked = true;
-                            radioButtonPackingSlipTransfer_CheckedChanged(sender, EventArgs.Empty);
-                            //comboBoxDealerName.SelectedIndex = comboBoxDealerName.FindString(row.Field<string>("NAME"));
-                            textBoxPackingSlip.Text = row.Field<string>("Remark");
-                            buttonNewChallanInsert.Text = "&Update Packing Slip";
-                        }
-                        else
-                        {
-                            radioButtonNewChallan.Checked = true;
-                            radioButtonNewChallan_CheckedChanged(sender, EventArgs.Empty);
-                            comboBoxDealerName.SelectedIndex = comboBoxDealerName.FindString(row.Field<string>("NAME"));
-                            textBoxNewChallanRemark.Text = row.Field<string>("Remark");
-                            buttonNewChallanInsert.Text = "&Update Challan";
-                        }                        
-
-                        /**************** DETAILS DISPLAY LOGIC ****************/
-                        var rows = dtGetChallan.AsEnumerable();
-
-                        var challanItemGroup = rows
-                            .Where(r => !string.IsNullOrWhiteSpace(r.Field<string>("ItemName")))
-                            .GroupBy(r => new
-                            {
-                                ItemName = r.Field<string>("ItemName").Trim(),
-                                Unit = dtGetChallan.Columns.Contains("FieldValue1") ? (r["FieldValue1"]?.ToString() ?? "") : ""
-                            });
-
-
-                        var itemNameColumn = dgvNewChallan.Columns["ItemName"] as DataGridViewComboBoxColumn;
-                        foreach (var challanItem in challanItemGroup)
-                        {
-                            string itemName = challanItem.Key.ItemName.Replace("D.", "Divya").Replace("M.", "Maestro").Replace("Cmndr", "Commander");
-                            string unit = challanItem.Key.Unit;
-
-                            // add single row per distinct item+unit
-                            int newIndex = dgvNewChallan.Rows.Add();
-                            var targetRow = dgvNewChallan.Rows[newIndex];
-
-                            // set item name + unit once using your existing helper
-                            var nameCell = targetRow.Cells["ItemName"];
-                            //setComboCellByDisplayOrValue(nameCell, itemName, unit);
-                            //var dsSource = itemNameColumn.DataSource as DataTable;
-                            var dsSource1 = itemNameColumn.DataSource as BindingSource;
-                            var dsSource = dsSource1.DataSource as DataTable; // try both if not sure which one is set
-                            if (dsSource != null)
-                            {
-                                var displayMember = itemNameColumn.DisplayMember;
-                                var valueMember = itemNameColumn.ValueMember;
-                                var found = dsSource.AsEnumerable()
-                                                    .FirstOrDefault(r => string.Equals(r.Field<string>(displayMember), itemName, StringComparison.OrdinalIgnoreCase));
-                                if (found != null)
-                                {
-                                    // if ValueMember contains unit concatenated, use that; otherwise just set the value
-                                    nameCell.Value = found[valueMember];
-                                    //comboboxItemName_TextChanged(nameCell, EventArgs.Empty); // trigger size column population if needed
-                                    dgvNewChallan.CurrentCell = nameCell;
-                                    dgvNewChallan.BeginEdit(true);
-
-                                    if (dgvNewChallan.EditingControl is ComboBox cb)
-                                    {
-                                        //cb.Text = "SomeValue"; // set programmatically
-                                        comboboxItemName_TextChanged(cb, EventArgs.Empty); // manually trigger
-                                    }
-
-                                }
-                            }
-                            int challanItemSum = 0;
-                            // populate size columns from group's rows
-                            foreach (var dr in challanItem)
-                            {
-                                string itemSize = dr.Table.Columns.Contains("ItemSize") ? (dr["ItemSize"]?.ToString().Split('/')[0] ?? "") : "";
-                                // adjust if quantity is in a different column (ItemDesc / Qty)
-                                int qty = 0;
-                                //int.TryParse(dr.Table.Columns.Contains("ItemDesc") ? dr["ItemDesc"]?.ToString() : dr["Qty"]?.ToString(), out qty);
-                                int.TryParse(dr["Qty"]?.ToString(), out qty);
-
-                                if (string.IsNullOrWhiteSpace(itemSize)) continue;
-
-                                var sizeCol = dgvNewChallan.Columns.Cast<DataGridViewColumn>()
-                                                .FirstOrDefault(c => c.Name.Contains("_" + itemSize) ||
-                                                                     string.Equals(c.HeaderText, itemSize, StringComparison.OrdinalIgnoreCase));
-                                if (sizeCol != null)
-                                {
-                                    // if multiple rows in same group map to same size, sum them (optional)
-                                    var curVal = targetRow.Cells[sizeCol.Index].Value;
-                                    int curQty = 0;
-                                    int.TryParse(curVal?.ToString() ?? "0", out curQty);
-                                    targetRow.Cells[sizeCol.Index].Value = (curQty + qty).ToString();
-                                    challanItemSum += qty;
-                                    challanTotal += qty;
-                                }
-                                else
-                                {
-                                    // size column not found - skip or handle (e.g., add column)
-                                }
-                            }
-                            targetRow.Cells["rowTotal"].Value = challanItemSum.ToString();
-                        }
-
-                    }
-                    else
-                    {
-                        MessageBox.Show("Challan/Packing Slip not found!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-
-                    if (challanNo.ToUpper().StartsWith("PI"))
-                    {
-                        textBoxPackingSlip.Focus();
-                    }
-                    else
-                        textBoxNewChallanRemark.Focus();
-                    // Bind details to DataGridView (allow edits/add/remove)
-                    //dgvNewChallan.DataSource = detailDt;                    
-                    //dgvNewChallan.Columns["Id"].Visible = false; // hide PK if not needed
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error fetching challan: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                mode = enumNewChallanMode.Insert;
             }
         }
 
@@ -736,5 +625,12 @@ namespace GoldenCoinChallan
             }
 
         }
+        enum enumNewChallanMode
+        {
+            Insert, Split, Modify, ModifyRender
+        }
+        enumNewChallanMode mode = enumNewChallanMode.Insert;
+
+
     }
 }

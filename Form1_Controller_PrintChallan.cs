@@ -12,8 +12,8 @@ namespace GoldenCoinChallan
 {
     public partial class Form1
     {
-        private async Task showChallanData(string challanNo)
-        //private void showChallanData()
+        //private async Task showChallanData(string challanNo)
+        private void showChallanData(string challanNo)
         {
             //string challanNo = textBoxChallan.Text;
 
@@ -21,8 +21,8 @@ namespace GoldenCoinChallan
             {
                 //Below code is used to populate the report viewer
                 //DataTable resTable = await Task.Run(() => this.viewChallanPrintTableAdapter.GetDataBy(challanNo));
-                DataTable resTable = await Task.Run(() => tempViewChallanPrintTableAdapter.GetDataBy(challanNo));
-                //DataTable resTable = this.viewChallanPrintTableAdapter.GetDataBy(textBoxChallan.Text); 
+                //DataTable resTable = await Task.Run(() => tempViewChallanPrintTableAdapter.GetDataBy(challanNo));
+                DataTable resTable = this.viewChallanPrintTableAdapter.GetDataBy(textBoxChallan.Text);
 
                 var rds = new ReportDataSource("DSViewChallanPrint", resTable as DataTable);
                 this.reportViewerChallanPrint.LocalReport.DataSources.Clear();

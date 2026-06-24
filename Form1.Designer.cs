@@ -36,6 +36,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageNewChallan = new System.Windows.Forms.TabPage();
+            this.buttonChallanSplit = new System.Windows.Forms.Button();
+            this.buttonFetchPSlip = new System.Windows.Forms.Button();
             this.textBoxPackingSlip = new System.Windows.Forms.TextBox();
             this.labelPackingSlip = new System.Windows.Forms.Label();
             this.groupBoxChallanPackingSlip = new System.Windows.Forms.GroupBox();
@@ -76,6 +78,7 @@
             this.UnitName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.rowTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPageChallanPrint = new System.Windows.Forms.TabPage();
+            this.buttonSplitChallan = new System.Windows.Forms.Button();
             this.btnGenChallan = new System.Windows.Forms.Button();
             this.btnTallyExport = new System.Windows.Forms.Button();
             this.btnModifyChallan = new System.Windows.Forms.Button();
@@ -122,7 +125,6 @@
             this.newChallanBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.getPSlipForModifyToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buttonFetchPSlip = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPageNewChallan.SuspendLayout();
             this.groupBoxChallanPackingSlip.SuspendLayout();
@@ -167,6 +169,7 @@
             // 
             // tabPageNewChallan
             // 
+            this.tabPageNewChallan.Controls.Add(this.buttonChallanSplit);
             this.tabPageNewChallan.Controls.Add(this.buttonFetchPSlip);
             this.tabPageNewChallan.Controls.Add(this.textBoxPackingSlip);
             this.tabPageNewChallan.Controls.Add(this.labelPackingSlip);
@@ -190,6 +193,28 @@
             this.tabPageNewChallan.Text = "New Challan";
             this.tabPageNewChallan.UseVisualStyleBackColor = true;
             this.tabPageNewChallan.Enter += new System.EventHandler(this.tabPageNewChallan_Enter);
+            // 
+            // buttonChallanSplit
+            // 
+            this.buttonChallanSplit.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.buttonChallanSplit.Location = new System.Drawing.Point(1109, 230);
+            this.buttonChallanSplit.Name = "buttonChallanSplit";
+            this.buttonChallanSplit.Size = new System.Drawing.Size(139, 29);
+            this.buttonChallanSplit.TabIndex = 20;
+            this.buttonChallanSplit.Text = "S&PLIT Challan";
+            this.buttonChallanSplit.UseVisualStyleBackColor = true;
+            this.buttonChallanSplit.Visible = false;
+            this.buttonChallanSplit.Click += new System.EventHandler(this.buttonChallanSplit_Click);
+            // 
+            // buttonFetchPSlip
+            // 
+            this.buttonFetchPSlip.Location = new System.Drawing.Point(365, 502);
+            this.buttonFetchPSlip.Name = "buttonFetchPSlip";
+            this.buttonFetchPSlip.Size = new System.Drawing.Size(105, 23);
+            this.buttonFetchPSlip.TabIndex = 19;
+            this.buttonFetchPSlip.Text = "Fetch Packing Slip";
+            this.buttonFetchPSlip.UseVisualStyleBackColor = true;
+            this.buttonFetchPSlip.Click += new System.EventHandler(this.buttonFetchPSlip_Click);
             // 
             // textBoxPackingSlip
             // 
@@ -395,7 +420,6 @@
             this.UnitName,
             this.rowTotal});
             this.dgvNewChallan.Location = new System.Drawing.Point(3, 147);
-            this.dgvNewChallan.MultiSelect = false;
             this.dgvNewChallan.Name = "dgvNewChallan";
             this.dgvNewChallan.RowHeadersWidth = 24;
             this.dgvNewChallan.Size = new System.Drawing.Size(1100, 339);
@@ -609,6 +633,7 @@
             // 
             // tabPageChallanPrint
             // 
+            this.tabPageChallanPrint.Controls.Add(this.buttonSplitChallan);
             this.tabPageChallanPrint.Controls.Add(this.btnGenChallan);
             this.tabPageChallanPrint.Controls.Add(this.btnTallyExport);
             this.tabPageChallanPrint.Controls.Add(this.btnModifyChallan);
@@ -626,53 +651,67 @@
             this.tabPageChallanPrint.Text = "Challan Print";
             this.tabPageChallanPrint.UseVisualStyleBackColor = true;
             // 
+            // buttonSplitChallan
+            // 
+            this.buttonSplitChallan.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.buttonSplitChallan.Font = new System.Drawing.Font("Calibri", 10.25F, System.Drawing.FontStyle.Bold);
+            this.buttonSplitChallan.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.buttonSplitChallan.Location = new System.Drawing.Point(526, 6);
+            this.buttonSplitChallan.Name = "buttonSplitChallan";
+            this.buttonSplitChallan.Size = new System.Drawing.Size(66, 30);
+            this.buttonSplitChallan.TabIndex = 10;
+            this.buttonSplitChallan.Text = "➗ &Split";
+            this.buttonSplitChallan.UseVisualStyleBackColor = false;
+            this.buttonSplitChallan.Click += new System.EventHandler(this.buttonSplitChallan_Click);
+            // 
             // btnGenChallan
             // 
             this.btnGenChallan.BackColor = System.Drawing.Color.GreenYellow;
-            this.btnGenChallan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.btnGenChallan.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold);
             this.btnGenChallan.Location = new System.Drawing.Point(167, 6);
             this.btnGenChallan.Name = "btnGenChallan";
-            this.btnGenChallan.Size = new System.Drawing.Size(145, 30);
+            this.btnGenChallan.Size = new System.Drawing.Size(105, 30);
             this.btnGenChallan.TabIndex = 6;
-            this.btnGenChallan.Text = "&Generate Challan";
+            this.btnGenChallan.Text = "✔ &Generate";
             this.btnGenChallan.UseVisualStyleBackColor = false;
             this.btnGenChallan.Click += new System.EventHandler(this.btnGenChallan_Click);
             // 
             // btnTallyExport
             // 
             this.btnTallyExport.BackColor = System.Drawing.Color.DeepSkyBlue;
-            this.btnTallyExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.btnTallyExport.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold);
             this.btnTallyExport.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnTallyExport.Location = new System.Drawing.Point(321, 6);
+            this.btnTallyExport.Location = new System.Drawing.Point(278, 6);
             this.btnTallyExport.Name = "btnTallyExport";
             this.btnTallyExport.Size = new System.Drawing.Size(145, 30);
             this.btnTallyExport.TabIndex = 2;
-            this.btnTallyExport.Text = "Export Tally &XML";
+            this.btnTallyExport.Text = "📩 Export Tally &XML";
             this.btnTallyExport.UseVisualStyleBackColor = false;
             this.btnTallyExport.Click += new System.EventHandler(this.btnTallyExport_Click);
             // 
             // btnModifyChallan
             // 
             this.btnModifyChallan.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.btnModifyChallan.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.btnModifyChallan.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold);
             this.btnModifyChallan.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.btnModifyChallan.Location = new System.Drawing.Point(472, 6);
+            this.btnModifyChallan.Location = new System.Drawing.Point(429, 6);
             this.btnModifyChallan.Name = "btnModifyChallan";
-            this.btnModifyChallan.Size = new System.Drawing.Size(145, 30);
+            this.btnModifyChallan.Size = new System.Drawing.Size(91, 30);
             this.btnModifyChallan.TabIndex = 9;
-            this.btnModifyChallan.Text = "&Modify Challan";
+            this.btnModifyChallan.Text = "✏️ &Modify";
             this.btnModifyChallan.UseVisualStyleBackColor = false;
             this.btnModifyChallan.Click += new System.EventHandler(this.btnModifyChallan_Click);
             // 
             // buttonChallanPrintRefresh
             // 
-            this.buttonChallanPrintRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.25F);
+            this.buttonChallanPrintRefresh.BackColor = System.Drawing.Color.LawnGreen;
+            this.buttonChallanPrintRefresh.Font = new System.Drawing.Font("Calibri", 13.25F);
             this.buttonChallanPrintRefresh.Location = new System.Drawing.Point(1108, 4);
             this.buttonChallanPrintRefresh.Name = "buttonChallanPrintRefresh";
             this.buttonChallanPrintRefresh.Size = new System.Drawing.Size(145, 30);
             this.buttonChallanPrintRefresh.TabIndex = 8;
-            this.buttonChallanPrintRefresh.Text = "Refresh";
-            this.buttonChallanPrintRefresh.UseVisualStyleBackColor = true;
+            this.buttonChallanPrintRefresh.Text = "🔄️ Refresh";
+            this.buttonChallanPrintRefresh.UseVisualStyleBackColor = false;
             this.buttonChallanPrintRefresh.Click += new System.EventHandler(this.buttonChallanPrintRefresh_Click);
             // 
             // dgvChallanList
@@ -1016,16 +1055,6 @@
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
             this.dataGridViewTextBoxColumn1.Width = 75;
             // 
-            // buttonFetchPSlip
-            // 
-            this.buttonFetchPSlip.Location = new System.Drawing.Point(365, 502);
-            this.buttonFetchPSlip.Name = "buttonFetchPSlip";
-            this.buttonFetchPSlip.Size = new System.Drawing.Size(105, 23);
-            this.buttonFetchPSlip.TabIndex = 19;
-            this.buttonFetchPSlip.Text = "Fetch Packing Slip";
-            this.buttonFetchPSlip.UseVisualStyleBackColor = true;
-            this.buttonFetchPSlip.Click += new System.EventHandler(this.buttonFetchPSlip_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1158,6 +1187,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn remarkDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn totQtyDataGridViewTextBoxColumn1;
         private System.Windows.Forms.Button buttonFetchPSlip;
+        private System.Windows.Forms.Button buttonChallanSplit;
+        private System.Windows.Forms.Button buttonSplitChallan;
     }
 }
 
