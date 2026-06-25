@@ -1,4 +1,5 @@
-﻿using GoldenCoinChallan.AA_2023_2024DataSetTableAdapters;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using GoldenCoinChallan.AA_2023_2024DataSetTableAdapters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Reporting.WinForms;
 using System;
@@ -13,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Color = System.Drawing.Color;
 
 namespace GoldenCoinChallan
 {
@@ -66,7 +68,12 @@ namespace GoldenCoinChallan
                 //viewPackingSlipListBindingSource.DataSource = adapter.GetPSlipForModify();
                 //dgvPSlipList.DataSource = viewPackingSlipListBindingSource;
             }
-            //newChallan_Load();
+            else if (tabControl1.SelectedTab == tabPageUploadDownload)
+            {
+                ucUploadDownload ucUploadDownload = new ucUploadDownload();
+                ucUploadDownload.Dock = DockStyle.Fill; // fills the tab
+                tabPageUploadDownload.Controls.Add(ucUploadDownload);
+            }
         }
         #region FORM RESIZE LOGIC
         /*		FORM RESIZE LOGIC START		*/

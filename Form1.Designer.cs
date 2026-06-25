@@ -125,6 +125,7 @@
             this.newChallanBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.getPSlipForModifyToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabPageUploadDownload = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.tabPageNewChallan.SuspendLayout();
             this.groupBoxChallanPackingSlip.SuspendLayout();
@@ -159,6 +160,7 @@
             this.tabControl1.Controls.Add(this.tabPageNewChallan);
             this.tabControl1.Controls.Add(this.tabPageChallanPrint);
             this.tabControl1.Controls.Add(this.tabPageGodownTransfer);
+            this.tabControl1.Controls.Add(this.tabPageUploadDownload);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -1055,6 +1057,16 @@
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
             this.dataGridViewTextBoxColumn1.Width = 75;
             // 
+            // tabPageUploadDownload
+            // 
+            this.tabPageUploadDownload.Location = new System.Drawing.Point(4, 22);
+            this.tabPageUploadDownload.Name = "tabPageUploadDownload";
+            this.tabPageUploadDownload.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageUploadDownload.Size = new System.Drawing.Size(1256, 655);
+            this.tabPageUploadDownload.TabIndex = 3;
+            this.tabPageUploadDownload.Text = "Upload/Download";
+            this.tabPageUploadDownload.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1189,6 +1201,7 @@
         private System.Windows.Forms.Button buttonFetchPSlip;
         private System.Windows.Forms.Button buttonChallanSplit;
         private System.Windows.Forms.Button buttonSplitChallan;
+        private System.Windows.Forms.TabPage tabPageUploadDownload;
     }
 }
 
