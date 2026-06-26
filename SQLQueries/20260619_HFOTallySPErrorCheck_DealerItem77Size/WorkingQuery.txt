@@ -1,0 +1,21 @@
+select * from dbo.tblHFOChallanTemp HFOChTemp
+WHERE HFOChTemp.ItemSize=77 AND (HFOChTemp.ItemName LIKE '%SUPER%' OR HFOChTemp.ItemName LIKE '%PREMIUM%' OR HFOChTemp.ItemName LIKE '%COMM%' OR HFOChTemp.ItemName LIKE '%TOY%' OR HFOChTemp.ItemName LIKE '%MAJOR%' OR HFOChTemp.ItemName LIKE '%COMM%' OR HFOChTemp.ItemName LIKE '%SUPREME%' OR HFOChTemp.ItemName LIKE '%HOT COTTSWOOL%' OR HFOChTemp.ItemName LIKE '%HOTGOLD%' OR HFOChTemp.ItemName LIKE '%SMARLYN MELANGE KIDS%')
+
+select * from dbo.tblHFOChallanTemp_Header
+
+exec [dbo].[sp_ChallanHFOOrder] '7F3B06B8-9344-46A0-BD32-923716445203';
+
+----
+select * from Master
+where code=81 and Type=10;
+
+select * from dbo.Vch_Hd where BillNo = 'CH/0555';
+select * from dbo.Vch_Dtl where BillNo = 'CH/0555';
+
+
+delete from dbo.Vch_Hd where BillNo = 'CH/0555';
+delete from dbo.Vch_Dtl where BillNo = 'CH/0555';
+
+update [dbo].[Master]
+			set fieldvalue5 = 554
+			where code=81 and Type=10; --where code=81 and fieldvalue2='Challan RBS';

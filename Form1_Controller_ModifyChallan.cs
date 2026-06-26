@@ -15,7 +15,7 @@ namespace GoldenCoinChallan
         {
             mode = enumNewChallanMode.ModifyRender;
             fetchChallan(sender, e);
-            mode=enumNewChallanMode.Modify;
+            mode = enumNewChallanMode.Modify;
         }
 
         private void buttonSplitChallan_Click(object sender, EventArgs e)
@@ -211,7 +211,7 @@ namespace GoldenCoinChallan
                 DataTable dtModifyChallan = dtNewChallan.Clone();
 
                 string itemName = string.Empty, itemUnit = String.Empty, itemSize = String.Empty;
-                int itemQty = 0, totalNewChallan=0, totalModifyChallan=0;
+                int itemQty = 0, totalNewChallan = 0, totalModifyChallan = 0;
 
                 foreach (DataGridViewRow row in dgvNewChallan.Rows)
                 {
@@ -230,12 +230,12 @@ namespace GoldenCoinChallan
                                 if (itemQty > 0)
                                 {
                                     dtNewChallan.Rows.Add(itemName, itemSize, itemQty, itemUnit);
-                                    totalNewChallan+=itemQty;
+                                    totalNewChallan += itemQty;
                                 }
                             }
                         }
                     }
-                    else if(!row.IsNewRow)
+                    else if (!row.IsNewRow)
                     {
                         DataGridViewComboBoxCell cmbItemName = row.Cells["ItemName"] as DataGridViewComboBoxCell;
                         itemUnit = cmbItemName.Value.ToString().Split(new String[] { "|||" }, StringSplitOptions.RemoveEmptyEntries)[1];
@@ -275,7 +275,7 @@ namespace GoldenCoinChallan
                             sqlCmdChallanHeader.Parameters.AddWithValue("@DealerCode", comboBoxDealerName.SelectedValue.ToString());
                             sqlCmdChallanHeader.Parameters.AddWithValue("@Remarks", "");
                             sqlCmdChallanHeader.Parameters.AddWithValue("@TotalItemQty", totalNewChallan);
-                        }                        
+                        }
                         sqlConnection.Open();
                         sqlCmdChallanHeader.ExecuteNonQuery();
                     }
@@ -305,7 +305,7 @@ namespace GoldenCoinChallan
                             {
                                 if (radioButtonNewChallan.Checked)
                                 {
-                                    MessageBox.Show("Challan "+ labelNewChallanNumber.Text + " splitted successfully! New Challan No. is " + reader.GetString(0));
+                                    MessageBox.Show("Challan " + labelNewChallanNumber.Text + " splitted successfully! New Challan No. is " + reader.GetString(0));
                                     //comboBoxDealerName.Focus();
                                 }
                             }
@@ -361,7 +361,7 @@ namespace GoldenCoinChallan
                                     MessageBox.Show("Challan " + reader.GetString(0) + " UPDATED successfully!");
                                     buttonNewChallanInsert.Text = "&Insert Challan";
                                     comboBoxDealerName.Focus();
-                                }                                
+                                }
                                 dgvNewChallan.Rows.Clear();
                                 challanTotal = 0;
                                 labelTotal.Text = "Total 0";
@@ -372,7 +372,7 @@ namespace GoldenCoinChallan
                             }
                         }
                     }
-                }                
+                }
             }
             catch (Exception ex)
             {

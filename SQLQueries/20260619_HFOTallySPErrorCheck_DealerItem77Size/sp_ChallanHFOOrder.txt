@@ -1,0 +1,113 @@
+USE [AA_2023_2024]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ChallanHFOOrder]    Script Date: 6/19/2026 7:03:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		VIRAL JAIN
+-- Create date: 03-June-2026
+-- Description:	To Export Order from HFO to Challan in SGM. Currently can be called in the laptop
+-- Modify date: 19-June-2026 # Error Check - DealerName & ItemName
+-- =============================================
+ALTER PROCEDURE [dbo].[sp_ChallanHFOOrder] 
+	@OrderMatrixId UNIQUEIDENTIFIER
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	DECLARE @ErrorMessage VARCHAR(4000), @ErrorCheck VARCHAR(100)='';
+	BEGIN TRY
+		
+		BEGIN TRANSACTION;
+
+		DECLARE @CreatedBy varchar(100);
+		SET @CreatedBy = Concat('HFO#',@OrderMatrixId);
+
+		--CHECK IF @CreatedBy = Concat('HFO#',@OrderMatrixId) already present in CreatedBy of VCH_HD or Descp of VCH_DTL, THEN RETURN/RAISE ERROR
+		--THROW/RAISEERROR
+		DECLARE @CheckIfOrderExists SMALLINT = 0, @BillNo VARCHAR(50) = '';
+		SELECT TOP 1 @BillNo += BillNo FROM dbo.Vch_Hd WHERE CreatedBy LIKE '%'+CONVERT(VARCHAR(36),@OrderMatrixId)+'%'; --HFO#0E7BEA56-03D8-450E-BBEA-4202B690EB96
+		SELECT TOP 1 @BillNo += '('+BillNo+')' FROM dbo.Vch_Dtl WHERE Descp LIKE '%'+CONVERT(VARCHAR(36),@OrderMatrixId)+'%'; --HFO#0E7BEA56-03D8-450E-BBEA-4202B690EB96
+
+		IF(LEN(@BillNo) >= 1)
+		BEGIN
+			IF XACT_STATE() <> 0
+				ROLLBACK TRANSACTION;
+			SET @ErrorMessage = CONCAT('ORDER ',@OrderMatrixId,' already exists in ',@BillNo);
+			THROW 50001,@ErrorMessage , 1;
+		END
+
+		--CHECK FOR HFODealerName in SGM & IF NOT FOUND, THEN RETURN/RAISE ERROR
+		--THROW/RAISEERROR
+		SELECT TOP 1 @ErrorCheck = (DealerName) FROM dbo.tblHFOChallanTemp_Header as HFOChTempHd
+		LEFT JOIN dbo.AccountMaster as AccMst
+		on HFOChTempHd.DealerName=AccMst.Name
+		WHERE AccMst.Name IS NULL OR LEN(AccMst.Name)=0;
+
+		IF(LEN(@ErrorCheck) >= 1)
+		BEGIN
+			IF XACT_STATE() <> 0
+				ROLLBACK TRANSACTION;
+			SET @ErrorMessage = CONCAT('Dealer Name ',@ErrorCheck,' not found in Santani Godown Manager App');
+			SET @ErrorCheck='';
+			THROW 50001,@ErrorMessage , 1;
+		END
+
+		--UPDATE 77 Size
+		UPDATE dbo.tblHFOChallanTemp
+		SET ItemSize = 78
+		WHERE ItemSize=77 AND (ItemName LIKE '%SUPER%' OR ItemName LIKE '%PREMIUM%' OR ItemName LIKE '%COMM%' OR ItemName LIKE '%TOY%' OR ItemName LIKE '%MAJOR%' OR ItemName LIKE '%COMM%' OR ItemName LIKE '%SUPREME%' OR ItemName LIKE '%HOT COTTSWOOL%' OR ItemName LIKE '%HOTGOLD%' OR ItemName LIKE '%SMARLYN MELANGE KIDS%');
+		
+		UPDATE dbo.tblHFOChallanTemp
+		SET ItemSize = 75
+		WHERE ItemSize=77 --FOR REMAINING ITEMS OF SIZE 77
+
+		--CHECK FOR HFOMaterialName in SGM & IF NOT FOUND, THEN RETURN/RAISE ERROR
+		--THROW/RAISEERROR
+		SELECT TOP 1 @ErrorCheck = (HFOChTemp.ItemName)+'('+(HFOChTemp.ItemSize)+')' FROM dbo.tblHFOChallanTemp as HFOChTemp
+		LEFT JOIN dbo.Material
+		on material.name like HFOChTemp.ItemName + '%'+ HFOChTemp.ItemSize +'%' --and CHECKSUM(HFOChTemp.ItemName) = CHECKSUM(LEFT(Material.Name, len(Material.Name) - charindex(' ', reverse(Material.Name), 0)))
+		WHERE Material.Name IS NULL OR LEN(Material.Name)=0;
+		
+		IF(LEN(@ErrorCheck) >= 1)
+		BEGIN
+			IF XACT_STATE() <> 0
+				ROLLBACK TRANSACTION;
+			SET @ErrorMessage = CONCAT('Item Name ',@ErrorCheck,' not found in Santani Godown Manager App');
+			SET @ErrorCheck='';
+			THROW 50001,@ErrorMessage , 1;
+		END
+
+		insert into dbo.tblNewChallanTemp_Header
+		select DealerName, AccMst.Code, Remarks, TotalItemQty 
+		from dbo.tblHFOChallanTemp_Header as HFOChTempHd
+		inner join dbo.AccountMaster as AccMst
+		on HFOChTempHd.DealerName=AccMst.Name;
+		
+		insert into dbo.tblNewChallanTemp
+		select RTRIM(ItemName), 0, ItemSize, ItemQty
+		from dbo.tblHFOChallanTemp;
+
+		exec sp_NewChallan @Date = NULL, @CreatedBy =@CreatedBy;
+
+		SELECT (BillNo) AS ChallanNo FROM dbo.Vch_Hd WHERE CreatedBy LIKE '%'+CONVERT(VARCHAR(36),@OrderMatrixId)+'%'; 
+		
+		TRUNCATE TABLE dbo.tblHFOChallanTemp;
+		DELETE FROM dbo.tblHFOChallanTemp_Header;
+
+		COMMIT TRANSACTION;
+	END TRY
+	BEGIN CATCH
+		IF XACT_STATE() <> 0
+            ROLLBACK TRANSACTION;
+
+		TRUNCATE TABLE dbo.tblHFOChallanTemp;
+		DELETE FROM dbo.tblHFOChallanTemp_Header;
+
+		SET @ErrorMessage = CONCAT('Error in Stored Procedure - ',ERROR_MESSAGE());
+		THROW 50001,@ErrorMessage , 1;		
+	END CATCH
+END
