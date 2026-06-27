@@ -25,7 +25,7 @@ namespace GoldenCoinChallan
                 //Below code is used to populate the report viewer
                 //DataTable resTable = await Task.Run(() => this.viewChallanPrintTableAdapter.GetDataBy(challanNo));
                 //DataTable resTable = await Task.Run(() => tempViewChallanPrintTableAdapter.GetDataBy(challanNo));
-                DataTable resTable = this.viewChallanPrintTableAdapter.GetDataBy(textBoxChallan.Text);
+                DataTable resTable = this.viewChallanPrintTableAdapter.GetDataBy(textBoxChallan.Text, "GEN");
 
                 var rds = new ReportDataSource("DSViewChallanPrint", resTable as DataTable);
                 this.reportViewerChallanPrint.LocalReport.DataSources.Clear();
@@ -91,7 +91,7 @@ namespace GoldenCoinChallan
             report.ReportEmbeddedResource = "GoldenCoinChallan.Report_ChallanPrint.rdlc";
             //report.ReportPath = "Report_ChallanPrint.rdlc";           
 
-            DataTable resTable = this.viewChallanPrintTableAdapter.GetDataBy(textBoxChallan.Text);
+            DataTable resTable = this.viewChallanPrintTableAdapter.GetDataBy(textBoxChallan.Text, "GEN");
             var rds = new ReportDataSource("DSViewChallanPrint", resTable as DataTable);
 
             report.DataSources.Add(rds);

@@ -2943,6 +2943,7 @@ namespace GoldenCoinChallan.AA_2023_2024DataSetTableAdapters {
             this._commandCollection[1].CommandType = global::System.Data.CommandType.StoredProcedure;
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@RETURN_VALUE", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.ReturnValue, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@ChallanNo", global::System.Data.SqlDbType.VarChar, 10, global::System.Data.ParameterDirection.Input, 0, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Mode", global::System.Data.SqlDbType.VarChar, 3, global::System.Data.ParameterDirection.Input, 0, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2973,13 +2974,19 @@ namespace GoldenCoinChallan.AA_2023_2024DataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "18.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
-        public virtual int FillBy(AA_2023_2024DataSet.ViewChallanPrintDataTable dataTable, string ChallanNo) {
+        public virtual int FillBy(AA_2023_2024DataSet.ViewChallanPrintDataTable dataTable, string ChallanNo, string Mode) {
             this.Adapter.SelectCommand = this.CommandCollection[1];
             if ((ChallanNo == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
             }
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((string)(ChallanNo));
+            }
+            if ((Mode == null)) {
+                this.Adapter.SelectCommand.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[2].Value = ((string)(Mode));
             }
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -2992,13 +2999,19 @@ namespace GoldenCoinChallan.AA_2023_2024DataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "18.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual AA_2023_2024DataSet.ViewChallanPrintDataTable GetDataBy(string ChallanNo) {
+        public virtual AA_2023_2024DataSet.ViewChallanPrintDataTable GetDataBy(string ChallanNo, string Mode) {
             this.Adapter.SelectCommand = this.CommandCollection[1];
             if ((ChallanNo == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
             }
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((string)(ChallanNo));
+            }
+            if ((Mode == null)) {
+                this.Adapter.SelectCommand.Parameters[2].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[2].Value = ((string)(Mode));
             }
             AA_2023_2024DataSet.ViewChallanPrintDataTable dataTable = new AA_2023_2024DataSet.ViewChallanPrintDataTable();
             this.Adapter.Fill(dataTable);

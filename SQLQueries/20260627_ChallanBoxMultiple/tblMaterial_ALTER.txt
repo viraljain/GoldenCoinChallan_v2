@@ -1,0 +1,3 @@
+ADDED Multiple INT type Column
+
+meaning if unit is different in Tally & SGM then what shud be the multiple while exporting XML to Tally

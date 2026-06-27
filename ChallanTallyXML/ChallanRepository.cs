@@ -49,7 +49,7 @@ namespace GoldenCoinChallan
             {
                 //Below code is used to populate the report viewer
                 //DataTable resTable = await Task.Run(() => this.viewChallanPrintTableAdapter.GetDataBy(challanNo));
-                DataTable resTable = tempViewChallanPrintTableAdapter.GetDataBy(challanNo);
+                DataTable resTable = tempViewChallanPrintTableAdapter.GetDataBy(challanNo, "XML");
 
                 List<InventoryEntry> challanItems = new List<InventoryEntry>();
                 //foreach (DataRow row in resTable.Select("ItemDesc IS NOT NULL").OrderBy(r => r["Srno"]))
