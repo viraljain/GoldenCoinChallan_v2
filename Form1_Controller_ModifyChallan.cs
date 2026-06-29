@@ -42,6 +42,7 @@ namespace GoldenCoinChallan
                 {
                     cmdGetChallan.CommandType = CommandType.StoredProcedure;
                     cmdGetChallan.Parameters.AddWithValue("@ChallanNo", challanNo);
+                    cmdGetChallan.Parameters.AddWithValue("@Mode", "PDF");
 
                     var dtGetChallan = new DataTable();
                     conn.Open();
