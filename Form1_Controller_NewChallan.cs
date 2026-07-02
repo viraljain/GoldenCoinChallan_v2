@@ -517,6 +517,7 @@ namespace GoldenCoinChallan
                             {
                                 while (reader.Read())
                                 {
+                                    savePrintChallan(reader.GetString(0));
                                     if (radioButtonNewChallan.Checked)
                                     {
                                         MessageBox.Show("Challan created successfully! Challan No. is " + reader.GetString(0));
@@ -551,6 +552,7 @@ namespace GoldenCoinChallan
                             {
                                 while (reader.Read())
                                 {
+                                    savePrintChallan(labelNewChallanNumber.Text);
                                     if (radioButtonNewChallan.Checked)
                                     {
                                         MessageBox.Show("Challan " + reader.GetString(0) + " UPDATED successfully!");

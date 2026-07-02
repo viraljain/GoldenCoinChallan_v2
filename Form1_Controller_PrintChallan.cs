@@ -1,5 +1,6 @@
 ﻿using GoldenCoinChallan.AA_2023_2024DataSetTableAdapters;
 using Microsoft.Reporting.WinForms;
+using PdfiumViewer;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,14 +26,16 @@ namespace GoldenCoinChallan
                 //Below code is used to populate the report viewer
                 //DataTable resTable = await Task.Run(() => this.viewChallanPrintTableAdapter.GetDataBy(challanNo));
                 //DataTable resTable = await Task.Run(() => tempViewChallanPrintTableAdapter.GetDataBy(challanNo));
-                DataTable resTable = this.viewChallanPrintTableAdapter.GetDataBy(textBoxChallan.Text, "GEN");
 
-                var rds = new ReportDataSource("DSViewChallanPrint", resTable as DataTable);
-                this.reportViewerChallanPrint.LocalReport.DataSources.Clear();
+                //20260701 - Replaced with PDF Viewer and Export to PDF functionality, so no need to populate the report viewer anymore
+                //DataTable resTable = this.viewChallanPrintTableAdapter.GetDataBy(textBoxChallan.Text, "GEN");
 
-                this.reportViewerChallanPrint.LocalReport.DataSources.Add(rds);
-                this.reportViewerChallanPrint.LocalReport.Refresh();
-                this.reportViewerChallanPrint.RefreshReport();
+                //var rds = new ReportDataSource("DSViewChallanPrint", resTable as DataTable);
+                //this.reportViewerChallanPrint.LocalReport.DataSources.Clear();
+
+                //this.reportViewerChallanPrint.LocalReport.DataSources.Add(rds);
+                //this.reportViewerChallanPrint.LocalReport.Refresh();
+                //this.reportViewerChallanPrint.RefreshReport();
             }
         }
 
@@ -79,19 +82,19 @@ namespace GoldenCoinChallan
                         btnTallyExport_Click(sender, e);
                         break;
                     case "🖨️":
-                        savePrintChallan();
+                        savePrintChallan(textBoxChallan.Text);
                         break;
                     default: return;
                 }
             }
         }
-        private void savePrintChallan()
+        private void savePrintChallan(string challanNo)
         {
             LocalReport report = new LocalReport();
             report.ReportEmbeddedResource = "GoldenCoinChallan.Report_ChallanPrint.rdlc";
             //report.ReportPath = "Report_ChallanPrint.rdlc";           
 
-            DataTable resTable = this.viewChallanPrintTableAdapter.GetDataBy(textBoxChallan.Text, "GEN");
+            DataTable resTable = this.viewChallanPrintTableAdapter.GetDataBy(challanNo, "GEN");
             var rds = new ReportDataSource("DSViewChallanPrint", resTable as DataTable);
 
             report.DataSources.Add(rds);
@@ -108,7 +111,7 @@ namespace GoldenCoinChallan
 
             byte[] bytes = report.Render("PDF", deviceInfo);
 
-            string fileName = $"{textBoxChallan.Text.Replace("/", "_").Replace("\\", "_")}.pdf";
+            string fileName = $"{challanNo.Replace("/", "_").Replace("\\", "_")}.pdf";
             string exportPath = fileName;
             //Save to file using SAVE DIALOG as a backup option if export path is not set or does not exist in settings
             var saveDialog = new SaveFileDialog
@@ -134,6 +137,8 @@ namespace GoldenCoinChallan
             labelStatus.Text = fileName + " exported successfully to " + exportPath.Replace(fileName, "");
             labelStatus.BackColor = System.Drawing.Color.LightGreen;
 
+            /*
+             * 20260701 - Replaced with PDF Viewer and Export to PDF functionality, so no need to print the PDF anymore
             // Print using default PDF viewer 
             ProcessStartInfo psi = new ProcessStartInfo
             {
@@ -146,6 +151,7 @@ namespace GoldenCoinChallan
                 UseShellExecute = true
             };
             Process.Start(psi);
+            */
             //Working with 32-bit DLL but let's wait - can be enabled later
             //PrintPdf(exportPath);
         }

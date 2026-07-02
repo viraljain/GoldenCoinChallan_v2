@@ -1,5 +1,6 @@
 ﻿using GoldenCoinChallan.AA_2023_2024DataSetTableAdapters;
 using Microsoft.Extensions.DependencyInjection;
+using PdfiumViewer;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -265,13 +266,40 @@ namespace GoldenCoinChallan
         {
             if (textBoxChallan.Text.Trim().Length > 0)
             {
-                generateChallan(textBoxChallan.Text.Trim());
+                //generateChallan(textBoxChallan.Text.Trim());
+                string fileName = $"{textBoxChallan.Text.Replace("/", "_").Replace("\\", "_")}.pdf";
+                string exportPath = Path.Combine(Properties.Settings.Default.ExportPathPDF, fileName);
+                pdfViewerChallanPrint.ZoomMode = PdfViewerZoomMode.FitWidth;
+
+                if (File.Exists(exportPath))
+                {
+                    pdfViewerChallanPrint.Document = PdfDocument.Load(exportPath);
+                }
+                else
+                {
+                    savePrintChallan(textBoxChallan.Text);
+                    pdfViewerChallanPrint.Document = PdfDocument.Load(exportPath);
+                }
             }
         }
         private void viewChallanPrintDataGridView_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             textBoxChallan.Text = dgvChallanList["dgvTextBoxBillNo", e.RowIndex].Value.ToString();
-            showChallanData(dgvChallanList["dgvTextBoxBillNo", e.RowIndex].Value.ToString());
+            //showChallanData(dgvChallanList["dgvTextBoxBillNo", e.RowIndex].Value.ToString());
+
+            string fileName = $"{textBoxChallan.Text.Replace("/", "_").Replace("\\", "_")}.pdf";
+            string exportPath = Path.Combine(Properties.Settings.Default.ExportPathPDF, fileName);
+            pdfViewerChallanPrint.ZoomMode = PdfViewerZoomMode.FitWidth;
+
+            if (File.Exists(exportPath))
+            {
+                pdfViewerChallanPrint.Document = PdfDocument.Load(exportPath); 
+            }
+            else
+            {
+                savePrintChallan(textBoxChallan.Text);
+                pdfViewerChallanPrint.Document = PdfDocument.Load(exportPath);
+            }
         }
         #endregion
 
@@ -505,7 +533,23 @@ namespace GoldenCoinChallan
         private void dgvPSlipList_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             textBoxChallan.Text = dgvPSlipList["dgvPSlipTextBoxBillNo", e.RowIndex].Value.ToString();
-            showChallanData(dgvPSlipList["dgvPSlipTextBoxBillNo", e.RowIndex].Value.ToString());
+            //showChallanData(dgvPSlipList["dgvPSlipTextBoxBillNo", e.RowIndex].Value.ToString());
+
+            string fileName = $"{textBoxChallan.Text.Replace("/", "_").Replace("\\", "_")}.pdf";
+            string exportPath = Path.Combine(Properties.Settings.Default.ExportPathPDF, fileName);
+            pdfViewerChallanPrint.ZoomMode = PdfViewerZoomMode.FitWidth;
+
+            if (File.Exists(exportPath))
+            {
+                pdfViewerChallanPrint.Document = PdfDocument.Load(exportPath);
+            }
+            else
+            {
+                savePrintChallan(textBoxChallan.Text);
+                var fileTemp = File.OpenRead(exportPath);
+                pdfViewerChallanPrint.Document = PdfDocument.Load(fileTemp);
+                File.Delete(exportPath);
+            }
         }
 
         private void buttonFetchPSlip_Click(object sender, EventArgs e)
