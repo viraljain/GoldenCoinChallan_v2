@@ -546,9 +546,9 @@ namespace GoldenCoinChallan
             else
             {
                 savePrintChallan(textBoxChallan.Text);
-                var fileTemp = File.OpenRead(exportPath);
-                pdfViewerChallanPrint.Document = PdfDocument.Load(fileTemp);
-                fileTemp.Dispose();
+                var tempMemoryStream = new MemoryStream(File.ReadAllBytes(exportPath));
+                pdfViewerChallanPrint.Document = PdfDocument.Load(tempMemoryStream);
+                //fileTemp.Dispose();
                 File.Delete(exportPath);
             }
         }
