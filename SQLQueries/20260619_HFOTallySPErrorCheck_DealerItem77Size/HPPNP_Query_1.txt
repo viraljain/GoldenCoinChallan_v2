@@ -1,0 +1,20 @@
+delete from dbo.tblHFOChallanTemp_Header;
+
+delete from dbo.tblHFOChallanTemp;
+
+truncate table tblNewChallanTemp_Header;
+
+delete from tblNewChallanTemp;
+
+
+-------------
+
+select * from dbo.tblHFOChallanTemp_Header;
+
+select * from dbo.tblHFOChallanTemp;
+
+exec sp_ChallanHFOOrder '83B7E177-3177-4400-8810-AD35364207F6';
+
+select * from tblNewChallanTemp_Header;
+
+select * from tblNewChallanTemp;

@@ -20,7 +20,16 @@ namespace GoldenCoinChallan
             this.newChallanItemTableAdapter1.Fill(this.aA_2023_2024DataSet.ViewNewChallan);
             DataGridViewComboBoxColumn dgvNewItem = (DataGridViewComboBoxColumn)dgvNewChallan.Columns["ItemName"];
 
-            dt_ItemNameSize = this.newChallanItemTableAdapter1.GetItemNameWithSizes().Distinct().CopyToDataTable();
+            //dt_ItemNameSize = this.newChallanItemTableAdapter1.GetItemNameWithSizes().Distinct().CopyToDataTable();
+            var raw = this.newChallanItemTableAdapter1.GetItemNameWithSizes().Distinct().CopyToDataTable();
+            dt_ItemNameSize = raw.DefaultView.ToTable(true, "ItemName", "ItemSize");
+            // fallback: if no rows, create empty table with expected columns
+            if (dt_ItemNameSize.Columns.Count == 0)
+            {
+                dt_ItemNameSize = new DataTable();
+                dt_ItemNameSize.Columns.Add("ItemName", typeof(string));
+                dt_ItemNameSize.Columns.Add("ItemSize", typeof(string));
+            }
 
             //DataRow rowSelectItem = dt_ItemNameSize.NewRow();
             //rowSelectItem["ItemName"] = "Select Item";
@@ -44,8 +53,19 @@ namespace GoldenCoinChallan
             //comboBoxDealerName.DataSource = dt_DealerName; 
             comboBoxDealerName.DataSource = bsDealerName;
             comboBoxDealerName.DisplayMember = "DealerName"; comboBoxDealerName.ValueMember = "DealerId";
-
+            comboBoxDealerName.SelectedIndex = 0;
             comboBoxDealerName.IntegralHeight = false;
+
+            if (mode == enumNewChallanMode.Split && !textBoxChallan.Text.Trim().ToUpper().StartsWith("PI"))
+            {
+                buttonNewChallanInsert.Visible = buttonNewChallanInsert.Enabled = false;
+                buttonChallanSplit.Visible = buttonChallanSplit.Enabled = true;
+            }
+            else
+            {
+                buttonNewChallanInsert.Visible = buttonNewChallanInsert.Enabled = true;
+                buttonChallanSplit.Visible = buttonChallanSplit.Enabled = false;
+            }
         }
         private void TxtItemSize_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -97,7 +117,7 @@ namespace GoldenCoinChallan
 
         private void dgvNewChallan_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvNewChallan.Columns[e.ColumnIndex].Name == "ItemName") // your ComboBox column
+            if (dgvNewChallan.Columns[e.ColumnIndex].Name == "ItemName" && mode != enumNewChallanMode.ModifyRender && !modeItemNameFilter) // your ComboBox column
             {
                 // Force edit mode immediately
                 dgvNewChallan.BeginEdit(true);
@@ -113,8 +133,10 @@ namespace GoldenCoinChallan
         }
 
         int rowIndex = -1;
+        bool modeItemNameFilter = false;
         private void TxtItemNameFilter_TextChanged(object sender, EventArgs e)
         {
+            modeItemNameFilter = true;
             TextBox txtItemNameFilter = sender as TextBox;
             if (rowIndex != dgvNewChallan.CurrentCell.RowIndex)
             {
@@ -124,14 +146,18 @@ namespace GoldenCoinChallan
             {
                 GetFilteredItems(txtItemNameFilter.Text);
             }
+            modeItemNameFilter = false;
         }
 
         // Example method to filter items based on text input
         private void GetFilteredItems(string filterText)
         {
+            filterText = filterText.Trim().Replace("'", "").Replace("%", "").Replace("  ", " ");
+
             int rowIndex = dgvNewChallan.CurrentCell.RowIndex;
 
             DataGridViewComboBoxCell comboBoxItemName = (DataGridViewComboBoxCell)dgvNewChallan.Rows[rowIndex].Cells["ItemName"];
+            comboBoxItemName.Value = null;
 
             // Filter ComboBox items dynamically
             DataRow[] ds_ItemName = dt_ItemNameSize.Select("ItemName LIKE '%" + filterText + "%'");
@@ -223,22 +249,42 @@ namespace GoldenCoinChallan
                 //dgvNewChallan.CurrentRow.Cells[firstActiveSize].Selected = true;
 
                 //To clear only invalid non-empty cells & keep valid non-empty cells.
-                foreach (DataGridViewCell cell in dgvNewChallan.CurrentRow.Cells)
+                //foreach (DataGridViewCell cell in dgvNewChallan.CurrentRow.Cells)
+                //{
+                //    if (!dgvNewChallan.Columns[cell.ColumnIndex].Name.Contains("Name"))
+                //    {
+                //        if (cell.ReadOnly == true && (cell.Style.BackColor == Color.DarkGray || cell.Style.BackColor == Color.CadetBlue) && cell.Value != null)
+                //        {
+                //            if (!String.IsNullOrEmpty(cell.Value.ToString()))
+                //            {
+                //                challanTotal -= Convert.ToInt16(cell.Value);
+                //            }
+                //            cell.Value = ""; // Clear the value of the cell                            
+                //        }
+                //    }
+                //}
+                //labelTotal.Text = "Total " + challanTotal.ToString();
+            }
+        }
+
+        private void comboboxItemName_Leave(object sender, EventArgs e)
+        {
+            foreach (DataGridViewCell cell in dgvNewChallan.CurrentRow.Cells)
+            {
+                if (!dgvNewChallan.Columns[cell.ColumnIndex].Name.Contains("Name"))
                 {
-                    if (!dgvNewChallan.Columns[cell.ColumnIndex].Name.Contains("Name"))
+                    if (cell.ReadOnly == true && (cell.Style.BackColor == Color.DarkGray || cell.Style.BackColor == Color.CadetBlue) && cell.Value != null)
                     {
-                        if (cell.ReadOnly == true && (cell.Style.BackColor == Color.DarkGray || cell.Style.BackColor == Color.CadetBlue) && cell.Value != null)
+                        if (!String.IsNullOrEmpty(cell.Value.ToString()))
                         {
-                            if (!String.IsNullOrEmpty(cell.Value.ToString()))
-                            {
-                                challanTotal -= Convert.ToInt16(cell.Value);
-                            }
-                            cell.Value = ""; // Clear the value of the cell                            
+                            challanTotal -= Convert.ToInt16(cell.Value);
+                            dgvNewChallan.CurrentRow.Cells["rowTotal"].Value = Convert.ToInt16(dgvNewChallan.CurrentRow.Cells["rowTotal"].Value) - Convert.ToInt16(cell.Value);
                         }
+                        cell.Value = ""; // Clear the value of the cell                            
                     }
                 }
-                labelTotal.Text = "Total " + challanTotal.ToString();
             }
+            labelTotal.Text = "Total " + challanTotal.ToString();
         }
         #region Non-working Editable Combobox in DataGridView
         /****** Non-working Editable Combobox in DataGridView ******
@@ -370,7 +416,7 @@ namespace GoldenCoinChallan
                     MessageBox.Show("Please enter Packing Slip No.");
                     return;
                 }
-
+                challanTotal = 0;
                 foreach (DataGridViewRow row in dgvNewChallan.Rows)
                 {
                     if (row.IsNewRow)
@@ -394,7 +440,10 @@ namespace GoldenCoinChallan
                                 int.TryParse(cell.Value.ToString(), out itemQty);
 
                                 if (itemQty > 0)
+                                {
                                     dtNewChallan.Rows.Add(itemName, itemSize, itemQty, itemUnit);
+                                    challanTotal += itemQty;
+                                }
                             }
                         }
                     }
@@ -431,7 +480,7 @@ namespace GoldenCoinChallan
                             sqlCmdChallanHeader.Parameters.AddWithValue("@Remarks", textBoxNewChallanRemark.Text);
                             sqlCmdChallanHeader.Parameters.AddWithValue("@TotalItemQty", challanTotal);
                         }
-                        //PackingSlip Transfer - Hardcoded as per DB AccountMaster Table value - PackkingSlip (684)
+                        //PackingSlip Transfer - Hardcoded as per DB AccountMaster Table value - PackingSlip (684)
                         else
                         {
                             sqlCmdChallanHeader.Parameters.AddWithValue("@DealerName", "PackingSlip");
@@ -528,7 +577,7 @@ namespace GoldenCoinChallan
             }
             catch (Exception ex)
             {
-                MessageBox.Show("ERROR Occurred - " + ex.Message);
+                MessageBox.Show("CHALLAN NEW/MODIFY ERROR - " + ex.Message);
             }
         }
         private void comboBoxDealerName_TextUpdated(object sender, EventArgs e)
@@ -558,12 +607,12 @@ namespace GoldenCoinChallan
 
         private void buttonResetChallan_Click(object sender, EventArgs e)
         {
-            DialogResult userResponse_deleteRow = MessageBox.Show(Text = "Are you sure you want to delete the selected rows?", "Item Deletion Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            DialogResult userResponse_deleteRow = MessageBox.Show(Text = "Are you sure you want to RESET the Challan? Data will be lost.", "Item Deletion Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
             if (userResponse_deleteRow == DialogResult.No)
                 return;
             else
             {
-                userResponse_deleteRow = MessageBox.Show(Text = "Please confirm again that you want to delete the selected rows?", "Item Deletion Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                userResponse_deleteRow = MessageBox.Show(Text = "Please confirm again that you want to RESET the Challan?", "Item Deletion Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (userResponse_deleteRow == DialogResult.No)
                     return;
                 else
@@ -573,10 +622,12 @@ namespace GoldenCoinChallan
                     labelTotal.Text = "Total 0";
                     textBoxNewChallanRemark.Text = "";
                     bsDealerName.RemoveFilter();
+                    comboBoxDealerName.SelectedIndex = 0;
                     comboBoxDealerName.Focus();
                     labelDealerName.Text = "";
                     textBoxPackingSlip.Text = "";
                     labelNewChallanNumber.Text = "";
+                    mode = enumNewChallanMode.Insert;
                 }
             }
         }

@@ -1,0 +1,10 @@
+CREATE TABLE dbo.tblHFOChallanTemp (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    HeaderOrderMatrixId UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES dbo.tblHFOChallanTemp_Header(OrderMatrixId),
+    ItemName NVARCHAR(100) NOT NULL,
+    ItemSize NVARCHAR(50) NULL,
+    ItemQty INT NOT NULL,
+    Price DECIMAL(18,2) NULL,
+    BaseId UNIQUEIDENTIFIER NULL,              -- maps to products_base.id
+    CreatedAt DATETIME NOT NULL DEFAULT GETDATE()
+);

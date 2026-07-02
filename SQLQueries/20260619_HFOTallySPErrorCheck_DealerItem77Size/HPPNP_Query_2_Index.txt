@@ -1,0 +1,13 @@
+/*
+Missing Index Details from SQLQuery2.sql - hppnp,1433.AA_2023_2024 (sa (52))
+The Query Processor estimates that implementing the following index could improve the query cost by 99.191%.
+*/
+
+/*
+USE [AA_2023_2024]
+GO
+CREATE NONCLUSTERED INDEX [<Name of Missing Index, sysname,>]
+ON [dbo].[Vch_Dtl] ([VchId])
+
+GO
+*/
