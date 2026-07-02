@@ -1,15 +1,9 @@
 ﻿using GoldenCoinChallan.AA_2023_2024DataSetTableAdapters;
 using Microsoft.Reporting.WinForms;
-using PdfiumViewer;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing.Printing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GoldenCoinChallan

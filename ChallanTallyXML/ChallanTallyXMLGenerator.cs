@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace GoldenCoinChallan
 {
     internal class ChallanTallyXMLGenerator : IChallanTallyXMLGenerator
     {
-        public string Generate(Challan challan) {
+        public string Generate(Challan challan)
+        {
             var sb = new StringBuilder();
             sb.AppendLine("<ENVELOPE>");
             sb.AppendLine("  <HEADER><TALLYREQUEST>Import Data</TALLYREQUEST></HEADER>");

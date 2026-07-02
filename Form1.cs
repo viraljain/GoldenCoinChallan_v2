@@ -293,7 +293,7 @@ namespace GoldenCoinChallan
 
             if (File.Exists(exportPath))
             {
-                pdfViewerChallanPrint.Document = PdfDocument.Load(exportPath); 
+                pdfViewerChallanPrint.Document = PdfDocument.Load(exportPath);
             }
             else
             {
@@ -315,12 +315,9 @@ namespace GoldenCoinChallan
         #endregion
 
 
-        bool tabMode = false;
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            tabMode = true;
-            Form1_Load(sender, e);
-            tabMode = false;
+            Form1_Load(sender, e);            
         }
 
         private TabPage lastTabPage;
