@@ -19,7 +19,7 @@ namespace GoldenCoinChallan
         {
             if (textBoxChallan.Text.Trim().ToUpper().StartsWith("PI"))
             {
-                MessageBox.Show("Error - Packing Split cannot be splitted.");
+                MessageBox.Show("Error - Packing Slip cannot be splitted.");
                 return;
             }
 
@@ -354,13 +354,13 @@ namespace GoldenCoinChallan
                         {
                             while (reader.Read())
                             {
-                                savePrintChallan(labelNewChallanNumber.Text);
-                                savePrintChallan(reader.GetString(0));
                                 if (radioButtonNewChallan.Checked)
                                 {
                                     MessageBox.Show("Challan " + reader.GetString(0) + " UPDATED successfully!");
                                     buttonNewChallanInsert.Text = "&Insert Challan";
                                     comboBoxDealerName.Focus();
+                                    savePrintChallan(labelNewChallanNumber.Text);
+                                    savePrintChallan(reader.GetString(0));
                                 }
                                 dgvNewChallan.Rows.Clear();
                                 challanTotal = 0;

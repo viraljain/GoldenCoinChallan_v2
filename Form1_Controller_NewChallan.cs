@@ -515,11 +515,11 @@ namespace GoldenCoinChallan
                             {
                                 while (reader.Read())
                                 {
-                                    savePrintChallan(reader.GetString(0));
                                     if (radioButtonNewChallan.Checked)
                                     {
-                                        MessageBox.Show("Challan created successfully! Challan No. is " + reader.GetString(0));
+                                        MessageBox.Show("Challan created successfully! Challan No. is " + reader.GetString(0));                                        
                                         comboBoxDealerName.Focus();
+                                        savePrintChallan(reader.GetString(0));
                                     }
                                     else
                                     {
@@ -550,12 +550,12 @@ namespace GoldenCoinChallan
                             {
                                 while (reader.Read())
                                 {
-                                    savePrintChallan(labelNewChallanNumber.Text);
                                     if (radioButtonNewChallan.Checked)
                                     {
                                         MessageBox.Show("Challan " + reader.GetString(0) + " UPDATED successfully!");
                                         buttonNewChallanInsert.Text = "&Insert Challan";
                                         comboBoxDealerName.Focus();
+                                        savePrintChallan(labelNewChallanNumber.Text);
                                     }
                                     else
                                     {
